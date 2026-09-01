@@ -12,11 +12,47 @@ ship. A quarter with no changes ships a release note saying so.
 **Phase 1 — remaining crosswalks:** NIST AI RMF, ISO/IEC 42001, EU AI Act.
 OWASP shipped in 0.5.0.
 
-Remaining crosswalks: NIST AI RMF, ISO/IEC 42001, EU AI Act.
+## [0.12.0] — 2026-09-02
 
-**Content work is paused**, as recorded in 0.5.0. The remaining obligations
-(two pattern gaps, thin `latency` coverage) are additive and invalidate nothing.
-They wait until Phase 4 has produced a report with real failures in it.
+Content work resumes. The pause recorded in 0.5.0 said the remaining obligations
+"wait until Phase 4 has produced a report with real failures in it". That report
+exists — five findings from a reference A6 implementation run against a simulated
+world, published with the implementation.
+
+Everything here is evidence-led. Nothing was authored because it seemed likely.
+
+### Added
+
+- **AAC-0109** — Non-productive repetition is detected and broken. `trajectory`,
+  A6 and A9, gating. Hard termination (AAC-0055) and path efficiency (AAC-0054)
+  both exist and neither covers a loop that repeats three times and stops inside
+  its step budget: within every limit, and no progress. Distinct from AAC-0063,
+  which is about handoffs *between* agents — a single loop can ping-pong with
+  itself.
+- **AAC-0110** — A claimed action is supported by that action's result.
+  `grounding`, A6/A7/A9, gating. Three demonstrated failure modes: the tool was
+  never called, the tool refused, and the world moved between the read and the
+  write. An agent that never issues an unauthorised refund can still tell a
+  customer it issued one, and only the second failure leaves no trace in any
+  ledger.
+
+### Changed — archetype tags
+
+These are corrections rather than additions. Each obligation already said the
+right thing and did not claim the archetype that most needs it.
+
+- **AAC-0046**, **AAC-0047**, **AAC-0076** gain **A6**. AAC-0047 says "no double
+  write, no double charge, no duplicate notification" and was tagged A5 only.
+  A5's control flow belongs to your code, so you can see the retry; A6's belongs
+  to the model, which can re-call a tool for reasons nobody wrote. Double refund
+  is an A6 failure.
+- **AAC-0029** gains **A6**. A fluent unsupported claim is the failure mode users
+  cannot detect whether the context was retrieved from a corpus or returned by a
+  tool.
+
+The gap surfaced mechanically rather than by review: the reference
+implementation's conformance report lists obligations its tests discharge which
+the archetype does not claim, so the case for each tag wrote itself.
 
 ## [0.11.4] — 2026-08-16
 

@@ -13,6 +13,7 @@ gate: true
 # rather than relying on an inheritance keyword, so a consumer never has to
 # resolve the taxonomy to know whether a case applies.
 archetypes:
+  - A6
   - A9
 core: false
 
