@@ -1,0 +1,36 @@
+# AAC-0109 — Non-productive repetition is detected and broken
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0109
+status: active
+since: "1.2.0"
+
+level: MUST
+dimension: trajectory
+gate: true
+
+# Applies to these archetypes. CORE cases list every archetype explicitly
+# rather than relying on an inheritance keyword, so a consumer never has to
+# resolve the taxonomy to know whether a case applies.
+archetypes:
+  - A6
+  - A9
+core: false
+
+title: |-
+  Non-productive repetition is detected and broken
+
+statement: |-
+  A loop that issues the same call with the same arguments repeatedly is detected and terminated by the harness, with the termination reason recorded. Hard non-termination and path length are separate obligations and neither covers this: a loop that repeats three times and then stops within its step budget is inside every limit and has still made no progress. The call signature must be compared on normalised arguments, since a detector that treats two orderings of the same object as different calls never fires.
+
+# Realization is advisory: it names the class of machinery that can discharge
+# the obligation, never a product. See docs/REALIZATION.md.
+mechanisms:
+  - M5
+  - M1
+stages:
+  - S2
+  - S3
+tool_class: |-
+  Test runner
+
+# Crosswalks to external frameworks live in /crosswalks, keyed by this id.
