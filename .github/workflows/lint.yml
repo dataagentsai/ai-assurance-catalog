@@ -4,6 +4,20 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+
+# The page is a build artifact of catalog/, never a file anyone edits. It is
+# committed as well as deployed, so the catalog stays readable straight from the
+# repository without waiting on a deployment.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and never cancel one half-done.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   lint:
@@ -44,3 +58,23 @@ jobs:
             git diff --stat -- site/
             exit 1
           fi
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: site
+
+  # Deployment is its own job so a repository without Pages turned on still
+  # gets an honest green signal on the catalog itself. This job stays red until
+  # Settings > Pages > Build and deployment is set to GitHub Actions — that is a
+  # repository setting and cannot be enabled from a workflow.
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: lint
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

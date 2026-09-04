@@ -192,11 +192,41 @@ if (fs.existsSync(realDir)) {
 }
 
 // ---- report ----
+// ---- guidance: commentary must point at something, and only at fields it owns.
+//
+// A file named for an id that does not exist renders nowhere and reports
+// nothing — it is a check that can never fire, which is the failure mode this
+// catalog keeps finding elsewhere. Cheap to refuse, so refuse it.
+const GUIDE_FIELDS = new Set(["id", "plain", "why", "example", "detect", "not_this"]);
+const guideDir = path.join(ROOT, "guidance");
+let guided = 0;
+if (fs.existsSync(guideDir)) {
+  for (const f of fs.readdirSync(guideDir).filter((x) => x.endsWith(".yaml")).sort()) {
+    const g = yaml.load(fs.readFileSync(path.join(guideDir, f), "utf8"));
+    if (!g || !g.id) { errors.push(`guidance/${f} has no id`); continue; }
+    if (g.id !== f.replace(/\.yaml$/, "")) errors.push(`guidance/${f} declares ${g.id}`);
+    if (!byId.has(g.id)) { errors.push(`guidance/${f} explains ${g.id}, which is not in the catalog`); continue; }
+    for (const k of Object.keys(g)) {
+      if (!GUIDE_FIELDS.has(k)) errors.push(`guidance/${f}: unknown field ${k}`);
+    }
+    // Guidance may cite a neighbour, never invent one.
+    for (const n of g.not_this || []) {
+      if (!byId.has(n.id)) errors.push(`guidance/${f}: not_this cites ${n.id}, which does not exist`);
+    }
+    // The one substantive rule: commentary must not carry normative text. A
+    // `statement` here would be a second authority that can disagree with the
+    // catalog, which is the whole thing guidance/ is arranged to prevent.
+    if ("statement" in g) errors.push(`guidance/${f} carries a statement — the catalog owns that`);
+    guided += 1;
+  }
+}
+
 const gates = [...byId.values()].filter((d) => d.gate).length;
 const musts = [...byId.values()].filter((d) => d.level === "MUST").length;
 const core = [...byId.values()].filter((d) => d.core).length;
 
 console.log(`catalog: ${byId.size} cases  (${core} core, ${musts} MUST, ${gates} gates)`);
+if (guided) console.log(`guidance: ${guided} explained, ${byId.size - guided} not yet`);
 if (patterns.size) {
   console.log(`patterns: ${patterns.size} informative`);
   // Surfaced, never silent: an uncaught pattern is a hole in the catalog.

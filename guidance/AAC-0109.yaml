@@ -1,0 +1,50 @@
+id: AAC-0109
+
+plain: |
+  Stop an agent that keeps making the same call with the same arguments and
+  getting nowhere — and write down that this is why you stopped it.
+
+why: |
+  A step budget limits what a run costs. It does not check whether the run is
+  getting anywhere. Those are different questions, and only the first is usually
+  asked.
+
+  An agent can call the same tool three times, receive the identical answer three
+  times, stop inside its budget, and be fully compliant. Every limit was
+  respected. The customer waited and got nothing.
+
+example: |
+  An agent is asked to cancel an order. It calls get_order("AB-1"), sees the
+  order has shipped, calls get_order("AB-1") again, sees the same thing, and
+  again. It stops at step 4 of a 12-step budget.
+
+  No limit was exceeded. No error was raised. The trace looks healthy. Nothing
+  happened.
+
+detect: |
+  Record a signature for every tool call — the tool name plus its arguments —
+  and terminate when the same signature repeats past a threshold.
+
+  The detail that decides whether the check works at all: normalise the
+  arguments before comparing. {"a":1,"b":2} and {"b":2,"a":1} are the same call,
+  and a detector that treats them as different never fires. It passes review,
+  stays switched on, and has never once triggered.
+
+  A test drives a model that returns the identical tool call ten times and
+  asserts the loop stopped early with the repetition reason recorded — not
+  merely that it stopped.
+
+not_this:
+  - id: AAC-0055
+    why: |
+      Hard non-termination. It catches a loop that never stops. This one is
+      about a loop that stops perfectly well and achieved nothing.
+  - id: AAC-0054
+    why: |
+      Path efficiency, scored against a reference trajectory. It tells you a run
+      was longer than ideal; it does not terminate anything, and it needs a
+      reference run to compare against.
+  - id: AAC-0008
+    why: |
+      Cost per successful task. A repeating loop is wasteful, but this is not a
+      spend control — a cheap loop that makes no progress still fails here.

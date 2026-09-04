@@ -45,6 +45,25 @@ if (fs.existsSync(realDir)) {
 }
 const approaches = real.approaches || [];
 
+// Non-normative commentary, keyed by id. The catalog stays the authority; this
+// only ever answers questions *about* a statement, never restates one. See
+// guidance/README.md for why the fields are fixed rather than free prose.
+const guideDir = path.join(ROOT, "guidance");
+const guidance = {};
+if (fs.existsSync(guideDir)) {
+  for (const f of fs.readdirSync(guideDir).filter((x) => x.endsWith(".yaml")).sort()) {
+    const g = yaml.load(fs.readFileSync(path.join(guideDir, f), "utf8"));
+    const trim = (v) => (typeof v === "string" ? v.trim() : v);
+    guidance[g.id] = {
+      plain: trim(g.plain),
+      why: trim(g.why),
+      example: trim(g.example),
+      detect: trim(g.detect),
+      not_this: (g.not_this || []).map((n) => ({ id: n.id, why: trim(n.why) })),
+    };
+  }
+}
+
 const patDir = path.join(ROOT, "patterns");
 const patterns = !fs.existsSync(patDir) ? [] : fs
   .readdirSync(patDir)
@@ -64,6 +83,7 @@ const data = {
   dimensions: real.dimensions,
   approaches,
   realizations,
+  guidance,
   cases: cases.map((c) => ({
     id: c.id, legacy: c.legacy_id, level: c.level, dim: c.dimension, gate: c.gate,
     core: c.core, arch: c.archetypes, title: c.title.trim(), text: c.statement.trim(),
@@ -190,6 +210,30 @@ td.k{font-family:var(--mono);font-size:12.5px;color:var(--ink);white-space:nowra
 #buildtbl td.cs span{display:block;font-family:var(--serif);font-size:13px;font-weight:400;color:var(--ink-3);white-space:normal;max-width:22ch;margin-top:3px}
 #buildtbl tr.newcase td{border-top:2px solid var(--rule-2)}
 #buildtbl .tl{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);display:block;margin-top:4px}
+/* Guidance. Visually quieter than the statement on purpose — it is commentary,
+   and it should never compete with the normative text for the eye. */
+.guide{margin-top:12px;border-top:1px dashed var(--rule);padding-top:10px}
+.guide>summary{cursor:pointer;font:600 12px/1.4 var(--sans);letter-spacing:.03em;
+  text-transform:uppercase;color:var(--accent);list-style:none;display:inline-flex;
+  align-items:center;gap:6px;padding:2px 0}
+.guide>summary::-webkit-details-marker{display:none}
+.guide>summary::before{content:"›";display:inline-block;transition:transform .15s ease;font-size:15px}
+.guide[open]>summary::before{transform:rotate(90deg)}
+.guide>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+.gbody{margin-top:10px;padding:12px 14px;background:var(--sunk);border-radius:6px}
+.gpart{margin-bottom:14px}
+.gpart:last-of-type{margin-bottom:8px}
+.glabel{display:block;font:600 11px/1.4 var(--sans);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.gpart p{margin:0 0 7px;font:15px/1.62 var(--serif);color:var(--ink-2);max-width:64ch}
+.gpart p:last-child{margin-bottom:0}
+.gnot{display:flex;gap:10px;margin-bottom:8px}
+.gnot a{font:600 12px/1.9 var(--mono);color:var(--accent);text-decoration:none;flex:0 0 auto}
+.gnot a:hover{text-decoration:underline}
+.gnot p{font-size:14px}
+.gfoot{margin:0;padding-top:8px;border-top:1px solid var(--rule);
+  font:11px/1.5 var(--sans);color:var(--ink-3)}
+.chip.guidechip{background:transparent;border-color:var(--ink-3);color:var(--ink-3);cursor:default}
 .how{margin-top:12px;border-top:1px dashed var(--rule);padding-top:10px}
 .how summary{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);cursor:pointer;list-style:none}
 .how summary::-webkit-details-marker{display:none}
@@ -268,16 +312,39 @@ function howHTML(id){
   }</ul></details>\`;
 }
 
+// Guidance is collapsed by default and the statement above it is not. The
+// normative text has to stay the thing you read first; commentary that pushed it
+// down the page would be teaching people to skip it.
+function guideHTML(id){
+  const g = (D.guidance||{})[id];
+  if (!g) return "";
+  const para = (s) => s.split(/\\n\\s*\\n/).map(p => \`<p>\${esc(p.trim())}</p>\`).join("");
+  const part = (label, body) => body ? \`<div class="gpart"><span class="glabel">\${label}</span><div>\${para(body)}</div></div>\` : "";
+  const others = (g.not_this||[]).map(n =>
+    \`<div class="gnot"><a href="#\${n.id}">\${n.id}</a><div>\${para(n.why)}</div></div>\`).join("");
+  return \`<details class="guide">
+    <summary>Explain this one</summary>
+    <div class="gbody">
+      \${part("In plain words", g.plain)}
+      \${part("Why it exists", g.why)}
+      \${part("What going wrong looks like", g.example)}
+      \${part("How you would know", g.detect)}
+      \${others ? \`<div class="gpart"><span class="glabel">What this is <em>not</em></span><div class="gnots">\${others}</div></div>\` : ""}
+      <p class="gfoot">Commentary, not the obligation. The statement above is the authority.</p>
+    </div></details>\`;
+}
+
 function caseHTML(c){
   return \`<article class="case" id="\${c.id}">
     <div class="lhs"><div class="caseline">
       <span class="cid">\${c.id}</span>
       \${c.core ? chip("","core","Owed by every archetype") : c.arch.map(a => chip("", a, ARCH_NAME[a])).join("")}
       <span class="lvl \${c.level}">\${c.level}</span><span class="dim">\${c.dim}</span>
+      \${(D.guidance||{})[c.id] ? \`<span class="chip guidechip" title="A plain-language explanation is available below">explained</span>\` : ""}
       \${(D.realizations||{})[c.id] ? \`<span class="chip howchip" title="Concrete build options are listed below">\${(D.realizations)[c.id].options.length} ways to build</span>\` : ""}
       \${c.legacy ? \`<span class="legacy">was \${c.legacy}</span>\` : ""}
     </div>
-    <h5>\${esc(c.title)}</h5><p>\${esc(c.text)}</p>\${howHTML(c.id)}</div>
+    <h5>\${esc(c.title)}</h5><p>\${esc(c.text)}</p>\${guideHTML(c.id)}\${howHTML(c.id)}</div>
     <div class="rhs">
       <div class="slot"><span class="sk">Mech</span><span class="chips">\${c.mech.map(m => chip("", m, MECH_LABEL[m])).join("")}</span></div>
       <div class="slot"><span class="sk">Stage</span><span class="chips">\${c.stage.map(s => chip("n", s, STAGE_LABEL[s])).join("")}</span></div>
@@ -320,6 +387,29 @@ function render(){
   document.getElementById("count").textContent =
     seen.size + " obligation" + (seen.size === 1 ? "" : "s") + (rows !== seen.size ? \` · \${rows} rows\` : "");
 }
+
+// A link to #AAC-0109 should behave like a page about AAC-0109: find it even if
+// the current filter hides it, open its explanation, and put it on screen.
+// Without this a shared link lands on whatever the last filter happened to be.
+function reveal(){
+  const id = decodeURIComponent(location.hash.slice(1));
+  if (!/^AAC-\\d{4}$/.test(id)) return;
+  const target = document.getElementById(id);
+  if (!target){
+    // Hidden by a filter rather than absent. Clear the filters and try once.
+    if (sel === "ALL" && !q.value && !mustonly.checked && !gateonly.checked && !howonly.checked) return;
+    sel = "ALL"; q.value = ""; mustonly.checked = gateonly.checked = howonly.checked = false;
+    [...tabs.querySelectorAll("button")].forEach(x =>
+      x.setAttribute("aria-selected", x.dataset.a === "ALL" ? "true" : "false"));
+    render();
+    return reveal();
+  }
+  const guide = target.querySelector("details.guide");
+  if (guide) guide.open = true;
+  target.scrollIntoView({block: "start"});
+}
+window.addEventListener("hashchange", reveal);
+reveal();
 
 tabs.addEventListener("click", e => {
   const b = e.target.closest("button[data-a]"); if (!b) return;

@@ -1,0 +1,39 @@
+id: AAC-0096
+
+plain: |
+  A saved answer may only be reused for a request that was asked under the same
+  conditions — same model, same permissions, same settings.
+
+why: |
+  A cache key describes what was asked. The trust boundary is about what was
+  available to answer it, and that is usually not in the request at all.
+
+  Two requests can be byte-identical and still deserve different answers: one
+  came from a caller who could reach an administrative tool and one did not. Key
+  on the request alone and the second caller receives the first caller's answer.
+
+example: |
+  A recording is made while a reviewer's elevated permissions are active, so the
+  tool list includes refund actions and the answer reflects that. Replayed later
+  for an ordinary customer, whose tool list has no refund action, the cached
+  answer describes a capability that caller does not have.
+
+  A quieter version: the recording was made against one model and replayed
+  against a run configured for another. Everything matches, the suite is green,
+  and the model under test was never called.
+
+detect: |
+  Record the configuration alongside the entry — model, the authorised tool
+  surface, and any sampling settings — and refuse a reuse whose configuration
+  differs.
+
+  Fail closed in both directions. A reuse that does not say what it is running
+  under is refused too: "the caller did not state it" is not a reason to assume
+  a match, and defaulting to allow turns the check into decoration.
+
+not_this:
+  - id: AAC-0006
+    why: |
+      No leakage of PII, secrets or credentials. That is about the content of an
+      answer. This is about an answer that may be entirely free of sensitive data
+      and still must not be handed to this particular caller.

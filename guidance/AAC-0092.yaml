@@ -1,0 +1,42 @@
+id: AAC-0092
+
+plain: |
+  If you send the answer to the user a piece at a time, whatever checks that
+  answer has to see each piece before the user does.
+
+why: |
+  A screen that runs on the finished reply is the normal design, and it works
+  because the reply is complete when it is checked. Streaming removes that
+  guarantee without changing any of the code that relied on it.
+
+  Once a token has been shown or spoken it cannot be recalled. So a check that
+  fires after the last token has already lost: the user read the first half of a
+  sentence the check was going to block.
+
+example: |
+  An agent streams "Yes, I have cancelled that order for you — " and the guard
+  that would have blocked the claim runs on the complete text a moment later.
+  The customer has read it. The order is not cancelled.
+
+  In voice this is worse: the caller has heard it, there is no screen to update,
+  and the correction arrives as a second sentence contradicting the first.
+
+detect: |
+  If you do not stream, the obligation is satisfied — and that is exactly the
+  situation to be careful about, because a test that passes by describing a
+  configuration where the defect cannot appear is not evidence of anything.
+
+  So test that *starting* to stream trips the gate: assert no client exposes an
+  incremental emit path and that the completion call is not a generator. Whoever
+  adds streaming is then made to answer the obligation instead of inheriting a
+  green result.
+
+  If you do stream, the test is that a violating fragment never leaves — buffer
+  to a screenable unit, screen it, then release.
+
+not_this:
+  - id: AAC-0005
+    why: |
+      Safety and policy compliance of the output. That is *what* the screen looks
+      for. This is *when* it runs relative to the user seeing the text, and a
+      correct screen at the wrong time protects nobody.

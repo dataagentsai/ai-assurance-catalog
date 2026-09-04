@@ -14,14 +14,30 @@ const s=fs.readFileSync(process.argv[2],"utf8");
 const js=s.split("<script>").pop().split("</script>")[0];
 const payload=JSON.parse(s.split("window.__AAC__ = ")[1].split("</script>")[0].replace(/;\s*$/,""));
 const present=new Set([...s.matchAll(/id="([^"]+)"/g)].map(m=>m[1]));
+/*
+ * Two kinds of change to this stub, and only one of them is allowed.
+ *
+ * Giving it a capability a real browser has — window.addEventListener,
+ * location, element.querySelector — is accuracy: the script would work in a
+ * browser and only fails here, so the harness is wrong.
+ *
+ * Making it return an element for an id with no markup is forgiveness, and that
+ * is the bug this file was written after. mk() below stays strict.
+ */
 const els={};
 const mk=id=>{
   if(!present.has(id)) return null;              // <-- the whole point
   return els[id]||(els[id]={id,innerHTML:"",textContent:"",value:"",checked:false,dataset:{},
     addEventListener(t,f){(this._h=this._h||{})[t]=f},
-    querySelectorAll:()=>[],closest:()=>null,setAttribute(){}});
+    querySelector:()=>null,querySelectorAll:()=>[],closest:()=>null,
+    setAttribute(){},scrollIntoView(){}});
 };
-global.window={__AAC__:payload};
+global.window={
+  __AAC__:payload,
+  addEventListener(t,f){(this._h=this._h||{})[t]=f},
+  location:{hash:""},
+};
+global.location=global.window.location;
 global.document={getElementById:mk,querySelectorAll:()=>[]};
 new Function("window","document",js)(global.window,global.document);
 const out=els["catalog-out"];

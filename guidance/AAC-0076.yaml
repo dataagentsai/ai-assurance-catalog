@@ -1,0 +1,48 @@
+id: AAC-0076
+
+plain: |
+  Whatever starts the agent must start it exactly once per occasion — not twice,
+  not never, and not again while the last run is still going.
+
+why: |
+  This is about the trigger, not about the agent. An agent that runs twice takes
+  every action twice, including the irreversible ones, and it does so correctly
+  each time. Nothing inside the agent is wrong.
+
+  Protections that live inside a run cannot help. An idempotency key derived from
+  the run gets a fresh value on the second run, so the ledger cannot see across
+  the two at all. The duplicate happens one layer above where the defence sits.
+
+example: |
+  Three separate failures, and the middle one is the worst.
+
+  Fires twice — a cron entry duplicated across two hosts, a webhook redelivered
+  because the acknowledgement was slow, a customer clicking Send twice. Two runs,
+  two refunds.
+
+  Never fires — the 02:00 job did not run. Nothing failed, nothing alerted, no
+  error was logged. Silence is indistinguishable from success, and the first
+  person to notice is a customer.
+
+  Fires again mid-run — two copies working the same data at once, each reading
+  state before the other has written it.
+
+detect: |
+  Test the trigger directly rather than the agent. Deliver the same event twice
+  and assert one run. Suppress the trigger for a window and assert something
+  notices it did not arrive. Start a second run while the first is in flight and
+  assert one of them is refused.
+
+  The missed window needs a positive signal — a heartbeat, an expected-run
+  record — because you cannot detect an absence by watching for an error.
+
+not_this:
+  - id: AAC-0047
+    why: |
+      Retried steps are idempotent. That protects a repeated step inside one run.
+      A duplicate trigger produces a whole second run, with its own key space,
+      which that protection never sees.
+  - id: AAC-0055
+    why: |
+      Hard termination. It bounds a run that has started; it says nothing about
+      how many runs started, or whether one should have.
