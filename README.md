@@ -50,6 +50,29 @@ Thirty-two of the 108 are **core** — owed by every AI application regardless o
 shape. The rest are archetype deltas: what is *new* about that shape's risk
 surface. That is why this is 108 cases and not several hundred.
 
+## Where this sits
+
+This catalog is one part of a family. The others are the
+[AI Assurance Catalog](https://github.com/dataagentsai/ai-assurance-catalog) —
+what must be **TRUE** — and **AgentTwin**, which describes what a system must be
+**FACED** with.
+
+Two family-level documents govern form, and neither asks you to agree with
+anything:
+
+- **[The Spec Charter](https://github.com/dataagentsai/clean-ai-engineering/blob/main/SPEC-CHARTER.md)**
+  — the routing rule that decides which artifact a statement belongs in, and the
+  dependency invariant that keeps this catalog free of any one domain's rules.
+- **[The Baseline](https://github.com/dataagentsai/clean-ai-engineering/blob/main/BASELINE.md)**
+  — why this catalog says nothing about code review, branching or coverage. An
+  agent is a software system; established practice is cited, never restated, and
+  only the delta that non-determinism creates appears here.
+
+The umbrella repository,
+[clean-ai-engineering](https://github.com/dataagentsai/clean-ai-engineering),
+states a point of view. **This catalog does not, and must remain usable by
+someone who rejects all of it.**
+
 ## What it is not
 
 This is a join table, not a framework. It deliberately authors none of the
