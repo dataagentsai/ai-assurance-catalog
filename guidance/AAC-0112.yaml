@@ -1,0 +1,61 @@
+id: AAC-0112
+
+plain: |
+  If the assistant says it will go and find out, the system has to have
+  somewhere for that to happen. Otherwise the conversation is over and the
+  person is still waiting.
+
+why: |
+  Every instrument a team normally has agrees that this run went well. It took
+  one step, so no budget was approached and no repetition was detected. It
+  raised no error, so nothing alerted. Its reply is fluent and on-topic, so a
+  reviewer skimming outputs sees nothing. And a truthfulness or groundedness
+  check finds no claim about the past to be wrong about — "let me look that up
+  for you" asserts nothing that could be false. It is, correctly, no claim at
+  all.
+
+  The gap is that these instruments all check what the run said about what it
+  did. None of them checks what the run said it was *going to* do, against
+  whether anything exists that could do it.
+
+example: |
+  A customer asks for a refund. The model replies "Let me check on that for
+  you." and calls nothing. The harness sees text with no tool calls, reads that
+  as the task being finished, and returns a completed outcome whose content is
+  the promise. No refund was requested, no approval is pending, no ticket was
+  opened, nobody is on a queue. The conversation ends there.
+
+  The same shape appears wherever prose can stand in for machinery: "I will
+  escalate this", "let me get a colleague", "I will keep an eye on that and let
+  you know". Each is a commitment the system has a real mechanism for, and each
+  was made without using it.
+
+detect: |
+  Drive the system with inputs that reliably produce a commitment and assert on
+  two things: the outcome the harness returned, and what the run left behind.
+  The outcome must not be the completed one, and a record must exist — a pending
+  decision with an identifier, a handoff with a reference, a scheduled
+  continuation — that could produce the answer.
+
+  Assert on the outcome, not the wording. A case that matches text passes the
+  moment somebody rewords the prompt, and it will never cover the phrasings
+  nobody thought of.
+
+not_this:
+  - id: AAC-0031
+    why: |
+      Abstention is the opposite case. There the answer will not come and must
+      not be dressed as content; here it will come and must not be dressed as an
+      ending. Both are the model's wording standing in for the harness's
+      outcome, and a suite covering one covers nothing of the other.
+  - id: AAC-0055
+    why: |
+      Hard termination bounds a run that will not stop. This one is about a run
+      that stopped too early and reported success — no budget was approached, so
+      nothing a termination case asserts was ever in question.
+  - id: AAC-0003
+    why: |
+      Instruction adherence would catch a system told not to hedge and hedging
+      anyway. That is a style rule about the text. An assistant saying "let me
+      check" while it actually checks is doing nothing wrong; what is wrong here
+      is that nothing exists to produce the answer.

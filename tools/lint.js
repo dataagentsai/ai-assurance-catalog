@@ -269,7 +269,18 @@ if (fs.existsSync(guideDir)) {
       if (!GUIDE_FIELDS.has(k)) errors.push(`guidance/${f}: unknown field ${k}`);
     }
     // Guidance may cite a neighbour, never invent one.
+    // Shape first: `not_this` is a list of citations. Written as prose it is a
+    // string, and iterating a string yields characters — which this check once
+    // reported as 512 identical errors naming none of them.
+    if (g.not_this !== undefined && !Array.isArray(g.not_this)) {
+      errors.push(`guidance/${f}: not_this must be a list of {id, why}, not ${typeof g.not_this}`);
+      g.not_this = [];
+    }
     for (const n of g.not_this || []) {
+      if (typeof n !== "object" || !n.id) {
+        errors.push(`guidance/${f}: every not_this entry needs an id`);
+        continue;
+      }
       if (!byId.has(n.id)) errors.push(`guidance/${f}: not_this cites ${n.id}, which does not exist`);
     }
     // The one substantive rule: commentary must not carry normative text. A

@@ -1,0 +1,39 @@
+# AAC-0112 — A completed outcome contains the answer
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0112
+status: active
+since: "0.14.0"
+
+level: MUST
+dimension: correctness
+gate: true
+
+# Archetypes whose output is prose a person waits on, and which have somewhere
+# for work to continue. A1, A2, A8 and A10 produce an artifact consumed by code
+# or read once; a commitment in their output is a content defect, caught by
+# format and instruction cases, not a run that never finishes.
+archetypes:
+  - A3
+  - A4
+  - A6
+  - A7
+  - A9
+core: false
+
+title: |-
+  A completed outcome contains the answer
+
+statement: |-
+  Cases exist in which the model commits the system to work it has not done — checking, looking into it, coming back, fetching someone — and none of them may be reported as a completed outcome. A run that ends with a commitment must carry the thing that will produce the answer: a pending decision with its identifier, a handoff with its reference, or a continuation the caller can drive. Assert on the outcome the harness returned and on what the run left behind, never on the wording alone; a case that only checks the text passes the moment the phrasing changes.
+
+# Realization is advisory: it names the class of machinery that can discharge
+# the obligation, never a product. See docs/REALIZATION.md.
+mechanisms:
+  - M1
+  - M5
+stages:
+  - S2
+  - S3
+
+
+tool_class: Test runner
