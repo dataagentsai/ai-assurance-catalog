@@ -12,6 +12,23 @@ ship. A quarter with no changes ships a release note saying so.
 **Phase 1 — remaining crosswalks:** NIST AI RMF, ISO/IEC 42001, EU AI Act.
 OWASP shipped in 0.5.0.
 
+## [0.13.0] — 2026-09-12
+
+One obligation, from the same reference implementation, and a version number
+that had fallen behind its own content: 0.12.0's cases shipped and the package
+version stayed at 0.11.4, so anything pinning this catalog pinned a version that
+did not describe it. Found by a build manifest that reads versions off disk
+rather than being told them.
+
+### Added
+
+- **AAC-0111** — A request acts only as the identity its credential proves.
+  `security`, core, gating. Session isolation (AAC-0040) and permission-respecting
+  retrieval (AAC-0032) both rest on the identity being authentic and neither says
+  so. The failure it catches is invisible without the test: an otherwise valid
+  request that names someone else in its body, where every downstream control is
+  intact and enforcing against a name the caller chose.
+
 ## [0.12.0] — 2026-09-02
 
 Content work resumes. The pause recorded in 0.5.0 said the remaining obligations
