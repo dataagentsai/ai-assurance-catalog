@@ -12,6 +12,51 @@ ship. A quarter with no changes ships a release note saying so.
 **Phase 1 — remaining crosswalks:** NIST AI RMF, ISO/IEC 42001, EU AI Act.
 OWASP shipped in 0.5.0.
 
+## [0.14.0] — 2026-09-12
+
+One obligation, and it came from a reader rather than an audit. Watching a run
+of the reference agent, they asked why it said *"let me check on that for you"*
+and never came back. The string was a test fixture; the behaviour was not.
+
+**AAC-0112 — A completed outcome contains the answer.** A model that commits the
+system to work it has not done, and calls nothing, produces a run every
+instrument reports as healthy: one step, so no budget approached and no
+repetition detected; no error, so nothing alerted; a fluent reply. A
+truthfulness check finds no claim about the past to be wrong about, because
+"let me look that up for you" is — correctly — no claim at all. What none of
+them checks is what the run said it was *going* to do, against whether anything
+exists that could do it.
+
+The obligation is the mirror of abstention (AAC-0031): there the answer will not
+come and must not be dressed as content; here it will come and must not be
+dressed as an ending. Cases assert on the returned outcome and on what the run
+left behind, never on the wording — a case that matches text passes the moment
+somebody rewords the prompt.
+
+**The concern axis.** Every obligation now sits under one of the nine quality
+characteristics of ISO/IEC 25010:2023, plus `cost`, derived through a crosswalk
+from the eighteen `dimension` values rather than authored a second time. The
+dimensions stay: they are the working vocabulary and they name failures an
+evaluation engineer recognises on sight. What the crosswalk adds is something to
+join on — an architect asking for everything about privacy, or cost, or
+reliability, across a whole spec family had nothing before. Stages gain the
+ISO/IEC/IEEE 12207 process they belong to, which is how an obligation's phase is
+derived rather than tagged.
+
+Three concerns are reached by nothing, and are recorded as such rather than
+dropped from the vocabulary: **compatibility**, **interaction capability** and
+**flexibility**. That is the finding. This catalog has nothing to say about
+interoperating with the systems around an agent, nothing about what its
+interface makes hard to get wrong, and nothing about replacing a component
+under it.
+
+**Linter.** The crosswalk must be total over the dimensions, every concern must
+resolve, a concern nothing reaches must be recorded with its reason, and a
+taxonomy error now stops before the case loop — the first proof of the totality
+check crashed inside it and buried the error that explained it. A `not_this`
+written as prose instead of a list produced 512 identical errors naming none of
+them; it now says what shape it wanted.
+
 ## [0.13.0] — 2026-09-12
 
 One obligation, from the same reference implementation, and a version number
