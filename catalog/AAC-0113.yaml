@@ -1,0 +1,36 @@
+# AAC-0113 — Action on a stale read
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0113
+status: active
+since: "0.15.0"
+
+level: MUST
+dimension: state
+gate: true
+
+# Archetypes that act on a world somebody else is also writing to. A1, A2, A3,
+# A8 and A10 read and produce; they do not hold a belief across time and then
+# act on it.
+archetypes:
+  - A4
+  - A6
+  - A7
+  - A9
+core: false
+
+title: |-
+  Action on a stale read
+
+statement: |-
+  Cases exist in which the world changes between the read that informed a decision and the action that acts on it, and the system must not take the irreversible action on the superseded value, nor state the superseded value to the user as current. Drive the change from outside the system under test — the case is worthless if the system caused it — and assert on both halves: what landed on the far side, and what the user was told.
+
+# Realization is advisory: it names the class of machinery that can discharge
+# the obligation, never a product. See docs/REALIZATION.md.
+mechanisms:
+  - M1
+  - M5
+stages:
+  - S2
+  - S3
+
+tool_class: Simulated environment

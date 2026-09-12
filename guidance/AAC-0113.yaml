@@ -1,0 +1,50 @@
+id: AAC-0113
+
+plain: |
+  Between looking something up and acting on it, somebody else may have changed
+  it. The system has to notice before it acts, not after.
+
+why: |
+  Every agent that touches a real business touches records other systems are
+  also writing to: a warehouse ships, a carrier scans, a colleague edits, a
+  scheduled job runs. A read is a statement about the past, and the gap between
+  the read and the action is exactly as long as the model took to think.
+
+  What makes it worth its own case is that the two halves fail separately and a
+  suite usually covers one. The action may be refused by the far system, which
+  is survivable — and the *reply* is composed from the stale read regardless, so
+  the user is told the order has not shipped by a system that has just been
+  refused permission to cancel it. Both sentences trace to the same lookup, and
+  a case that only asserts on the effect passes.
+
+example: |
+  The agent reads an order: pending. The customer asks a clarifying question.
+  The warehouse ships it. The agent cancels.
+
+  Three outcomes, and a suite should know which one it is testing. The order
+  system refuses the cancellation, and the agent has to explain a refusal it did
+  not predict. Or the order system accepts it, and an order that is physically
+  on a van is marked cancelled. Or — the common one — neither matters yet,
+  because the reply was already written from the stale read.
+
+detect: |
+  Drive the change from outside the system under test: a simulated environment
+  that moves the row between the read and the write, a fault injector, or a
+  fixture whose second read differs from its first. A case where the system
+  itself caused the change is testing something else.
+
+  Assert on both halves. What landed at the far end — the effect log, the row's
+  final state — and what the user was told, against what was true when they were
+  told it.
+
+not_this:
+  - id: AAC-0047
+    why: |
+      Idempotency is about the same request arriving twice. This is about one
+      request acting on a value that has since changed — a different question,
+      and a system can be perfectly idempotent and still do this.
+  - id: AAC-0110
+    why: |
+      A claimed action supported by that action's result. Here the claim is
+      about state rather than about an action, and it is wrong before any action
+      is attempted.

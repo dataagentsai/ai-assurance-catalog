@@ -1,6 +1,6 @@
 {
   "report_version": "1.0",
-  "catalog_version": "0.13.0",
+  "catalog_version": "0.14.0",
   "generated_at": "2026-08-16T11:42:08Z",
   "subject": {
     "name": "invoice-classifier",

@@ -12,6 +12,22 @@ ship. A quarter with no changes ships a release note saying so.
 **Phase 1 — remaining crosswalks:** NIST AI RMF, ISO/IEC 42001, EU AI Act.
 OWASP shipped in 0.5.0.
 
+## [0.15.0] — 2026-09-13
+
+**AAC-0113 — Action on a stale read.** Between the read that informed a decision
+and the action that acts on it, somebody else may have changed the record: a
+warehouse ships, a carrier scans, a colleague edits, a scheduled job runs. The
+gap is exactly as long as the model took to think.
+
+It earns its own case because the two halves fail separately and a suite usually
+covers one. The action may be refused by the far system, which is survivable —
+and the *reply* is composed from the stale read regardless, so the user is told
+the order has not shipped by a system that has just been refused permission to
+cancel it. Both sentences trace to the same lookup, and a case asserting only on
+the effect passes. So the obligation asks for both, and asks that the change be
+driven from outside the system under test: a case where the system itself caused
+the change is testing something else.
+
 ## [0.14.0] — 2026-09-12
 
 One obligation, and it came from a reader rather than an audit. Watching a run
