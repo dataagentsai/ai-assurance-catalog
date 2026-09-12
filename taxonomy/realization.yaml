@@ -52,32 +52,45 @@ mechanisms:
       Generated attacks, input mutation, fault injection, fuzzing. Coverage
       grows over time; every production incident should become a new case here.
 
+# WHEN it runs. Each stage also carries the ISO/IEC/IEEE 12207 technical
+# process it belongs to, which is how an obligation's `phase` is derived rather
+# than tagged (Spec Charter, §3). The split falls where the request path does: a
+# check that runs before release is verification; a check that runs against live
+# traffic is operation. S4 is the interesting case and sits on the verification
+# side — it runs in production but it is a gate the release had to pass, and
+# what it asserts was decided before deployment.
 stages:
   - id: S1
     name: Dev loop
+    process: verification
     summary: Run by hand while iterating. Seconds. Nobody but the author sees a failure.
   - id: S2
     name: CI, pre-merge
+    process: verification
     summary: >-
       Every change to prompt, schema, tool definition or model pin. Minutes,
       cheap and deterministic — mock the model where the test is about plumbing.
   - id: S3
     name: Pre-release eval
+    process: verification
     summary: >-
       Full offline dataset against the release candidate. Real model calls, real
       cost. This is where release gates live.
   - id: S4
     name: Runtime gateway
+    process: verification
     summary: >-
       Inline on the live request path, blocking. A failure is seen by the end
       user as a refusal, redaction or fallback.
   - id: S5
     name: Production online eval
+    process: operation
     summary: >-
       Asynchronous scoring of sampled live traces. Raises an alert, never
       blocks. The only stage that sees your real input distribution.
   - id: S6
     name: Scheduled regression
+    process: operation
     summary: >-
       Periodic re-run of frozen cases to catch provider-side model drift and
       corpus staleness. Nothing changed on your side — that is the point.
@@ -123,7 +136,9 @@ approaches:
       ground truth every model-graded mechanism is calibrated against.
 
 # Dimensions are the quality attribute under test. Used for filtering and for
-# the coverage matrix; not part of the identity of a case.
+# the coverage matrix; not part of the identity of a case. Each one is a facet
+# under a `concern` — the family-wide axis — through the crosswalk in
+# taxonomy/concerns.yaml, which the linter requires to be total.
 dimensions:
   - correctness
   - grounding

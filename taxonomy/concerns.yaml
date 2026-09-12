@@ -1,0 +1,185 @@
+# The concern axis: which kind of quality an obligation is about.
+#
+# Cited, not invented. The nine quality characteristics of ISO/IEC 25010:2023,
+# plus `cost` — the one addition, because 25010 has no characteristic for what a
+# system spends to produce its answer. For conventional software that is a
+# deployment question; for an agent it is a per-request property that moves with
+# the model, the prompt and the iteration count, and it is the property most
+# likely to fail silently.
+#
+# ## Why this sits beside `dimension` rather than replacing it
+#
+# The eighteen `dimension` values are this catalog's own, and they are good at
+# what they do: `grounding` and `trajectory` name failures an evaluation engineer
+# recognises on sight, and no ISO characteristic does. But they are ours, which
+# means a reader outside this project has to accept our taxonomy before they can
+# accept an obligation, and an architect trying to answer "show me everything
+# about privacy across all six specs" has nothing to join on.
+#
+# So `dimension` stays the working vocabulary and becomes a **facet under a
+# concern**, through the crosswalk below. An obligation's concern is therefore
+# **derived** — not authored a second time, and not able to disagree with the
+# dimension it already carries.
+#
+# ## What the crosswalk is allowed to be
+#
+# One dimension maps to exactly one concern. A dimension that honestly belonged
+# to two concerns would be two dimensions, and splitting it is the correct fix —
+# not widening the crosswalk until it stops constraining anything.
+
+version: "0.1.0"
+
+# The vocabulary. `iso` names the 25010:2023 characteristic; the slug is what
+# artifacts carry. Shared with the rest of the spec family — see the Spec
+# Charter, §3 — which is why the spelling is checked and not merely documented.
+concerns:
+  - id: functional-suitability
+    iso: Functional suitability
+    summary: >-
+      Does it do the right thing. The default concern, and the one an NFR is
+      defined against: a statement whose concern is anything else is an NFR.
+  - id: performance-efficiency
+    iso: Performance efficiency
+    summary: Time behaviour, resource use and capacity under a stated load.
+  - id: compatibility
+    iso: Compatibility
+    summary: >-
+      Co-existence and interoperability with the systems around it. **No
+      obligation carries it today** — see `unused` below.
+  - id: interaction-capability
+    iso: Interaction capability
+    summary: >-
+      What the interface makes easy, recognisable and hard to get wrong. **No
+      obligation carries it today.**
+  - id: reliability
+    iso: Reliability
+    summary: Faultlessness, availability, fault tolerance and recoverability.
+  - id: security
+    iso: Security
+    summary: >-
+      Confidentiality, integrity, non-repudiation, accountability, authenticity
+      and resistance to attack.
+  - id: maintainability
+    iso: Maintainability
+    summary: >-
+      Modularity, reusability, analysability, modifiability, testability — what
+      makes the next change safe rather than this one correct.
+  - id: flexibility
+    iso: Flexibility
+    summary: >-
+      Adaptability, scalability, replaceability. **No obligation carries it
+      today.**
+  - id: safety
+    iso: Safety
+    summary: >-
+      Freedom from unacceptable risk to people, property or environment —
+      operational constraint, fail-safe behaviour, bounded blast radius.
+  - id: cost
+    iso: null
+    summary: >-
+      What a run spends. The addition; see the header for why it is not folded
+      into performance efficiency.
+
+# dimension → concern, with the 25010 sub-characteristic it narrows to. A
+# `facet` of null means the dimension spans the characteristic rather than
+# narrowing it, and inventing a narrower name would be false precision.
+crosswalk:
+  - dimension: correctness
+    concern: functional-suitability
+    facet: functional correctness
+  - dimension: grounding
+    concern: functional-suitability
+    facet: functional correctness
+    note: >-
+      An ungrounded answer is a wrong answer that happens to be fluent. The
+      distinctive part — that it is wrong *about a source it was given* — is
+      what the dimension keeps and the characteristic cannot.
+  - dimension: format
+    concern: functional-suitability
+    facet: functional correctness
+  - dimension: instruction
+    concern: functional-suitability
+    facet: functional appropriateness
+  - dimension: tool-use
+    concern: functional-suitability
+    facet: functional appropriateness
+  - dimension: trajectory
+    concern: functional-suitability
+    facet: functional appropriateness
+    note: >-
+      The right answer reached by a route nobody would sanction is
+      inappropriate, not incorrect — which is exactly the distinction 25010
+      draws between its two sub-characteristics.
+  - dimension: state
+    concern: functional-suitability
+    facet: functional completeness
+    note: >-
+      A handoff payload missing half the conversation, or a memory that lost the
+      correction, is an incomplete function rather than an unreliable one.
+  - dimension: robustness
+    concern: reliability
+    facet: fault tolerance
+  - dimension: reliability
+    concern: reliability
+    facet: availability
+  - dimension: determinism
+    concern: maintainability
+    facet: testability
+    note: >-
+      Reproducibility is not a property the user experiences; it is what makes
+      every other obligation demonstrable. Bounded variance and replayable
+      trajectories exist so a verdict can be trusted twice.
+  - dimension: drift
+    concern: maintainability
+    facet: modifiability
+    note: >-
+      Pinning, rollback, regression against the last release and scheduled
+      re-runs are all one thing: the next change is safe to make. That is
+      modifiability, not reliability.
+  - dimension: observability
+    concern: maintainability
+    facet: analysability
+  - dimension: latency
+    concern: performance-efficiency
+    facet: time behaviour
+  - dimension: privacy
+    concern: security
+    facet: confidentiality
+  - dimension: security
+    concern: security
+    facet: resistance
+  - dimension: safety
+    concern: safety
+    facet: null
+  - dimension: oversight
+    concern: safety
+    facet: operational constraint
+    note: >-
+      Human approval before an irreversible action is a constraint on
+      operation — the same shape as an interlock, and read that way by anyone
+      coming from a safety standard.
+  - dimension: cost
+    concern: cost
+    facet: null
+
+# Concerns no obligation reaches. Recorded rather than removed from the
+# vocabulary, because the gap is the finding: this catalog has nothing to say
+# about interoperating with the systems around an agent, nothing about what its
+# interface makes hard to get wrong, and nothing about replacing a component
+# under it. Each is a real assurance question, and each is absent.
+unused:
+  - concern: compatibility
+    because: >-
+      Tool and model interfaces are treated as given. An obligation about
+      surviving a provider's schema change, or about two agents sharing a
+      protocol, would land here.
+  - concern: interaction-capability
+    because: >-
+      The catalog is written about a system, not about the person using it.
+      Over-refusal (AAC-0020) is the closest thing here and is filed under
+      instruction adherence, which is where it belongs.
+  - concern: flexibility
+    because: >-
+      Scalability and replaceability are architecture questions, and the harness
+      catalog holds them. Whether that is the right split is an open question,
+      not a settled one.

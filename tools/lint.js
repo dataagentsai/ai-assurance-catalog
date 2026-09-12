@@ -28,10 +28,56 @@ const validate = ajv.compile(schema);
 
 const arch = load("taxonomy/archetypes.yaml");
 const real = load("taxonomy/realization.yaml");
+const conc = load("taxonomy/concerns.yaml");
 const ARCH_IDS = new Set(arch.archetypes.map((a) => a.id));
 const DIMS = new Set(real.dimensions);
 const MECH = new Set(real.mechanisms.map((m) => m.id));
 const STAGES = new Set(real.stages.map((s) => s.id));
+const CONCERNS = new Set(conc.concerns.map((c) => c.id));
+/*
+ * dimension -> concern. An obligation's concern is DERIVED through this map,
+ * never authored, so it cannot disagree with the dimension already carried.
+ * The map must be total over the dimension vocabulary — see the check below.
+ */
+const CONCERN_OF = new Map(conc.crosswalk.map((r) => [r.dimension, r]));
+
+/*
+ * The concern axis is family-wide (Spec Charter, §3): the same ten slugs appear
+ * in the harness catalog, in an AOAS and on a world's scenarios, and the
+ * Concern View joins all of them on this string. So the vocabulary is checked
+ * for shape here, where a typo would otherwise turn into a silently missing row
+ * on a page generated somewhere else.
+ */
+for (const c of conc.concerns) {
+  if (!/^[a-z]+(-[a-z]+)*$/.test(c.id)) err("taxonomy/concerns.yaml", `concern "${c.id}" is not a slug`);
+}
+for (const d of DIMS) {
+  if (!CONCERN_OF.has(d)) {
+    err("taxonomy/concerns.yaml", `dimension "${d}" has no concern — the crosswalk must be total`);
+  }
+}
+for (const [d, row] of CONCERN_OF) {
+  if (!DIMS.has(d)) err("taxonomy/concerns.yaml", `crosswalk names unknown dimension "${d}"`);
+  if (!CONCERNS.has(row.concern)) err("taxonomy/concerns.yaml", `"${d}" maps to unknown concern "${row.concern}"`);
+}
+/*
+ * `unused` is an admission, and an admission that has stopped being true is
+ * worse than none — it would keep reporting a gap the catalog has since filled.
+ */
+const REACHED = new Set();
+for (const u of conc.unused || []) {
+  if (!CONCERNS.has(u.concern)) err("taxonomy/concerns.yaml", `unused names unknown concern "${u.concern}"`);
+}
+
+/*
+ * Every stage carries the 12207 process it belongs to, because that is how an
+ * obligation's phase is derived. A stage with none would leave its obligations
+ * out of the generation brief entirely.
+ */
+const PROCESSES = new Set(["requirements", "architecture", "design", "implementation", "verification", "operation"]);
+for (const s of real.stages) {
+  if (!PROCESSES.has(s.process)) err("taxonomy/realization.yaml", `stage ${s.id} has no 12207 process`);
+}
 
 /*
  * Products that must never appear in a case's normative text. Naming a vendor
@@ -47,6 +93,18 @@ const PRODUCTS = [
   "crewai", "pytest", "vitest", "label studio", "argilla",
 ];
 
+/*
+ * A taxonomy error stops here rather than being collected. Every check over the
+ * cases reads these maps, so continuing on a broken vocabulary produces a crash
+ * inside the case loop and buries the one error that explains it — which is what
+ * happened the first time the totality check was proven by removing a row.
+ */
+if (errors.length) {
+  for (const e of errors) console.error(`  ERROR ${e}`);
+  console.error(`\n${errors.length} taxonomy error(s) — the case checks cannot run against a broken vocabulary`);
+  process.exit(1);
+}
+
 const files = fs.readdirSync(path.join(ROOT, "catalog")).filter((f) => f.endsWith(".yaml")).sort();
 const byId = new Map();
 
@@ -61,6 +119,7 @@ for (const f of files) {
   if (byId.has(doc.id)) err(f, `duplicate id, also in ${byId.get(doc.id)._file}`);
 
   if (!DIMS.has(doc.dimension)) err(f, `unknown dimension "${doc.dimension}"`);
+  else REACHED.add(CONCERN_OF.get(doc.dimension).concern);
   for (const a of doc.archetypes) if (!ARCH_IDS.has(a)) err(f, `unknown archetype "${a}"`);
   for (const m of doc.mechanisms) if (!MECH.has(m)) err(f, `unknown mechanism "${m}"`);
   for (const s of doc.stages) if (!STAGES.has(s)) err(f, `unknown stage "${s}"`);
@@ -221,11 +280,23 @@ if (fs.existsSync(guideDir)) {
   }
 }
 
+for (const u of conc.unused || []) {
+  if (REACHED.has(u.concern)) {
+    err("taxonomy/concerns.yaml", `"${u.concern}" is listed unused but ${[...byId.values()].filter((d) => CONCERN_OF.get(d.dimension)?.concern === u.concern).length} case(s) reach it`);
+  }
+}
+for (const c of CONCERNS) {
+  if (!REACHED.has(c) && !(conc.unused || []).some((u) => u.concern === c)) {
+    err("taxonomy/concerns.yaml", `no case reaches "${c}" and it is not recorded under unused`);
+  }
+}
+
 const gates = [...byId.values()].filter((d) => d.gate).length;
 const musts = [...byId.values()].filter((d) => d.level === "MUST").length;
 const core = [...byId.values()].filter((d) => d.core).length;
 
 console.log(`catalog: ${byId.size} cases  (${core} core, ${musts} MUST, ${gates} gates)`);
+console.log(`concerns: ${REACHED.size} of ${CONCERNS.size} reached, ${(conc.unused || []).length} recorded unused`);
 if (guided) console.log(`guidance: ${guided} explained, ${byId.size - guided} not yet`);
 if (patterns.size) {
   console.log(`patterns: ${patterns.size} informative`);
