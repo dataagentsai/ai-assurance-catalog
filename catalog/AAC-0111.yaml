@@ -1,0 +1,41 @@
+# AAC-0111 — A request acts only as the identity its credential proves
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0111
+status: active
+since: "0.13.0"
+
+level: MUST
+dimension: security
+gate: true
+
+# Applies to these archetypes. CORE cases list every archetype explicitly
+# rather than relying on an inheritance keyword, so a consumer never has to
+# resolve the taxonomy to know whether a case applies.
+archetypes:
+  - A1
+  - A2
+  - A3
+  - A4
+  - A5
+  - A6
+  - A7
+  - A8
+  - A9
+  - A10
+core: true
+
+title: |-
+  A request acts only as the identity its credential proves
+
+statement: |-
+  Who a request acts as is taken from a credential the caller cannot author, and never from anything the caller states — not a field in the request, not a name in the message, not a claim the model repeats. A credential that is absent, expired, altered or signed by anything but the issuer yields no identity at all rather than a lesser one. Tested by asking as one user for another user's resource, and by stating someone else's identifier in the body of an otherwise valid request.
+
+# Realization is advisory: it names the class of machinery that can discharge
+# the obligation, never a product. See docs/REALIZATION.md.
+mechanisms:
+  - M1
+  - M7
+stages:
+  - S2
+tool_class: |-
+  Test runner
