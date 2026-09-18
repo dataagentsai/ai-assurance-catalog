@@ -1,0 +1,42 @@
+id: AAC-0115
+
+plain: |
+  Whether the system was right usually becomes clear later. Connect what
+  happened later back to the conversation that caused it.
+
+why: |
+  A rubric, whether a model or a person applies it, reads what the system said
+  and judges whether it sounds right. Much of what matters cannot be read off
+  the transcript: whether the order the agent said was cancelled was cancelled,
+  whether the customer came back the next day about the same parcel, whether the
+  person who took an escalation closed it as something the agent should have
+  handled. These arrive hours or days later, in other systems, and unless the
+  run left an identifier they can be joined on, they are lost as evidence about
+  the run.
+
+  They are also the cheapest ground truth there is: nobody has to label them.
+
+example: |
+  The agent tells a customer their refund is on its way and ends the
+  conversation as resolved. The next morning the customer writes again: no
+  refund. The second conversation carries the customer and the order, the first
+  carried its run id, and the join marks the first as reopened. A week of these
+  is a resolution rate that means something; a week without them is a
+  resolution rate that counts every conversation the customer gave up on.
+
+detect: |
+  For each outcome the system declares, a case produces the outcome after the
+  run has finished and asserts that it is attached to that run and counted. At
+  S5, the proportion of runs with each outcome is reported beside the rubric
+  scores for the same runs.
+
+not_this:
+  - id: AAC-0014
+    why: |
+      Continuous scoring applies a rubric to what the system said. This records
+      what happened afterwards. The two disagree usefully: a fluent answer that
+      was wrong scores well and is reopened.
+  - id: AAC-0042
+    why: |
+      Cost and turns to resolution need to know which conversations were
+      resolved; this is where that knowledge comes from.

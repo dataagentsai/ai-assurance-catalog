@@ -1,6 +1,6 @@
 {
   "report_version": "1.0",
-  "catalog_version": "0.14.0",
+  "catalog_version": "0.16.0",
   "generated_at": "2026-08-16T11:42:08Z",
   "subject": {
     "name": "invoice-classifier",
@@ -584,12 +584,20 @@
     {
       "case": "AAC-0111",
       "status": "not-covered"
+    },
+    {
+      "case": "AAC-0114",
+      "status": "not-covered"
+    },
+    {
+      "case": "AAC-0116",
+      "status": "not-covered"
     }
   ],
   "summary": {
-    "applicable": 44,
+    "applicable": 46,
     "covered": 28,
-    "not_covered": 9,
+    "not_covered": 11,
     "accepted_risk": 4,
     "not_applicable": 3,
     "failing": 2,

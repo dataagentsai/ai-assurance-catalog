@@ -1,0 +1,46 @@
+id: AAC-0114
+
+plain: |
+  Count how the system's work ends — answered, refused, handed to a person,
+  failed — and notice when those numbers move, before a user does.
+
+why: |
+  The failures that matter most in a deployed AI system are the ones every
+  request survives. A prompt edit makes one rule refuse a whole class of
+  legitimate requests; a model update starts handing twice as many conversations
+  to a person; a tool begins returning empty results. Each request completes,
+  each response is well formed, and the error rate stays flat. The only place
+  the failure is visible is in a rate, and only against what that rate usually
+  is.
+
+  Traces cannot carry this on their own. A trace answers what happened in one
+  run; a rate is an aggregate over many, and computing it from a trace store
+  means sampling, which makes it wrong by an amount nobody can bound, or
+  scanning, which nobody schedules every minute.
+
+example: |
+  A support agent escalates about one conversation in twelve. A release changes
+  a sentence in its instruction, and the next morning it escalates one in three.
+  Nothing errored. The people on the desk notice first, by being busy.
+
+  With the rate watched against last week's, the alert fires within the hour,
+  names the rule that is firing, and the release that preceded it.
+
+detect: |
+  The rates exist as metrics, with labels drawn from closed sets (a rule
+  identifier, an outcome kind) and never from users, orders or free text. A
+  baseline is declared for each, and an alert rule compares the current window
+  with it. The test is that a deliberate shift — a replayed day with one rule
+  forced to fire — raises the alert.
+
+not_this:
+  - id: AAC-0014
+    why: |
+      Scoring sampled traffic on a rubric judges the quality of individual
+      answers, slowly and with noise. This watches counts every run produces,
+      exactly and within minutes; it catches a system that has stopped doing
+      its job, not one that has started doing it slightly worse.
+  - id: AAC-0079
+    why: |
+      Failure being loud is about errors and runs that never complete. Here
+      nothing errors; the system completes, and completes wrongly in aggregate.

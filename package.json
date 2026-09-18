@@ -1,6 +1,6 @@
 {
   "name": "ai-assurance-catalog",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "Test obligations for AI applications, by architecture archetype. A catalog, not a framework.",
   "license": "Apache-2.0",
   "private": true,

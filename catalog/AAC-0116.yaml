@@ -1,0 +1,35 @@
+# AAC-0116 — A synthetic run exercises the deployed system on a schedule
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0116
+status: active
+since: "0.16.0"
+
+level: SHOULD
+dimension: reliability
+gate: false
+
+archetypes:
+  - A1
+  - A2
+  - A3
+  - A4
+  - A5
+  - A6
+  - A7
+  - A8
+  - A9
+  - A10
+core: true
+
+title: |-
+  A synthetic run exercises the deployed system on a schedule
+
+statement: |-
+  A small set of frozen cases runs through the deployed system — its own entrypoint, identity, gateway and tools, not a copy of them — on a schedule, as a test identity whose effects are isolated from real users' data, and a failed case alerts a person. Monitoring built on real traffic reads a broken deployment as a quiet hour; this is the check that does not wait for a user to find it.
+
+mechanisms:
+  - M1
+  - M5
+stages:
+  - S6
+tool_class: Simulated environment

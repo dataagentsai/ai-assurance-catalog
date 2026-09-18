@@ -12,6 +12,25 @@ ship. A quarter with no changes ships a release note saying so.
 **Phase 1 — remaining crosswalks:** NIST AI RMF, ISO/IEC 42001, EU AI Act.
 OWASP shipped in 0.5.0.
 
+## [0.16.0] — 2026-09-19
+
+**Watching a deployed system: three cases for S5 and S6.** The stages were
+declared from the start — online eval, scheduled regression — and the cases in
+them judged answers, not whether the system was working. A support agent under
+production monitoring showed what was missing: every request can succeed while
+the system fails, and nothing said so.
+
+- **AAC-0114 — Behaviour rates are watched in production against a baseline.**
+  How requests end, refusals and escalations by rule, failures by kind, cost per
+  unit of work: computed continuously, compared with a declared baseline, and
+  alerted on. A system that refuses everything answers each request correctly.
+- **AAC-0115 — Later outcomes are joined to the run that produced them.** The
+  user coming back, an action reversed, an escalation closed as unnecessary. A
+  rubric reads what the system said; only the outcome says whether it was right.
+- **AAC-0116 — A synthetic run exercises the deployed system on a schedule.**
+  As a test identity isolated from real data. Monitoring built on traffic reads
+  a broken deployment as a quiet hour.
+
 ## [0.15.0] — 2026-09-13
 
 **AAC-0113 — Action on a stale read.** Between the read that informed a decision

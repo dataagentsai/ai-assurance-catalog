@@ -1,0 +1,44 @@
+id: AAC-0116
+
+plain: |
+  Every few minutes, have a pretend user try the real system end to end, and
+  raise the alarm if it fails.
+
+why: |
+  Monitoring that reads real traffic cannot tell a broken system from an idle
+  one. A certificate expires overnight, a gateway key is rotated, an identity
+  provider's client changes, a dependency's schema moves — and the first request
+  to find it is a real user's, at whatever hour they arrive. A synthetic run
+  finds it on a schedule the operator chose.
+
+  It must be the deployed system, not a copy: the value is in exercising the
+  identity, gateway, network and configuration that the test environment does
+  not share. That is why it needs an identity of its own whose effects cannot
+  touch a real user's records, and whose runs are marked so they are left out of
+  every business number.
+
+example: |
+  Every ten minutes a test customer signs in, asks for the status of an order in
+  a namespace only it owns, and asks to cancel another. The cases assert the
+  answer and the effect, as they would in a simulation. At 03:10 the gateway's
+  key is rotated and not updated; at 03:20 the synthetic run fails and pages,
+  hours before the first customer would have.
+
+detect: |
+  The schedule, the cases and the identity are declared. A deliberate break of
+  one dependency in a staging deployment fails the synthetic run within one
+  period. Synthetic runs are recognisable in the record and excluded from the
+  rates in AAC-0114.
+
+not_this:
+  - id: AAC-0016
+    why: |
+      A scheduled re-run against unchanged inputs catches the model drifting
+      while nothing on your side changed, and can run anywhere. This catches the
+      deployment being broken, and only means anything run against the
+      deployment.
+  - id: AAC-0079
+    why: |
+      A dead-man's switch detects a run that never happened in a system that is
+      supposed to run on its own. This supplies the runs, for a system that only
+      runs when somebody asks.

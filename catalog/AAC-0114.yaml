@@ -1,0 +1,37 @@
+# AAC-0114 — Behaviour rates are watched in production against a baseline
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0114
+status: active
+since: "0.16.0"
+
+level: SHOULD
+dimension: observability
+gate: false
+
+archetypes:
+  - A1
+  - A2
+  - A3
+  - A4
+  - A5
+  - A6
+  - A7
+  - A8
+  - A9
+  - A10
+core: true
+
+title: |-
+  Behaviour rates are watched in production against a baseline
+
+statement: |-
+  The rates that say whether the system is doing its job — how requests end, refusals and escalations by the rule that decided them, tool and model failures by kind, runs stopped by a limit, cost per unit of work — are computed continuously from production and compared with a declared baseline, and a shift beyond a declared bound alerts a person before a user reports it. Every request can succeed while the system fails: a system that refuses everything answers each request correctly.
+
+# Realization is advisory: it names the class of machinery that can discharge
+# the obligation, never a product. See docs/REALIZATION.md.
+mechanisms:
+  - M2
+stages:
+  - S5
+tool_class: |-
+  Metrics store and alerting

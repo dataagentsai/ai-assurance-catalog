@@ -1,0 +1,33 @@
+# AAC-0115 — Later outcomes are joined to the run that produced them
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0115
+status: active
+since: "0.16.0"
+
+level: SHOULD
+dimension: correctness
+gate: false
+
+# Archetypes whose result is judged by what happens afterwards: a conversation
+# that resumes, an action somebody reverses. A system that only produces text for
+# a caller to use has no later signal of its own to join.
+archetypes:
+  - A4
+  - A6
+  - A7
+  - A9
+core: false
+
+title: |-
+  Later outcomes are joined to the run that produced them
+
+statement: |-
+  Signals that arrive after a run — the user returning about the same matter, an action reversed or compensated, an escalation a person closed as unnecessary, explicit feedback — are attached to the run that produced them through an identifier the run recorded, and are counted beside the rubric scores. A rubric reads what the system said; only the outcome says whether it was right.
+
+mechanisms:
+  - M2
+  - M1
+stages:
+  - S5
+tool_class: |-
+  Eval platform
