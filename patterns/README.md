@@ -52,6 +52,32 @@ The first pass already found two:
 Both are tracked in [CHANGELOG.md](../CHANGELOG.md). Closing a gap means writing
 a case and adding its identifier here — after which the gap note is removed.
 
+## A pattern can say how it shows: `signal`
+
+Since 0.16.0 a pattern may carry a `signal` — what a monitor reads to see it in a
+running system before the symptom does:
+
+```yaml
+signal:
+  level: turn          # turn · conversation · window
+  reads: [tool name, tool arguments, tool outcome]
+  detect: A write tool is called again with the same arguments after it was refused.
+  threshold: any
+  severity: ticket     # page · ticket · trend
+```
+
+`turn` signals are decidable from one unit of work's record (AHC-0114),
+`conversation` ones from the units of one session, and `window` ones are rates
+against the system's own baseline, for whatever evaluates alert rules. The
+signal is as informative as the pattern: a starting rule and a starting
+threshold, to be tuned, never a conformance requirement.
+
+This is what turns the directory into a rule catalog a monitor can implement:
+[patterns/operations.yaml](operations.yaml) holds the ones that only exist in
+production — contradictions between a reply and a tool result, writes retried
+after a refusal, a user repeating themselves, a rule that starts refusing
+everything, a deployment gone quiet.
+
 ## Scope, and an honest tension
 
 [docs/NON-GOALS.md](../docs/NON-GOALS.md) commits this project to authoring no

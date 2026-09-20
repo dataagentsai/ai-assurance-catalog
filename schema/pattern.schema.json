@@ -50,6 +50,30 @@
             "type": "string",
             "minLength": 30,
             "description": "Required when caught_by is empty. States what obligation is missing and why it has not been written yet."
+          },
+          "signal": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["level", "reads", "detect", "severity"],
+            "description": "How the pattern shows in a running system's telemetry — what a monitor reads to see it before the symptom does. INFORMATIVE like the pattern: a starting rule and a starting threshold, to be tuned against the system's own baseline.",
+            "properties": {
+              "level": {
+                "enum": ["turn", "conversation", "window"],
+                "description": "turn: decidable from one unit of work's record. conversation: needs the units of one session. window: a rate or quantile over many units, against a baseline."
+              },
+              "reads": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string" },
+                "description": "The record fields or metrics it reads. OpenTelemetry GenAI names where they exist; otherwise the AHC-0114 record group that holds it."
+              },
+              "detect": { "type": "string", "minLength": 20, "description": "The rule, in words precise enough to implement." },
+              "threshold": { "type": "string", "description": "A starting threshold, where the rule has one." },
+              "severity": {
+                "enum": ["page", "ticket", "trend"],
+                "description": "page: certain and wrong now. ticket: read this week. trend: meaningful only as a rate."
+              }
+            }
           }
         },
         "allOf": [

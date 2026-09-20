@@ -1,0 +1,797 @@
+# INFORMATIVE. Patterns are diagnoses, not obligations. Nothing here is required
+# for conformance — see patterns/README.md.
+#
+# Signals in production. Each pattern here carries a `signal`: the telemetry a
+# monitor reads to see it before the symptom does, the rule, a starting
+# threshold and how loudly to say so. Turn-level signals are decidable from one
+# unit of work's record (AHC-0114); conversation-level ones from the units of one
+# session; window-level ones are rates against the system's own baseline, and
+# belong in whatever evaluates alert rules.
+#
+# These are starting rules. Every threshold is a first guess to be tuned against
+# a real baseline, and a rule that pages and is wrong is worse than no rule.
+
+domain: operations
+version: "0.16.0"
+
+patterns:
+  # ---------------------------------------------------------------- tool use
+
+  - id: AACP-0019
+    name: Retry after the far end said no
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      The same write appears two or three times in one trace, each refused, and
+      the reply says it could not be done — or, worse, that it was.
+    mechanism: >-
+      A refusal from the system that owns the action (the order has shipped, the
+      window has closed) is correct and final, but it arrives as a tool result
+      the model reads as an obstacle. It retries with the same arguments, or
+      trivially different ones, because nothing tells it a refusal is not an
+      error.
+    caught_by: [AAC-0053, AAC-0047]
+    signal:
+      level: turn
+      reads: [tool name, tool arguments, tool outcome]
+      detect: >-
+        A write tool is called again, with the same arguments, after an earlier
+        call in the same unit of work was refused.
+      threshold: any
+      severity: ticket
+
+  - id: AACP-0020
+    name: Retry storm on a failing dependency
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      One dependency degrades and the system's traffic to it multiplies, so the
+      dependency degrades further and the bill rises with it.
+    mechanism: >-
+      Each layer retries on its own — the SDK, the harness, the model choosing
+      to call again — and the retries multiply rather than add. A dependency at
+      half capacity receives several times its normal load exactly when it can
+      least serve it.
+    caught_by: [AAC-0053, AAC-0009]
+    signal:
+      level: window
+      reads: [agent.tool.calls by tool and outcome, agent.turns]
+      detect: >-
+        For one tool, the error share of calls rises and calls per unit of work
+        rise with it.
+      threshold: error share above 10% and calls per unit 1.5x the weekly baseline, over 10 minutes
+      severity: page
+
+  - id: AACP-0021
+    name: Write without a read
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      Irreversible actions taken on records the system never looked at in that
+      conversation — cancellations of orders it had not fetched, refunds against
+      totals it had not read.
+    mechanism: >-
+      The model has an identifier from the user's words and the write tool
+      accepts one, so it acts. Every check that depends on the record's current
+      state — can this still be cancelled, is this the user's — is then left to
+      the far end, and the reply is composed without knowing what was there.
+    caught_by: [AAC-0113, AAC-0056]
+    signal:
+      level: turn
+      reads: [tool name, tool arguments, side-effect class]
+      detect: >-
+        An irreversible or reversible write names an entity that no read in the
+        same unit of work returned.
+      threshold: any
+      severity: ticket
+
+  - id: AACP-0022
+    name: Invented argument
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      Tool calls that fail with not-found, or succeed on the wrong record, for
+      identifiers the user never gave.
+    mechanism: >-
+      Asked to act on "my last order", the model fills the identifier with a
+      plausible one — from an example in its instructions, from an earlier
+      conversation's shape, from nothing — rather than reading it.
+    caught_by: [AAC-0052]
+    signal:
+      level: turn
+      reads: [input, tool arguments, tool results]
+      detect: >-
+        A tool is called with an identifier that appears neither in the user's
+        words nor in any earlier tool result in the unit of work.
+      threshold: any
+      severity: ticket
+
+  - id: AACP-0023
+    name: A tool that is not offered
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      Unknown-tool errors in the trace, often after a model or prompt change,
+      for tools with plausible names that do not exist.
+    mechanism: >-
+      The model has seen tool names in training or in an old prompt and asks for
+      one the surface does not offer. A harness that raises instead of returning
+      the refusal as a result ends the run.
+    caught_by: [AAC-0051]
+    signal:
+      level: window
+      reads: [agent.tool.calls with outcome unknown]
+      detect: Requests for tools not on the surface, as a share of tool calls.
+      threshold: above 1% over an hour
+      severity: ticket
+
+  - id: AACP-0024
+    name: Arguments that fail their schema, again
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      Validation errors on tool arguments that repeat across units of work for
+      the same tool, rising after a tool's schema changes.
+    mechanism: >-
+      A schema changed and the description the model reads did not, or the model
+      cannot produce the format asked for. Each call fails validation, the model
+      tries again, and the unit of work spends its budget learning a schema.
+    caught_by: [AAC-0052]
+    signal:
+      level: window
+      reads: [agent.tool.calls by tool with outcome error, the validation error]
+      detect: Argument validation failures per tool as a share of that tool's calls.
+      threshold: above 5% over an hour
+      severity: ticket
+
+  - id: AACP-0025
+    name: An answer built on a truncated result
+    status: active
+    since: "0.16.0"
+    archetypes: [A2, A6, A7, A9]
+    symptom: >-
+      Confident answers about "all" of something — every order, every row —
+      that miss the part a result bound cut off.
+    mechanism: >-
+      A tool result is truncated to fit the context, correctly, and the marker
+      saying so is read as the end of the data rather than the end of what fits.
+    caught_by: [AAC-0105]
+    signal:
+      level: turn
+      reads: [agent.tool.truncated, turn result]
+      detect: A unit of work completes after a truncated tool result without asking for more.
+      threshold: any, as a rate
+      severity: trend
+
+  - id: AACP-0026
+    name: A dead tool on the surface
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      Tool definitions that cost context on every call and are never used, or
+      used only by mistake.
+    mechanism: >-
+      Tools are added for a case and never removed. Each is a description the
+      model reads on every call and a choice it can make wrongly.
+    caught_by: [AAC-0103, AAC-0051]
+    signal:
+      level: window
+      reads: [agent.tools.count, agent.tool.calls by tool]
+      detect: A tool offered on the surface with no successful call in a week of traffic.
+      threshold: zero calls in 7 days with at least 500 units of work
+      severity: trend
+
+  - id: AACP-0027
+    name: Tool latency drift
+    status: active
+    since: "0.16.0"
+    archetypes: [A2, A6, A7, A9]
+    symptom: >-
+      End-to-end latency climbs with no change in the system, and the model
+      calls are as fast as ever.
+    mechanism: >-
+      A dependency behind a tool slows — an index grows, a region fails over —
+      and every unit of work that touches it waits. Model latency is watched,
+      tool latency is not, so the cause is looked for in the wrong place.
+    caught_by: [AAC-0007]
+    signal:
+      level: window
+      reads: [agent.tool.duration by tool]
+      detect: A tool's p95 duration against its own weekly baseline.
+      threshold: p95 above 2x baseline for 15 minutes
+      severity: ticket
+
+  # ------------------------------------------------------------------ answers
+
+  - id: AACP-0028
+    name: Reply contradicts a tool result
+    status: active
+    since: "0.16.0"
+    archetypes: [A2, A4, A6, A7]
+    symptom: >-
+      Users told something the system's own lookup said was otherwise: an order
+      reported shipped that the store said was pending.
+    mechanism: >-
+      The model composes from its reading of the conversation rather than the
+      result, or from a result earlier in the conversation that a later one
+      superseded. The trace holds both the truth and the contradiction, and
+      nothing compares them.
+    caught_by: [AAC-0110, AAC-0113]
+    signal:
+      level: turn
+      reads: [reply, tool results]
+      detect: >-
+        The reply names an entity and a state, and the last tool result for that
+        entity in the unit of work gave a different state.
+      threshold: any
+      severity: page
+
+  - id: AACP-0029
+    name: A claimed action without its effect
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      Users told something was cancelled, refunded or booked, and nothing
+      happened. Found when they come back.
+    mechanism: >-
+      The model writes the sentence that usually follows the action, whether or
+      not the action was taken or succeeded. A refused or failed write reads
+      much like a successful one in a transcript.
+    caught_by: [AAC-0110]
+    signal:
+      level: turn
+      reads: [reply, tool name, tool outcome]
+      detect: >-
+        The reply states an action as done and no call to the tool that does it
+        succeeded in the unit of work.
+      threshold: any
+      severity: page
+
+  - id: AACP-0030
+    name: An identifier nobody gave
+    status: active
+    since: "0.16.0"
+    archetypes: [A2, A4, A6, A7]
+    symptom: >-
+      Replies that cite order numbers, reference codes or amounts that exist
+      nowhere in the system.
+    mechanism: >-
+      Specifics are the most plausible part of a fluent answer and the least
+      checked. A number that appears in no input and no result was generated.
+    caught_by: [AAC-0110, AAC-0024]
+    signal:
+      level: turn
+      reads: [input, reply, tool results]
+      detect: >-
+        The reply contains an identifier of a declared shape that appears
+        neither in the user's words nor in any tool result of the unit of work.
+      threshold: any
+      severity: ticket
+
+  - id: AACP-0031
+    name: Internal text in a reply
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A4, A6, A7]
+    symptom: >-
+      Users shown tool names, JSON, stack traces or fragments of the
+      instructions.
+    mechanism: >-
+      Tool results and errors are placed in the context verbatim, and the model
+      echoes what it was shown. An error path that returns the exception's text
+      puts it one step from the user.
+    caught_by: [AAC-0106, AAC-0002]
+    signal:
+      level: turn
+      reads: [reply, the surface's tool names]
+      detect: >-
+        The reply contains a tool's name, a JSON object, a stack trace or a
+        known sentence of the standing instruction.
+      threshold: any
+      severity: ticket
+
+  - id: AACP-0032
+    name: Asks for what it was already given
+    status: active
+    since: "0.16.0"
+    archetypes: [A4, A6, A7]
+    symptom: >-
+      "Could you give me your order number?" in reply to a message containing
+      one. Users repeat themselves and leave.
+    mechanism: >-
+      The model follows the script for the intent — ask for the identifier —
+      without reading the message it is answering, or the identifier was dropped
+      when the context was assembled.
+    caught_by: [AAC-0038]
+    signal:
+      level: turn
+      reads: [input, reply]
+      detect: >-
+        The user's message contains an identifier of a declared shape and the
+        reply asks for one.
+      threshold: any
+      severity: ticket
+
+  - id: AACP-0033
+    name: Personal data in a reply
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A4, A6, A7]
+    symptom: >-
+      Card numbers, phone numbers or another person's details shown to a user.
+    mechanism: >-
+      Records hold personal data, tools return records, and the model repeats
+      what it read. Output-side screening that runs after the reply is logged is
+      screening in name only.
+    caught_by: [AAC-0006]
+    signal:
+      level: turn
+      reads: [reply redaction marker]
+      detect: The redactor would change the reply the user was shown.
+      threshold: any
+      severity: page
+
+  - id: AACP-0034
+    name: A completion with nothing in it
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A4, A6, A7]
+    symptom: >-
+      Units of work counted as completed whose reply is empty, a fragment, or a
+      promise to look.
+    mechanism: >-
+      Completion is decided by the loop ending, not by the reply containing an
+      answer. A model that stops after "let me check" has ended its loop.
+    caught_by: [AAC-0112]
+    signal:
+      level: turn
+      reads: [turn result, reply]
+      detect: A completed unit of work whose reply is shorter than a declared minimum.
+      threshold: fewer than 15 characters
+      severity: ticket
+
+  - id: AACP-0035
+    name: Apology without progress
+    status: active
+    since: "0.16.0"
+    archetypes: [A4, A6, A7]
+    symptom: >-
+      Conversations of several turns in which each reply apologises and none
+      moves anything.
+    mechanism: >-
+      The system cannot do what is asked and has no path to say so and hand on,
+      so it produces the socially appropriate sentence each time.
+    caught_by: [AAC-0037]
+    signal:
+      level: conversation
+      reads: [reply, tool calls]
+      detect: >-
+        Consecutive replies in one conversation that apologise, with no
+        successful tool call between them.
+      threshold: three in a row
+      severity: ticket
+
+  # --------------------------------------------------------------- trajectory
+
+  - id: AACP-0036
+    name: Ended by a limit, not by an answer
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      A share of units of work end on a step budget, a cost ceiling or a
+      loop detector, and the reply is a hand-off sentence.
+    mechanism: >-
+      Limits are the backstop, and a backstop that is reached routinely is doing
+      the work of a missing path — a tool that cannot answer, a case the
+      instructions do not cover.
+    caught_by: [AAC-0055, AAC-0077]
+    signal:
+      level: turn
+      reads: [agent.termination.reason]
+      detect: The unit of work stopped on a step budget, a cost ceiling or oscillation.
+      threshold: any per unit; above 5% of units over a day
+      severity: ticket
+
+  - id: AACP-0037
+    name: A longer path than the task needs
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      Tool calls per unit of work rise for the same kinds of request, with
+      latency and cost rising behind them.
+    mechanism: >-
+      A prompt or model change makes the system more cautious or more curious:
+      it reads twice, lists before fetching, confirms what it knows. Each step is
+      harmless and the path doubles.
+    caught_by: [AAC-0054]
+    signal:
+      level: window
+      reads: [agent.tool.calls, agent.turns by route]
+      detect: Tool calls per unit of work, by route, against the weekly baseline.
+      threshold: 1.5x baseline over a day
+      severity: trend
+
+  - id: AACP-0038
+    name: Unreadable model output
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      A rise in failed units of work after a model or prompt change, with the
+      provider reporting success.
+    mechanism: >-
+      The model's output no longer parses into the declared shape — a tool call
+      malformed, a JSON field renamed. The provider served a response; the
+      system could not read it.
+    caught_by: [AAC-0002]
+    signal:
+      level: window
+      reads: [agent.model.calls by outcome]
+      detect: Malformed responses as a share of model calls.
+      threshold: above 2% over an hour
+      severity: ticket
+
+  - id: AACP-0039
+    name: Answered over a failed tool
+    status: active
+    since: "0.16.0"
+    archetypes: [A2, A6, A7, A9]
+    symptom: >-
+      Confident replies in units of work where the lookup failed.
+    mechanism: >-
+      A failed tool returns nothing the model can use, and the model answers
+      from what it already believed rather than saying it could not check.
+    caught_by: [AAC-0053]
+    signal:
+      level: turn
+      reads: [tool outcome, turn result]
+      detect: A unit of work completes after a tool call in it failed.
+      threshold: any, as a rate
+      severity: ticket
+
+  # --------------------------------------------------- conversations, outcomes
+
+  - id: AACP-0040
+    name: The user repeats themselves
+    status: active
+    since: "0.16.0"
+    archetypes: [A4, A6, A7]
+    symptom: >-
+      The same message, or nearly, twice in one conversation.
+    mechanism: >-
+      A user repeats a request when the reply did not address it. It is the
+      cheapest signal of misunderstanding there is, and it is in the record.
+    caught_by: [AAC-0039, AAC-0037]
+    signal:
+      level: conversation
+      reads: [input]
+      detect: Two messages in one conversation whose normalised text is the same.
+      threshold: any, as a rate
+      severity: trend
+
+  - id: AACP-0041
+    name: Back within a day
+    status: active
+    since: "0.16.0"
+    archetypes: [A4, A6, A7]
+    symptom: >-
+      Resolution rates that look good while contact volume per user does not
+      fall.
+    mechanism: >-
+      A conversation that ends counts as resolved whether the user's problem was
+      solved or they gave up. The ones that were not solved come back.
+    caught_by: [AAC-0115, AAC-0042]
+    signal:
+      level: conversation
+      reads: [user.id, session.id, turn result, start time]
+      detect: >-
+        A user opens a new conversation within a day of one whose last unit of
+        work completed.
+      threshold: above the weekly baseline rate
+      severity: trend
+
+  - id: AACP-0042
+    name: A person asked for right after an answer
+    status: active
+    since: "0.16.0"
+    archetypes: [A4, A6, A7]
+    symptom: >-
+      Escalations whose conversation shows a completed answer immediately
+      before the request for a person.
+    mechanism: >-
+      The answer was delivered and did not satisfy. The escalation is counted as
+      the user's choice rather than as the previous turn's failure.
+    caught_by: [AAC-0115]
+    signal:
+      level: conversation
+      reads: [route kind, turn result]
+      detect: A completed unit of work followed, in the same conversation, by a request for a person.
+      threshold: any, as a rate
+      severity: trend
+
+  - id: AACP-0043
+    name: Turns to resolution creeping up
+    status: active
+    since: "0.16.0"
+    archetypes: [A4, A6, A7]
+    symptom: >-
+      Conversations get longer for the same requests, and late turns cost more
+      than early ones.
+    mechanism: >-
+      Each extra turn carries the whole conversation. A small drop in first-turn
+      answers is a large rise in cost per resolved conversation.
+    caught_by: [AAC-0042]
+    signal:
+      level: window
+      reads: [agent.turns by session]
+      detect: Median turns per resolved conversation against the weekly baseline.
+      threshold: 1.3x baseline over a day
+      severity: trend
+
+  - id: AACP-0044
+    name: Escalations nobody needed
+    status: active
+    since: "0.16.0"
+    archetypes: [A4, A6, A7]
+    symptom: >-
+      People on the desk close hand-offs the system could have handled, and the
+      share is concentrated in one rule.
+    mechanism: >-
+      An escalation rule is written broad to be safe, and its cost falls on
+      people who are not the ones tuning it.
+    caught_by: [AAC-0020, AAC-0043]
+    signal:
+      level: window
+      reads: [agent.escalation.resolve outcome by rule]
+      detect: Share of escalations closed as unnecessary, by the rule that raised them.
+      threshold: above 30% for one rule over a week
+      severity: ticket
+
+  - id: AACP-0045
+    name: Waits that lapse with nobody
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      Approvals expire and hand-offs time out, and the users behind them are
+      told nothing more.
+    mechanism: >-
+      The human side of the system has less capacity than the automated side
+      sends it, and the difference expires quietly on a timer.
+    caught_by: [AAC-0043, AAC-0078]
+    signal:
+      level: window
+      reads: [approvals settled by outcome, escalations closed by state]
+      detect: Approvals expired and escalations lapsed, as counts.
+      threshold: any in 6 hours
+      severity: ticket
+
+  - id: AACP-0046
+    name: One rule refusing too much
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A4, A6, A7]
+    symptom: >-
+      A sudden rise in refusals, all under one rule, after a change to rules or
+      prompt. Users experience the product as broken.
+    mechanism: >-
+      A refusal is a correct-looking response, so a rule that begins matching
+      legitimate requests raises no error; it only changes a rate nobody plots
+      by rule.
+    caught_by: [AAC-0020, AAC-0088]
+    signal:
+      level: window
+      reads: [agent.refusals by rule, agent.turns]
+      detect: One rule's refusals as a share of units of work, against its weekly baseline.
+      threshold: above 2x baseline and above 10% of units over an hour
+      severity: page
+
+  # ------------------------------------------------------------------- safety
+
+  - id: AACP-0047
+    name: Authority reached for
+    status: active
+    since: "0.16.0"
+    archetypes: [A6, A7, A9]
+    symptom: >-
+      The far end refuses calls for want of authority — no approval, a scope
+      the session does not hold — rather than for the state of the record.
+    mechanism: >-
+      Something in the context persuaded the model to try an action the user
+      cannot authorise, or the harness is sending the wrong identity. Either
+      way the only thing that held was the far end's check.
+    caught_by: [AAC-0057, AAC-0111]
+    signal:
+      level: window
+      reads: [agent.tool.calls with outcome error on write tools, far-end refusal reason]
+      detect: Writes refused for authority, as counts.
+      threshold: any
+      severity: page
+
+  - id: AACP-0048
+    name: A promise nothing is keeping
+    status: active
+    since: "0.16.0"
+    archetypes: [A4, A6, A7]
+    symptom: >-
+      "I'll get back to you" in replies, and nobody does.
+    mechanism: >-
+      The model writes the helpful sentence; nothing in the system scheduled the
+      work it describes.
+    caught_by: [AAC-0112]
+    signal:
+      level: turn
+      reads: [agent.promise.unbacked]
+      detect: A completed reply commits to future work and no workflow holds it.
+      threshold: any
+      severity: ticket
+
+  # --------------------------------------------------------------- operations
+
+  - id: AACP-0049
+    name: Healthy status codes, broken behaviour
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      Error rate flat, latency normal, and users complaining. The system is up
+      and not doing its job.
+    mechanism: >-
+      Every request succeeds at the protocol level: refusals are 200s,
+      escalations are 202s, a wrong answer is a well-formed one. The failure is
+      in how the work ends, and only a rate by outcome shows it.
+    caught_by: [AAC-0114]
+    signal:
+      level: window
+      reads: [agent.turns by result, agent.escalations by rule]
+      detect: The share of units of work ending escalated, refused or failed, against the weekly baseline.
+      threshold: 2x baseline and above 15% over an hour, with at least 20 units
+      severity: page
+
+  - id: AACP-0050
+    name: A quiet deployment
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      A drop in traffic read as a quiet hour. The deployment was broken and
+      nobody could reach it.
+    mechanism: >-
+      Monitoring built on the records the system emits cannot see a system that
+      emits nothing. Only a probe the monitoring side schedules can.
+    caught_by: [AAC-0116, AAC-0079]
+    signal:
+      level: window
+      reads: [agent.canary.cases]
+      detect: The synthetic run failed twice in a row, or has not reported for two periods.
+      threshold: two failures in 25 minutes, or none reported in 25 minutes
+      severity: page
+
+  - id: AACP-0051
+    name: Latency tail over budget
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      Average latency fine, and a tenth of users waiting half a minute.
+    mechanism: >-
+      Units of work with more steps, larger contexts or a slow tool sit in the
+      tail, and the mean hides them.
+    caught_by: [AAC-0007]
+    signal:
+      level: window
+      reads: [agent.turn.duration, gen_ai.client.operation.duration]
+      detect: p95 duration of a unit of work against its declared budget.
+      threshold: p95 above 20 seconds for 10 minutes
+      severity: page
+
+  - id: AACP-0052
+    name: Provider degradation
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      A burst of failed units of work with the same cause, from the model
+      provider or the gateway.
+    mechanism: >-
+      The provider throttles or fails, retries absorb some of it, and the rest
+      reaches users as failures. Fallbacks, where declared, carry the traffic at
+      a different quality and price.
+    caught_by: [AAC-0009]
+    signal:
+      level: window
+      reads: [agent.model.calls by outcome, gen_ai.client.operation.duration with error.type]
+      detect: Model calls unavailable or throttled, as counts.
+      threshold: three or more in 5 minutes
+      severity: page
+
+  - id: AACP-0053
+    name: Spend outrunning its budget
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      The month's budget is gone by the middle of it, or one unit of work costs
+      what a hundred usually do.
+    mechanism: >-
+      Spend is watched on the invoice, a month late. A change that doubles cost
+      per unit of work shows on the first day in a quantile and on the thirtieth
+      in a total.
+    caught_by: [AAC-0008, AAC-0093, AAC-0077]
+    signal:
+      level: window
+      reads: [agent.spend, gen_ai.client.token.usage]
+      detect: p95 spend per unit of work against the weekly baseline, and spend per hour against budget pace.
+      threshold: p95 above 2x baseline over an hour
+      severity: ticket
+
+  - id: AACP-0054
+    name: The served model is not the pinned one
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      Behaviour shifts with no release, and the configuration names the same
+      model it always did.
+    mechanism: >-
+      An alias moved, a gateway fell back, or a provider updated a model behind
+      a stable name. The request says one model; the response names another.
+    caught_by: [AAC-0012, AAC-0094]
+    signal:
+      level: window
+      reads: [gen_ai.request.model, gen_ai.response.model]
+      detect: Model calls whose response model differs from the requested one.
+      threshold: any new pair
+      severity: ticket
+
+  - id: AACP-0055
+    name: A release that moved the rates
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      A deploy, then a slow change in escalations, refusals or cost that nobody
+      connects to it.
+    mechanism: >-
+      Offline evaluation passed, and production's input distribution found what
+      the golden set did not. The rates moved; nothing compared them by release.
+    caught_by: [AAC-0013, AAC-0101]
+    signal:
+      level: window
+      reads: [every rate above, agent.config.fingerprint]
+      detect: The rates of AACP-0049 and AACP-0053 compared between the current and previous configuration fingerprint.
+      threshold: any rate beyond its bound within a day of a new fingerprint
+      severity: page
+
+  # ------------------------------------------------------ the telemetry itself
+
+  - id: AACP-0056
+    name: Telemetry that silently drops
+    status: active
+    since: "0.16.0"
+    archetypes: [A1, A2, A3, A4, A5, A6, A7, A8, A9, A10]
+    symptom: >-
+      A trace store with fewer units of work than the system served, and online
+      scores computed over the ones that happened to arrive.
+    mechanism: >-
+      The exporter batches and sends in the background, as it must; when the
+      store is slow or down the batch times out and is dropped, and the only
+      record of the loss is a log line in the process that lost it. Every rate
+      computed from the store is then short by an amount nobody knows.
+    caught_by: [AAC-0011, AAC-0079]
+    signal:
+      level: window
+      reads: [otelcol_exporter_send_failed_spans, otelcol_exporter_enqueue_failed_spans]
+      detect: Spans the collector failed to deliver or to queue, as counts.
+      threshold: any in 15 minutes
+      severity: ticket

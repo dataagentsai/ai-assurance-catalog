@@ -19,6 +19,12 @@ patterns:
       succeeds on the fourth try is billed four times and counted once, so any
       metric with calls in the denominator averages the problem away.
     caught_by: [AAC-0008, AAC-0102, AAC-0104]
+    signal:
+      level: window
+      reads: [agent.model.calls, agent.turns, agent.spend]
+      detect: Model calls per unit of work, and spend per unit, against the weekly baseline while units per hour are flat.
+      threshold: 1.5x baseline over a day
+      severity: ticket
 
   - id: AACP-0002
     name: Context accretion
@@ -34,6 +40,12 @@ patterns:
       individually justified and none is ever removed, because nobody owns the
       total and no release diff shows it.
     caught_by: [AAC-0103]
+    signal:
+      level: window
+      reads: [gen_ai.client.token.usage with gen_ai.token.type input, agent.config.fingerprint]
+      detect: Median input tokens per model call, compared between configuration fingerprints.
+      threshold: 20% above the previous fingerprint's median
+      severity: trend
 
   - id: AACP-0003
     name: Conversation tail cost
@@ -48,6 +60,12 @@ patterns:
       conversation length rather than linearly. Averaging cost across all turns
       hides it completely: the median turn is cheap and the tail is not.
     caught_by: [AAC-0042, AAC-0103]
+    signal:
+      level: conversation
+      reads: [gen_ai.usage.input_tokens, session.id]
+      detect: Input tokens of a conversation's late turns against its first, and cost per resolved conversation.
+      threshold: late turns above 4x the first
+      severity: trend
 
   - id: AACP-0004
     name: Tool-output dumping
@@ -63,6 +81,12 @@ patterns:
       repeatedly, so it appears negligible in any single-call view and dominates
       in aggregate.
     caught_by: [AAC-0105, AAC-0054]
+    signal:
+      level: window
+      reads: [agent.tool.truncated, agent.context.chars]
+      detect: Share of tool results truncated to fit, and context size per call, by tool.
+      threshold: above 10% of one tool's results
+      severity: trend
 
   - id: AACP-0005
     name: Frontier-model default

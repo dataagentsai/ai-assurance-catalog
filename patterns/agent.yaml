@@ -35,6 +35,12 @@ patterns:
       the loop continues until an external limit stops it — and if that limit
       is generous, the run is expensive as well as useless.
     caught_by: [AAC-0053, AAC-0055, AAC-0054]
+    signal:
+      level: turn
+      reads: [tool name, tool outcome]
+      detect: A tool errors and is called again in the same unit of work, twice or more.
+      threshold: two errors of one tool in one unit of work
+      severity: ticket
 
   - id: AACP-0015
     name: Instructions arriving through tool output
@@ -50,6 +56,15 @@ patterns:
       and never see this channel, which is why it survives systems that test
       prompt injection thoroughly at the front door.
     caught_by: [AAC-0058, AAC-0036, AAC-0004]
+    signal:
+      level: turn
+      reads: [tool results, tool name, side-effect class]
+      detect: >-
+        A tool result holds instruction-shaped text — ignore previous
+        instructions, system override, you are now — and a write follows it in
+        the same unit of work.
+      threshold: any
+      severity: page
 
   - id: AACP-0016
     name: Context lost at handoff

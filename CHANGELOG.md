@@ -31,6 +31,15 @@ the system fails, and nothing said so.
   As a test identity isolated from real data. Monitoring built on traffic reads
   a broken deployment as a quiet hour.
 
+**Patterns gain a `signal`, and 37 production patterns arrive.** A pattern said
+what fails and which obligation catches it; it did not say how a running system
+shows it. `signal` does — the fields a monitor reads, the rule, a starting
+threshold and a severity — so the pattern directory is now a rule catalog a
+monitor can implement, the way a cost analyser implements its anti-pattern list.
+`patterns/operations.yaml` (AACP-0019 to AACP-0055) covers tool use, answers,
+trajectories, conversations, safety and operations; six existing patterns gained
+signals. Informative, like every pattern: nothing here is a conformance claim.
+
 ## [0.15.0] — 2026-09-13
 
 **AAC-0113 — Action on a stale read.** Between the read that informed a decision
