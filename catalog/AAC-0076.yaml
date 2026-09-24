@@ -21,7 +21,7 @@ title: |-
   Triggers fire once and only once
 
 statement: |-
-  Schedule and event triggers are tested for duplicate firing, missed windows and overlapping runs. An agent that runs twice takes every action twice.
+  Schedule and event triggers are tested for duplicate firing, missed windows and overlapping runs, and for what a duplicate is answered with where a caller can receive one. An agent that runs twice takes every action twice; an agent that refuses a duplicate without saying what the first run produced leaves a caller whose reply was lost unable to tell a run that never happened from one that did.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.
