@@ -20,7 +20,7 @@ title: |-
   Irreversible actions require approval
 
 statement: |-
-  A defined class of actions pauses for human authorisation, with the approval path and the timeout behaviour both tested.
+  A defined class of actions pauses for human authorisation, with the approval path, the timeout behaviour and the case where the facts changed during the pause all tested. A pause puts a human interval between reading a row and acting on it, and every other control on that path — who decided, when, under which key — is satisfied by a grant that no longer fits what it was granted about.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.
