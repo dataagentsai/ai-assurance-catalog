@@ -1,0 +1,45 @@
+# AAC-0117 — What is held about one person can be found and removed
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0117
+status: active
+since: "0.4.0"
+
+level: MUST
+dimension: privacy
+gate: true
+
+# Applies to these archetypes. CORE cases list every archetype explicitly
+# rather than relying on an inheritance keyword, so a consumer never has to
+# resolve the taxonomy to know whether a case applies.
+archetypes:
+  - A1
+  - A2
+  - A3
+  - A4
+  - A5
+  - A6
+  - A7
+  - A8
+  - A9
+  - A10
+core: true
+
+title: |-
+  What is held about one person can be found and removed
+
+statement: |-
+  Every store the agent writes to can be asked what it holds about one identified person and can remove it, and both are tested: that their records go, that nobody else's do, and that an unidentified request removes nothing. This is not retention. A schedule that drops rows after ninety days answers a storage bill and does not answer somebody asking today about last week, and a system that has only the schedule will discover on the day it is asked that the records it must find are keyed by identifiers only it can derive, held in stores that were never asked to be searchable that way.
+
+  Where removing a record would restore a capability the record exists to refuse — a deduplication entry that stops a queued action running a second time — the obligation is discharged by removing what the record says rather than that it exists, and the test is that the refusal still holds afterwards.
+
+# Realization is advisory: it names the class of machinery that can discharge
+# the obligation, never a product. See docs/REALIZATION.md.
+mechanisms:
+  - M1
+stages:
+  - S2
+  - S4
+tool_class: |-
+  Test runner + the agent's own stores
+
+# Crosswalks to external frameworks live in /crosswalks, keyed by this id.

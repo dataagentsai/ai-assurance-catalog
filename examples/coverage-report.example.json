@@ -592,16 +592,20 @@
     {
       "case": "AAC-0116",
       "status": "not-covered"
+    },
+    {
+      "case": "AAC-0117",
+      "status": "not-covered"
     }
   ],
   "summary": {
-    "applicable": 46,
+    "applicable": 47,
     "covered": 28,
-    "not_covered": 11,
+    "not_covered": 12,
     "accepted_risk": 4,
     "not_applicable": 3,
     "failing": 2,
-    "uncovered_musts": 5,
-    "uncovered_gates": 2
+    "uncovered_musts": 6,
+    "uncovered_gates": 3
   }
 }
