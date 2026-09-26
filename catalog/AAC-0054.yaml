@@ -1,4 +1,4 @@
-# AAC-0054 — Path efficiency against a reference trajectory
+# AAC-0054 — Path efficiency against known-good trajectories
 # Normative. Edit here; the rendered site is generated from this file.
 id: AAC-0054
 legacy_id: A6-04
@@ -17,10 +17,10 @@ archetypes:
 core: false
 
 title: |-
-  Path efficiency against a reference trajectory
+  Path efficiency against known-good trajectories
 
 statement: |-
-  Step count, token count and duplicate calls compared to a known-good path. Correct answers reached by wandering are a cost and latency defect that output-only scoring cannot see.
+  Step count, token count and duplicate calls compared to the known-good paths for each case. A case may have more than one: an action the far system would refuse is correctly handled by reading first and declining, or by attempting it and relaying the refusal, and both are accepted. A shorter correct path — acting without a prior read where the harness re-reads before any irreversible action — must pass, not fail for skipping a step the reference took. Correct answers reached by wandering are a cost and latency defect that output-only scoring cannot see.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.

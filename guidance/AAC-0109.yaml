@@ -41,9 +41,9 @@ not_this:
       about a loop that stops perfectly well and achieved nothing.
   - id: AAC-0054
     why: |
-      Path efficiency, scored against a reference trajectory. It tells you a run
+      Path efficiency, scored against known-good trajectories. It tells you a run
       was longer than ideal; it does not terminate anything, and it needs a
-      reference run to compare against.
+      known-good path to compare against.
   - id: AAC-0008
     why: |
       Cost per successful task. A repeating loop is wasteful, but this is not a

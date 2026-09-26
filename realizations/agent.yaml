@@ -63,12 +63,12 @@ cases:
         tools: [toxiproxy, responses, VCR]
         how: Inject transport-level faults beneath the tool implementation.
 
-  AAC-0054:  # Path efficiency against a reference trajectory
+  AAC-0054:  # Path efficiency against known-good trajectories
     options:
       - approach: in-house
         mechanism: M5
         tools: [your trace exporter]
-        how: Record step count, token total and duplicate-call count per task; compare against a known-good path and fail on regression.
+        how: Record step count, token total and duplicate-call count per task; compare against the case's set of known-good paths and fail on regression.
         caveat: Correct answers reached by wandering pass every output-based check. This is a cost and latency defect that only trace assertions can see.
       - approach: platform
         mechanism: M5

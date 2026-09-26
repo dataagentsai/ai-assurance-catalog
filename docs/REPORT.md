@@ -52,6 +52,11 @@ check in the row's `note`, so the gap reads as "skipped", not as "nobody thought
 of it". A skipped live-model test that counted as coverage would claim exactly
 the obligation it was skipped for want of.
 
+The same holds inside a check that generates its cases — a planted-injection
+suite, an attack corpus, a golden set. Its evidence records how many cases
+actually ran, and a run of zero is `outcome: fail`, never `pass`. A runner that
+silently drops the generation step runs one unplanted case, and that passes.
+
 `not-applicable` is for conditional obligations — the `MAY` cases whose
 condition genuinely fails. A system that does not stream does not owe
 `AAC-0092`. It is not a general escape hatch, and a reviewer will read a long

@@ -28,7 +28,7 @@ title: |-
   Every reachable model is evaluated, not just the primary
 
 statement: |-
-  The golden set is run against every model the system can actually serve from, including cheap routes, fallbacks and failover targets. A system with a mandated fallback path already has more than one route, so this applies even where no router was deliberately built. Teams routinely evaluate the primary and ship an unevaluated fallback that first appears under the load of an incident.
+  The golden set is run against every model the system can actually serve from, including cheap routes, fallbacks and failover targets. A system with a mandated fallback path already has more than one route, so this applies even where no router was deliberately built. Teams routinely evaluate the primary and ship an unevaluated fallback that first appears under the load of an incident. A route that is rate-limited is still evaluated: the run is paced to the provider's budget with real waits, and a case that degraded because the route was throttled is re-run, not scored as a failure of the model.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.

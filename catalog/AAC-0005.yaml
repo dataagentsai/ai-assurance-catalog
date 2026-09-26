@@ -29,7 +29,7 @@ title: |-
   Safety and policy compliance under adversarial input
 
 statement: |-
-  A maintained attack corpus covering your policy categories is run against the system, with both the block rate and the over-block rate recorded. Only measuring blocks makes over-refusal invisible.
+  A maintained attack corpus covering your policy categories is run against the system, with both the block rate and the over-block rate recorded. The over-block rate needs cases of its own: legitimate requests that resemble the blocked ones, and correct answers that trip a rule by quoting text the system was shown or by listing a state — "(cancelled)" beside an order is not a claim to have cancelled it. A corpus of attacks alone measures no over-blocking, however low the number it reports. Only measuring blocks makes over-refusal invisible.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.
