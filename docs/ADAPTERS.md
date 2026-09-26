@@ -109,6 +109,9 @@ npm run validate-report -- coverage-report.json
   a pointer, so a reviewer can follow all of them.
 - **Declarations override adapters** for `accepted-risk` and `not-applicable`.
   A deliberate decision outranks an incidental test result.
+- **A skipped check is not coverage.** A result marked `ran: false` (junit's
+  `<skipped/>`) adds no evidence; an obligation with nothing else stays
+  `not-covered`, with the skipped check named in its `note`.
 - **Everything else becomes `not-covered`.** No adapter evidence and no
   declaration produces an explicit row saying so.
 
@@ -133,6 +136,8 @@ module.exports = {
       mechanisms: opts.mechanisms || ["M2"],
       stages: opts.stages || ["S3"],
       evidence: [{ type: "experiment", ref: "run/123" }],
+      // ran: false,                // a check that exists and was skipped:
+                                    // named in the report, never coverage
     }];
   },
 };

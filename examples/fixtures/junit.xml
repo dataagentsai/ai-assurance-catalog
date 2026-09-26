@@ -5,7 +5,7 @@
   embedded in test names — so the adapter is covered on both paths.
 -->
 <testsuites>
-  <testsuite name="pytest" tests="18" failures="1" errors="0" skipped="0" time="41.882">
+  <testsuite name="pytest" tests="20" failures="1" errors="0" skipped="2" time="41.882">
 
     <!-- Property form: a rename cannot silently break the link. -->
     <testcase classname="tests.contract" name="test_response_matches_declared_schema" time="0.412">
@@ -88,6 +88,19 @@
     <!-- Name-embedded form: no properties, identifier read from the test name. -->
     <testcase classname="tests.routing" name="test_aac_0099_schema_holds_on_fallback_model" time="3.220"/>
     <testcase classname="tests.routing" name="test_aac_0101_routing_config_change_triggers_suite" time="0.377"/>
+
+    <!--
+      Skipped: a check that exists and did not run is not coverage. AAC-0100
+      has nothing else, so it reads not-covered with the skip named in its note.
+      AAC-0098 stays covered by the promptfoo run; the skip adds no evidence.
+    -->
+    <testcase classname="tests.routing" name="test_route_and_reason_recorded_in_trace" time="0.000">
+      <properties><property name="aac" value="AAC-0100"/></properties>
+      <skipped message="trace backend not reachable from CI"/>
+    </testcase>
+    <testcase classname="tests.routing" name="test_aac_0098_live_route_golden_set" time="0.000">
+      <skipped message="no model key"/>
+    </testcase>
 
   </testsuite>
 </testsuites>

@@ -12,6 +12,13 @@ ship. A quarter with no changes ships a release note saying so.
 **Phase 1 — remaining crosswalks:** NIST AI RMF, ISO/IEC 42001, EU AI Act.
 OWASP shipped in 0.5.0.
 
+**Fixed — a skipped test no longer counts as coverage.** The junit adapter read
+`<skipped/>` as `covered` with outcome `unknown`, while REPORT.md defines
+`covered` as a check that exists *and ran*. A support agent's first report
+claimed its every-reachable-model obligations (AAC-0098, AAC-0099) on a test
+skipped for want of a model key. A skip is now marked `ran: false`; the builder
+leaves it out of the verdict and names it in the `not-covered` row's `note`.
+
 ## [0.16.0] — 2026-09-19
 
 **Watching a deployed system: three cases for S5 and S6.** The stages were

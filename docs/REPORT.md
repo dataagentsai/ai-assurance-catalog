@@ -46,6 +46,12 @@ Four honest statuses, and `not-covered` is a legitimate one:
 | `accepted-risk` | Deliberately not implemented | `owner`, `rationale`, `review_by` |
 | `not-applicable` | The case's stated condition does not hold | `rationale` |
 
+*Ran* is part of `covered`. A check that exists and was skipped did not run, so
+on its own it leaves the obligation `not-covered`; the builder names the skipped
+check in the row's `note`, so the gap reads as "skipped", not as "nobody thought
+of it". A skipped live-model test that counted as coverage would claim exactly
+the obligation it was skipped for want of.
+
 `not-applicable` is for conditional obligations — the `MAY` cases whose
 condition genuinely fails. A system that does not stream does not owe
 `AAC-0092`. It is not a general escape hatch, and a reviewer will read a long

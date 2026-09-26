@@ -521,7 +521,8 @@
     },
     {
       "case": "AAC-0100",
-      "status": "not-covered"
+      "status": "not-covered",
+      "note": "check exists but did not run: tests.routing::test_route_and_reason_recorded_in_trace"
     },
     {
       "case": "AAC-0101",

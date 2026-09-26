@@ -99,15 +99,24 @@ function extract(xml, opts = {}) {
         return p ? String(p["@value"]).split(/[,\s]+/).filter(Boolean) : null;
       };
 
+      /*
+       * A skipped test is a check that exists and did not run. REPORT.md defines
+       * `covered` as a check that exists *and ran*, so a skip is marked `ran:
+       * false` and the merge leaves it out of the verdict. Read as `unknown` it
+       * made a skipped live-model test claim coverage of the obligation it
+       * would have checked.
+       */
+      const skipped = tc.skipped !== undefined && tc.error === undefined && tc.failure === undefined;
       const outcome =
         tc.error !== undefined ? "error"
         : tc.failure !== undefined ? "fail"
-        : tc.skipped !== undefined ? "unknown"
+        : skipped ? "unknown"
         : "pass";
 
       const ref = cls ? `${cls}::${name}` : name;
       for (const c of cases) {
         results.push({
+          ...(skipped ? { ran: false } : {}),
           case: c,
           outcome,
           mechanisms: prop("aac.mechanism") || opts.mechanisms || ["M1"],

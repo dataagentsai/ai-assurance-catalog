@@ -76,7 +76,12 @@ const RANK = { error: 3, fail: 2, unknown: 1, pass: 0 };
 const results = [];
 for (const id of applicable) {
   const d = declared.get(id);
-  const hits = collected.get(id) || [];
+  const all = collected.get(id) || [];
+  // A check that exists but did not run (a skipped test) is not coverage.
+  // It is named in the not-covered row, so the gap reads as "skipped", not
+  // as "nobody thought of it".
+  const hits = all.filter((h) => h.ran !== false);
+  const idle = all.filter((h) => h.ran === false).flatMap((h) => h.evidence.map((e) => e.ref));
 
   if (d && d.status !== "covered") {
     results.push({ case: id, ...d });
@@ -84,7 +89,8 @@ for (const id of applicable) {
   }
   if (!hits.length) {
     // Silence is not an answer.
-    results.push(d ? { case: id, ...d } : { case: id, status: "not-covered" });
+    results.push(d ? { case: id, ...d }
+      : { case: id, status: "not-covered", ...(idle.length ? { note: `check exists but did not run: ${idle.join(", ")}`.slice(0, 500) } : {}) });
     continue;
   }
   // Worst outcome wins: one failing check makes the obligation failing.
