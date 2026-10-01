@@ -21,7 +21,7 @@ title: |-
   Every claim is supported by retrieved context
 
 statement: |-
-  Faithfulness scored claim by claim against the context actually supplied. This is the central obligation of the archetype — a fluent unsupported answer is the failure mode users cannot detect.
+  Faithfulness scored claim by claim against the context actually supplied. This is the central obligation of the archetype — a fluent unsupported answer is the failure mode users cannot detect. Where the system reads through tools, their results are the context: a figure, date, status or identifier the output states is one a result in the same exchange returned, and an amount no result carried is unsupported however plausible it is. Check the values as well as the actions, because a check on claimed actions alone passes a reply that quotes an invented refund.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.

@@ -57,6 +57,7 @@ grader. One rule in `tools/owed.js`, read by `build-report` and
 MINOR under the versioning rules: existing cases widened, none changed. The
 example report goes from 47 applicable to 51.
 
+- **AAC-0029: tool results are the context, and values are claims** (T-076d). Generation run 2 replied "you will receive Rs 12,400 back", a figure no tool returned, and its claims check passed because it covered actions only. Clarification in place.
 - **Four statements say what the support agent's defects taught** (T-021),
   clarifications in place per ID-POLICY: AAC-0038 is tested across separate
   calls carrying only the conversation's identifier (F-006); AAC-0042's
