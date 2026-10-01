@@ -37,6 +37,16 @@ it has found something.
 with no entry is indistinguishable from one nobody thought about, which is
 exactly the ambiguity this format exists to remove.
 
+**Applicable** has two sources. A case is owed when it names one of the
+subject's archetypes, **or** when a covered row's evidence was produced by a
+mechanism whose `owes` in `taxonomy/realization.yaml` names it. The second is
+how a judge is caught: a system that grades anything with a model (M3, M4)
+contains one, and owes AAC-0084, 0085, 0086 and 0090 whether or not it declared
+A10. Without it, an agent scored online by a rubric reported rubric scores with
+nothing behind the rubric. The rule reads the report's own rows, so
+`validate-report` reaches the same answer as `build-report`, and a row owed this
+way says so in its `note`.
+
 Four honest statuses, and `not-covered` is a legitimate one:
 
 | Status | Meaning | Also requires |

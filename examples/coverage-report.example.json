@@ -419,6 +419,26 @@
       ]
     },
     {
+      "case": "AAC-0084",
+      "status": "not-covered",
+      "note": "owed by mechanism, not archetype: evidence here is graded by M3"
+    },
+    {
+      "case": "AAC-0085",
+      "status": "not-covered",
+      "note": "owed by mechanism, not archetype: evidence here is graded by M3"
+    },
+    {
+      "case": "AAC-0086",
+      "status": "not-covered",
+      "note": "owed by mechanism, not archetype: evidence here is graded by M3"
+    },
+    {
+      "case": "AAC-0090",
+      "status": "not-covered",
+      "note": "owed by mechanism, not archetype: evidence here is graded by M3"
+    },
+    {
       "case": "AAC-0091",
       "status": "covered",
       "outcome": "pass",
@@ -621,13 +641,13 @@
     }
   ],
   "summary": {
-    "applicable": 47,
+    "applicable": 51,
     "covered": 28,
-    "not_covered": 12,
+    "not_covered": 16,
     "accepted_risk": 4,
     "not_applicable": 3,
     "failing": 2,
-    "uncovered_musts": 6,
-    "uncovered_gates": 3
+    "uncovered_musts": 9,
+    "uncovered_gates": 7
   }
 }

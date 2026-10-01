@@ -27,13 +27,24 @@ mechanisms:
     summary: >-
       A model scores the output against a written rubric. The only practical
       mechanism for open-ended quality, and it must itself be validated —
-      every A10 obligation applies to your judge.
+      the judge obligations in `owes` apply to it, whatever the archetype of
+      the system it grades.
+    # A system that grades with a model contains a judge, whether or not it
+    # declared A10. Without this, an A6 agent scored online by a rubric owed
+    # nothing about the rubric's grader, and every score it reported was
+    # unvalidated. build-report makes these applicable for any source that
+    # declares this mechanism. The classifier and router cases of A10
+    # (AAC-0087 to 0089) are not owed: a judge is not a router.
+    owes: [AAC-0084, AAC-0085, AAC-0086, AAC-0090]
   - id: M4
     name: Model-graded, reference-based
     summary: >-
       Compare against a gold answer, or pairwise against the previous release.
       More stable than M3 because the judge has an anchor. Requires curated
       references.
+    # Anchored is not validated: the judge still decides what "matches the
+    # reference" means, so it owes what M3's judge owes.
+    owes: [AAC-0084, AAC-0085, AAC-0086, AAC-0090]
   - id: M5
     name: Trace assertion
     summary: >-

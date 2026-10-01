@@ -15,6 +15,7 @@
 const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
+const { owed } = require("./owed");
 
 const ROOT = path.join(__dirname, "..");
 const ADAPTERS = {
@@ -40,10 +41,6 @@ for (const f of fs.readdirSync(path.join(ROOT, "catalog")).filter((x) => x.endsW
   cases.set(c.id, c);
 }
 const owned = new Set(cfg.subject.archetypes);
-const applicable = [...cases.values()]
-  .filter((c) => c.status === "active" && c.archetypes.some((a) => owned.has(a)))
-  .map((c) => c.id)
-  .sort();
 
 // ---- adapters ----
 const collected = new Map();
@@ -69,6 +66,15 @@ for (const src of cfg.sources || []) {
   for (const w of adapter.extract.warnings || []) warn.push(`${src.adapter}: ${w}`);
 }
 
+// ---- what is owed: by archetype, and by the mechanisms the evidence used ----
+// A check graded by a model means the system contains a judge, and the judge
+// owes what its mechanism owes (taxonomy/realization.yaml), whether or not the
+// subject declared A10. Read from the evidence, as validate-report reads it.
+const evidence = [...collected.values()].flat().filter((r) => r.ran !== false);
+const owing = owed(cases, cfg.subject.archetypes, evidence);
+const applicable = [...owing.keys()].sort();
+const owedNote = (id) => owing.get(id) || null;
+
 // ---- declarations: accepted risk, not-applicable, manual coverage ----
 const declared = new Map((cfg.declarations || []).map((d) => [d.case, d]));
 
@@ -90,13 +96,14 @@ for (const id of applicable) {
   }
   if (!hits.length) {
     // Silence is not an answer.
+    const why = [owedNote(id), idle.length ? `check exists but did not run: ${idle.join(", ")}` : null].filter(Boolean);
     results.push(d ? { case: id, ...d }
-      : { case: id, status: "not-covered", ...(idle.length ? { note: `check exists but did not run: ${idle.join(", ")}`.slice(0, 500) } : {}) });
+      : { case: id, status: "not-covered", ...(why.length ? { note: why.join(" | ").slice(0, 500) } : {}) });
     continue;
   }
   // Worst outcome wins: one failing check makes the obligation failing.
   const outcome = hits.reduce((a, h) => (RANK[h.outcome] > RANK[a] ? h.outcome : a), "pass");
-  const notes = hits.filter((h) => h.note).map((h) => h.note);
+  const notes = [owedNote(id), ...hits.filter((h) => h.note).map((h) => h.note)].filter(Boolean);
   results.push({
     case: id,
     status: "covered",

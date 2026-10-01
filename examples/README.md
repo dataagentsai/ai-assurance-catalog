@@ -22,18 +22,19 @@ npm run validate-report -- examples/coverage-report.example.json
 
 Subject: an illustrative batch document classifier that emits a typed record per
 invoice, classified `A1` + `A2`. That composition makes 47 obligations
-applicable. It is **not a real system** — the Phase 4 reference implementation
+applicable by archetype, and its model-graded checks owe the four judge
+obligations on top, for 51. It is **not a real system** — the Phase 4 reference implementation
 replaces it with a report from a live repository's CI.
 
 ```
 invoice-classifier a3f19c2  [A1 A2]  catalog 0.16.0
-  applicable      47
+  applicable      51
   covered         28  (2 failing)
   accepted risk   4
   not applicable  3
-  not covered     12
-  uncovered MUSTs 6
-  uncovered gates 3
+  not covered     16
+  uncovered MUSTs 9
+  uncovered gates 7
 ```
 
 ## It is deliberately imperfect
@@ -51,10 +52,11 @@ the format supports, because each one means something different to a reader:
   undiscovered one is a finding.
 - **3 not applicable** — the conditional `MAY` obligations whose condition
   genuinely fails: no streaming, no cache, single region.
-- **12 not covered** — honest blind spots, six of them MUSTs and three of them
-  release gates. Nobody has got to them and nobody has accepted them.
+- **16 not covered** — honest blind spots, nine of them MUSTs and seven of them
+  release gates. Four are the judge's: the promptfoo and DeepEval checks grade
+  with a model, and nobody has validated that model against human labels. Nobody has got to them and nobody has accepted them.
 
-Those twelve are not hand-listed anywhere. They appear because `build-report`
+Those sixteen are not hand-listed anywhere. They appear because `build-report`
 found no adapter evidence and no declaration, and wrote the row anyway. A blind
 spot cannot be hidden by omitting it, which is the only reason the coverage
 number means anything.

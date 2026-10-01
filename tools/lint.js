@@ -159,6 +159,19 @@ for (const [id, doc] of byId) {
 }
 
 /*
+ * A mechanism's `owes` makes cases applicable to any system that declares the
+ * mechanism, whatever its archetypes — build-report reads it. A name that is
+ * not an active case would make a report owe something that does not exist.
+ */
+for (const m of real.mechanisms) {
+  for (const id of m.owes || []) {
+    const c = byId.get(id);
+    if (!c) err("taxonomy/realization.yaml", `${m.id} owes unknown case ${id}`);
+    else if (c.status !== "active") err("taxonomy/realization.yaml", `${m.id} owes ${id}, which is ${c.status}`);
+  }
+}
+
+/*
  * Crosswalks may only reference cases that exist, and must record how tight the
  * mapping is. `relation` exists to stop the failure that discredits a crosswalk
  * fastest: claiming a test obligation is equivalent to a management-system

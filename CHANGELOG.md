@@ -9,6 +9,16 @@ ship. A quarter with no changes ships a release note saying so.
 
 ## [Unreleased]
 
+**A judge owes what a judge owes, whatever the system's archetype.** M3 and M4
+in `taxonomy/realization.yaml` now carry `owes: [AAC-0084, AAC-0085, AAC-0086,
+AAC-0090]`, and a coverage report owes those four whenever a covered row's
+evidence was graded by a model. Before, only a subject that declared A10 owed
+them, so an A6 agent scored online by a rubric owed nothing about the rubric's
+grader. One rule in `tools/owed.js`, read by `build-report` and
+`validate-report` alike; the linter checks every `owes` names an active case.
+MINOR under the versioning rules: existing cases widened, none changed. The
+example report goes from 47 applicable to 51.
+
 **Phase 1 complete — three crosswalks: NIST AI RMF, ISO/IEC 42001, EU AI
 Act.** Out of band, as crosswalks always are: no obligation changed and the
 catalog version does not move. OWASP shipped in 0.5.0.

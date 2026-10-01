@@ -11,6 +11,7 @@
 const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
+const { owed } = require("./owed");
 const Ajv = require("ajv/dist/2020");
 const addFormats = require("ajv-formats");
 
@@ -38,6 +39,13 @@ if (report.catalog_version && report.catalog_version !== pkg.version) {
   console.log(`note: report claims catalog ${report.catalog_version}, this checkout is ${pkg.version}`);
 }
 
+// Owed by archetype, or by a mechanism the report's own evidence used — the
+// same rule build-report applies (tools/owed.js).
+const evidence = (report.results || [])
+  .filter((r) => r.status === "covered")
+  .map((r) => ({ case: r.case, mechanisms: r.mechanisms }));
+const owing = owed(cases, report.subject?.archetypes, evidence);
+
 const seen = new Set();
 for (const r of report.results || []) {
   const c = cases.get(r.case);
@@ -46,8 +54,7 @@ for (const r of report.results || []) {
   seen.add(r.case);
   if (c.status !== "active") console.log(`note: ${r.case} is ${c.status} in the catalog`);
   // An obligation the subject does not owe should be omitted, not reported.
-  const owed = c.archetypes.some((a) => (report.subject?.archetypes || []).includes(a));
-  if (!owed) errors.push(`${r.case}: not owed by archetypes ${(report.subject?.archetypes || []).join(",")}`);
+  if (!owing.has(r.case)) errors.push(`${r.case}: not owed by archetypes ${(report.subject?.archetypes || []).join(",")} or by any mechanism its evidence used`);
 }
 
 /*
@@ -55,9 +62,7 @@ for (const r of report.results || []) {
  * the ones nobody has got to yet. Missing rows are the difference between a
  * claim and a selection.
  */
-const applicable = [...cases.values()].filter(
-  (c) => c.status === "active" && c.archetypes.some((a) => (report.subject?.archetypes || []).includes(a))
-);
+const applicable = [...owing.keys()].map((id) => cases.get(id));
 const missing = applicable.filter((c) => !seen.has(c.id));
 for (const m of missing) errors.push(`${m.id} applicable but absent — use status "not-covered" to say so`);
 
