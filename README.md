@@ -25,7 +25,7 @@ thing nobody publishes. This is that catalog.
 
 ## What it is
 
-108 obligations. Each one states, in plain English, something that must be true
+117 obligations. Each one states, in plain English, something that must be true
 of a system — tagged with which architecture archetypes owe it, which classes of
 machinery can produce a verdict, at which lifecycle stage, and whether failure
 blocks.
@@ -46,9 +46,9 @@ stages: [S2, S4]          # CI pre-merge, runtime gateway
 tool_class: Test runner + gateway
 ```
 
-Thirty-two of the 108 are **core** — owed by every AI application regardless of
+Thirty-six of the 117 are **core** — owed by every AI application regardless of
 shape. The rest are archetype deltas: what is *new* about that shape's risk
-surface. That is why this is 108 cases and not several hundred.
+surface. That is why this is 117 cases and not several hundred.
 
 ## Where this sits
 
@@ -131,7 +131,7 @@ deprecation rules.
 ## Layout
 
 ```
-catalog/        108 cases, one YAML file each — the normative master
+catalog/        117 cases, one YAML file each — the normative master
 taxonomy/       archetypes, mechanisms, stages, dimensions, levels
 schema/         JSON Schema for a case, a pattern, and a coverage report
 realizations/   how each obligation gets built — six approaches, named products
