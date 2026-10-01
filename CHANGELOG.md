@@ -9,6 +9,26 @@ ship. A quarter with no changes ships a release note saying so.
 
 ## [Unreleased]
 
+**Phase 3 — a Langfuse adapter: eval-platform scores become evidence.**
+`adapters/langfuse.js` reads a project's scores as the public API returns them
+(`GET /api/public/v3/scores?fields=details,subject` on Langfuse v4, `/v2/scores`
+on v3; field names checked against Langfuse's published API definition). An
+obligation is declared in score `metadata.aac`, in the score name, or in a
+mapping file of score names. The verdict is never a threshold: a BOOLEAN score
+is its own verdict (`aac.pass: false` or `inverted:` for a name that states a
+defect), a writer may state one in `metadata["aac.outcome"]`, and everything
+else — a NUMERIC score above all — is `unknown`. `aac.outcome: skipped` is
+`ran: false`. The mechanism is declared, never read from Langfuse's `source`,
+because `EVAL` covers code evaluators as well as LLM judges; a declared score
+with no mechanism is dropped with a warning. Online scoring writes one score per
+trace, so scores fold into one result per obligation with worst outcome winning
+and at most `maxRefs` trace links, failing ones first. The adapter warns on an
+export that stopped before its last page and on a v3 export without `metadata`.
+The example gains a Langfuse fixture that adds evidence without moving the
+summary, and a skipped online sampler (AAC-0014) that names itself in its
+not-covered row; `adapters/langfuse.test.js` joins `npm run test-adapters`.
+LangSmith feedback is the next adapter.
+
 **A judge owes what a judge owes, whatever the system's archetype.** M3 and M4
 in `taxonomy/realization.yaml` now carry `owes: [AAC-0084, AAC-0085, AAC-0086,
 AAC-0090]`, and a coverage report owes those four whenever a covered row's

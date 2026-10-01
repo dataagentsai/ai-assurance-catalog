@@ -192,7 +192,8 @@
     },
     {
       "case": "AAC-0014",
-      "status": "not-covered"
+      "status": "not-covered",
+      "note": "check exists but did not run: online-sampler @ trace:tr-81b0"
     },
     {
       "case": "AAC-0015",
@@ -221,7 +222,7 @@
     {
       "case": "AAC-0017",
       "status": "covered",
-      "outcome": "pass",
+      "outcome": "unknown",
       "mechanisms": [
         "M3"
       ],
@@ -233,8 +234,14 @@
           "type": "experiment",
           "ref": "accuracy by vendor, document length band and source channel",
           "url": "https://evals.example.internal/runs/a3f19c2"
+        },
+        {
+          "type": "experiment",
+          "ref": "AAC-0017 accuracy by vendor slice @ experiment:run-a3f19c2",
+          "at": "2026-08-15T11:00:00Z"
         }
-      ]
+      ],
+      "note": "langfuse AAC-0017 accuracy by vendor slice: 1 score (1 unknown)"
     },
     {
       "case": "AAC-0018",
@@ -306,14 +313,28 @@
         "M1"
       ],
       "stages": [
-        "S2"
+        "S2",
+        "S5"
       ],
       "evidence": [
         {
           "type": "test",
           "ref": "tests.contract::test_every_field_validates"
+        },
+        {
+          "type": "experiment",
+          "ref": "schema-valid @ trace:tr-7f21",
+          "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-7f21",
+          "at": "2026-08-15T09:12:02Z"
+        },
+        {
+          "type": "experiment",
+          "ref": "schema-valid @ trace:tr-7f9c",
+          "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-7f9c",
+          "at": "2026-08-15T09:40:50Z"
         }
-      ]
+      ],
+      "note": "langfuse schema-valid: 2 scores (2 pass)"
     },
     {
       "case": "AAC-0023",
@@ -349,7 +370,8 @@
       ],
       "stages": [
         "S2",
-        "S3"
+        "S3",
+        "S5"
       ],
       "evidence": [
         {
@@ -359,18 +381,45 @@
         {
           "type": "test",
           "ref": "tests/test_llm_eval.py::test_absent_fields_stay_null"
+        },
+        {
+          "type": "experiment",
+          "ref": "absent-fields-null @ trace:tr-7f21",
+          "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-7f21",
+          "at": "2026-08-15T09:12:03Z"
+        },
+        {
+          "type": "experiment",
+          "ref": "absent-fields-null @ trace:tr-7f9c",
+          "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-7f9c",
+          "at": "2026-08-15T09:40:51Z"
+        },
+        {
+          "type": "experiment",
+          "ref": "absent-fields-null @ trace:tr-80a4",
+          "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-80a4",
+          "at": "2026-08-15T10:02:17Z"
+        },
+        {
+          "type": "experiment",
+          "ref": "invented-value @ trace:tr-80a4",
+          "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-80a4",
+          "at": "2026-08-15T10:02:18Z"
         }
-      ]
+      ],
+      "note": "langfuse absent-fields-null, invented-value: 4 scores (4 pass)"
     },
     {
       "case": "AAC-0025",
       "status": "covered",
       "outcome": "pass",
       "mechanisms": [
-        "M3"
+        "M3",
+        "M6"
       ],
       "stages": [
-        "S3"
+        "S3",
+        "S5"
       ],
       "evidence": [
         {
@@ -381,8 +430,15 @@
         {
           "type": "test",
           "ref": "tests/test_llm_eval.py::test_field_level_scores"
+        },
+        {
+          "type": "annotation",
+          "ref": "field-recall-review @ trace:tr-7f9c",
+          "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-7f9c",
+          "at": "2026-08-15T14:22:40Z"
         }
-      ]
+      ],
+      "note": "langfuse field-recall-review: 1 score (1 pass)"
     },
     {
       "case": "AAC-0026",

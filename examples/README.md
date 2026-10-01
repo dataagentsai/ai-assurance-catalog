@@ -4,8 +4,9 @@
 fixtures/junit.xml       a pytest run
 fixtures/promptfoo.json  a promptfoo run
 fixtures/deepeval.json   a DeepEval test run
+fixtures/langfuse.json   a page of Langfuse scores (v3 API), + langfuse.map.yaml
 aac.config.yaml          what is claimed, from where, and what is accepted
-coverage-report.example.json   <- built from the four above
+coverage-report.example.json   <- built from the above
 ```
 
 ## The report is a build artifact, not a document
@@ -47,6 +48,10 @@ the format supports, because each one means something different to a reader:
   task, for +1.9% quality). Both are *working controls reporting real problems*,
   which is a materially better position than not checking. See
   [../docs/REPORT.md](../docs/REPORT.md).
+- **1 unknown** — `AAC-0017`, covered by a Langfuse NUMERIC score (0.93
+  slice accuracy) and nothing that states a verdict on it. The number would
+  pass or fail only under a threshold, and the threshold is the adopter's, so
+  the adapter leaves it `unknown` rather than pick one.
 - **4 accepted risks** — each with an owner and a review date. Under a
   management-system audit an identified, owned, dated gap is conformant; an
   undiscovered one is a finding.

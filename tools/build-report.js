@@ -22,6 +22,7 @@ const ADAPTERS = {
   junit: require("../adapters/junit"),
   promptfoo: require("../adapters/promptfoo"),
   deepeval: require("../adapters/deepeval"),
+  langfuse: require("../adapters/langfuse"),
 };
 
 const args = process.argv.slice(2);

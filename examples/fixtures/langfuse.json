@@ -1,0 +1,216 @@
+{
+  "_comment": "Fixture: one page of GET /api/public/v3/scores?fields=details,subject for the illustrative invoice-classifier (Langfuse v4 shape: value typed by dataType, the scored entity under subject, cursor pagination). Exercises every declaration path - metadata.aac, a name, the mapping file, none - and the verdict rules: BOOLEAN read as stated, a name that asserts a defect inverted by metadata aac.pass, NUMERIC left unknown, a writer-stated aac.outcome, and a score that says its check was skipped.",
+  "data": [
+    {
+      "id": "s-01",
+      "projectId": "proj-invoice",
+      "name": "absent-fields-null",
+      "source": "EVAL",
+      "dataType": "BOOLEAN",
+      "value": true,
+      "timestamp": "2026-08-15T09:12:03.120Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T09:12:03.120Z",
+      "updatedAt": "2026-08-15T09:12:03.120Z",
+      "comment": "No field without a source value was filled.",
+      "configId": null,
+      "metadata": {
+        "aac": "AAC-0024"
+      },
+      "subject": {
+        "kind": "trace",
+        "id": "tr-7f21"
+      }
+    },
+    {
+      "id": "s-02",
+      "projectId": "proj-invoice",
+      "name": "absent-fields-null",
+      "source": "EVAL",
+      "dataType": "BOOLEAN",
+      "value": true,
+      "timestamp": "2026-08-15T09:40:51.004Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T09:40:51.004Z",
+      "updatedAt": "2026-08-15T09:40:51.004Z",
+      "comment": null,
+      "configId": null,
+      "metadata": {
+        "aac": "AAC-0024"
+      },
+      "subject": {
+        "kind": "trace",
+        "id": "tr-7f9c"
+      }
+    },
+    {
+      "id": "s-03",
+      "projectId": "proj-invoice",
+      "name": "absent-fields-null",
+      "source": "EVAL",
+      "dataType": "BOOLEAN",
+      "value": true,
+      "timestamp": "2026-08-15T10:02:17.551Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T10:02:17.551Z",
+      "updatedAt": "2026-08-15T10:02:17.551Z",
+      "comment": null,
+      "configId": null,
+      "metadata": {
+        "aac": "AAC-0024"
+      },
+      "subject": {
+        "kind": "trace",
+        "id": "tr-80a4"
+      }
+    },
+    {
+      "id": "s-04",
+      "projectId": "proj-invoice",
+      "name": "invented-value",
+      "source": "EVAL",
+      "dataType": "BOOLEAN",
+      "value": false,
+      "timestamp": "2026-08-15T10:02:18.003Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T10:02:18.003Z",
+      "updatedAt": "2026-08-15T10:02:18.003Z",
+      "comment": "Every value traces to the document.",
+      "configId": null,
+      "metadata": {
+        "aac": "AAC-0024",
+        "aac.pass": false
+      },
+      "subject": {
+        "kind": "trace",
+        "id": "tr-80a4"
+      }
+    },
+    {
+      "id": "s-05",
+      "projectId": "proj-invoice",
+      "name": "schema-valid",
+      "source": "API",
+      "dataType": "BOOLEAN",
+      "value": true,
+      "timestamp": "2026-08-15T09:12:02.870Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T09:12:02.870Z",
+      "updatedAt": "2026-08-15T09:12:02.870Z",
+      "comment": null,
+      "configId": null,
+      "metadata": {},
+      "subject": {
+        "kind": "trace",
+        "id": "tr-7f21"
+      }
+    },
+    {
+      "id": "s-06",
+      "projectId": "proj-invoice",
+      "name": "schema-valid",
+      "source": "API",
+      "dataType": "BOOLEAN",
+      "value": true,
+      "timestamp": "2026-08-15T09:40:50.660Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T09:40:50.660Z",
+      "updatedAt": "2026-08-15T09:40:50.660Z",
+      "comment": null,
+      "configId": null,
+      "metadata": {},
+      "subject": {
+        "kind": "trace",
+        "id": "tr-7f9c"
+      }
+    },
+    {
+      "id": "s-07",
+      "projectId": "proj-invoice",
+      "name": "AAC-0017 accuracy by vendor slice",
+      "source": "EVAL",
+      "dataType": "NUMERIC",
+      "value": 0.93,
+      "timestamp": "2026-08-15T11:00:00.000Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T11:00:00.000Z",
+      "updatedAt": "2026-08-15T11:00:00.000Z",
+      "comment": "lowest slice: vendor F, 0.88",
+      "configId": null,
+      "metadata": {},
+      "subject": {
+        "kind": "experiment",
+        "id": "run-a3f19c2"
+      }
+    },
+    {
+      "id": "s-08",
+      "projectId": "proj-invoice",
+      "name": "field-recall-review",
+      "source": "ANNOTATION",
+      "dataType": "CATEGORICAL",
+      "value": "correct",
+      "timestamp": "2026-08-15T14:22:40.000Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T14:22:40.000Z",
+      "updatedAt": "2026-08-15T14:22:40.000Z",
+      "comment": null,
+      "configId": null,
+      "metadata": {
+        "aac": "AAC-0025",
+        "aac.outcome": "pass"
+      },
+      "subject": {
+        "kind": "trace",
+        "id": "tr-7f9c"
+      },
+      "authorUserId": "reviewer-2",
+      "queueId": "q-fields"
+    },
+    {
+      "id": "s-09",
+      "projectId": "proj-invoice",
+      "name": "online-sampler",
+      "source": "API",
+      "dataType": "BOOLEAN",
+      "value": true,
+      "timestamp": "2026-08-15T12:00:00.000Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T12:00:00.000Z",
+      "updatedAt": "2026-08-15T12:00:00.000Z",
+      "comment": "sampler paused for the release freeze",
+      "configId": null,
+      "metadata": {
+        "aac": "AAC-0014",
+        "aac.outcome": "skipped",
+        "aac.mechanism": "M3"
+      },
+      "subject": {
+        "kind": "trace",
+        "id": "tr-81b0"
+      }
+    },
+    {
+      "id": "s-10",
+      "projectId": "proj-invoice",
+      "name": "tone",
+      "source": "EVAL",
+      "dataType": "NUMERIC",
+      "value": 0.71,
+      "timestamp": "2026-08-15T09:12:04.000Z",
+      "environment": "production",
+      "createdAt": "2026-08-15T09:12:04.000Z",
+      "updatedAt": "2026-08-15T09:12:04.000Z",
+      "comment": null,
+      "configId": null,
+      "metadata": {},
+      "subject": {
+        "kind": "trace",
+        "id": "tr-7f21"
+      }
+    }
+  ],
+  "meta": {
+    "limit": 50
+  }
+}

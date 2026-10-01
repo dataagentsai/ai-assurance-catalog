@@ -45,6 +45,16 @@ sources:
     mechanisms: [M3]
     stages: [S3]
 
+  # Scores the Langfuse project already holds: GET /api/public/v3/scores with
+  # fields=details,subject, saved as it answers. Langfuse's `source` does not
+  # name a mechanism (EVAL covers LLM and code evaluators alike), so each source
+  # is mapped here. Stages default to S5 for trace scores, S3 for experiments.
+  - adapter: langfuse
+    path: fixtures/langfuse.json
+    map: fixtures/langfuse.map.yaml
+    mechanisms: { EVAL: [M3], ANNOTATION: [M6], API: [M1] }
+    url: https://langfuse.example.internal/project/proj-invoice
+
 declarations:
   # Conditional obligations whose stated condition genuinely does not hold.
   - case: AAC-0092

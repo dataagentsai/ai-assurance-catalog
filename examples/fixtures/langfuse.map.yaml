@@ -1,0 +1,5 @@
+# Score names the online evaluators already use, mapped to the obligation each
+# discharges — for scores that cannot carry metadata.aac yet. Names match
+# exactly; a name that matches no score in the export is reported.
+AAC-0022:
+  - schema-valid
