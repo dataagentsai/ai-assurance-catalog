@@ -1,0 +1,296 @@
+# Crosswalk: EU AI Act — Regulation (EU) 2024/1689 -> AAC obligations.
+#
+# INFORMATIVE, and not legal advice. Released out of band from the catalog: an
+# amendment, delegated act or harmonised standard must never force a version
+# bump in catalog/.
+#
+# The Act is organised by ROLE AND RISK CLASS — what a provider or deployer of a
+# high-risk system, or of a system with transparency obligations, must do. This
+# catalog is organised by APPLICATION SHAPE. Whether the Act applies at all is a
+# classification question (Art. 6, Annex III) that no test obligation answers.
+# Where it applies, an obligation is evidence that a requirement is met; it is
+# never the conformity assessment itself.
+#
+# SCOPE OF THIS FILE. The items considered are the ones a technical test could
+# plausibly evidence: the high-risk requirements of Chapter III Section 2
+# (Arts. 9 to 15), the provider and deployer obligations that turn on testing,
+# logs or monitoring (Arts. 17, 19, 26, 72, 73), the transparency obligations of
+# Art. 50, and the general-purpose-model obligations (Arts. 53, 55). Each appears
+# exactly once, under `mappings` or `unmapped`. The rest of the Act —
+# institutions, penalties, sandboxes, notified bodies — is procedural and is not
+# listed.
+#
+# The Official Journal text is public and may be quoted. Names below are short
+# labels; read the article for the wording.
+
+framework: eu-ai-act
+framework_version: "Regulation (EU) 2024/1689, OJ L, 12.7.2024"
+framework_url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+license_note: >-
+  Official Journal of the European Union; reuse of EU legal texts is permitted.
+  Not legal advice — whether a system is high-risk is a classification under
+  Art. 6 and Annex III that this crosswalk does not make.
+version: "0.1.0"
+
+mappings:
+  - external: Art. 9(6)
+    external_name: Testing to identify risk management measures and confirm consistent performance
+    relation: evidence-for
+    cases: [AAC-0001, AAC-0005, AAC-0010, AAC-0098]
+    note: >-
+      "Perform consistently for their intended purpose": accuracy on a frozen
+      set, the safety corpus, the run-to-run noise floor, and every route the
+      system can serve from. Any covered row in a coverage report is testing in
+      this sense; these are the ones that speak to consistency.
+
+  - external: Art. 9(8)
+    external_name: Testing before placing on the market, against prior defined metrics and probabilistic thresholds
+    relation: partial
+    cases: [AAC-0001, AAC-0013, AAC-0102]
+    note: >-
+      The catalog obliges a frozen set, a regression comparison and a cost gate
+      run before promotion. The metrics and probabilistic thresholds the
+      article requires are the provider's to define — the catalog deliberately
+      sets none (docs/NON-GOALS.md) — so the mapping is partial by design.
+
+  - external: Art. 10(3)
+    external_name: Testing data sets relevant, representative, free of errors, complete
+    relation: partial
+    cases: [AAC-0001, AAC-0031]
+    note: >-
+      Under Art. 10(6), a system that does not train models owes Art. 10(2) to
+      (5) for its testing data sets only, which is the usual position of an LLM
+      application. AAC-0001 requires the curated, version-controlled set to
+      exist; AAC-0031 requires the unanswerable cases a set curated from
+      answerable questions never contains, which is completeness in practice.
+      Neither tests representativeness or error rate of the set itself.
+
+  - external: Art. 12(1)
+    external_name: Automatic recording of events (logs) over the lifetime of the system
+    relation: evidence-for
+    cases: [AAC-0011, AAC-0060, AAC-0080]
+    note: >-
+      AAC-0011 is asserted in CI, so a log field that stops being written fails
+      a build instead of being discovered when it is needed.
+
+  - external: Art. 12(2)
+    external_name: Logs enable identifying risk situations and substantial modification, post-market monitoring, and deployer monitoring
+    relation: evidence-for
+    cases: [AAC-0012, AAC-0100, AAC-0080, AAC-0114]
+    note: >-
+      Point (a), substantial modification, is the one teams miss: recording the
+      model version, prompt revision and serving route per request (AAC-0012,
+      AAC-0100) is what lets a provider show from the logs that what ran is
+      what was assessed. Points (b) and (c) are served by the same records.
+
+  - external: Art. 13(3)(b)(ii)
+    external_name: Instructions for use state the level of accuracy, robustness and cybersecurity tested and validated
+    relation: partial
+    cases: [AAC-0001, AAC-0017, AAC-0018]
+    note: >-
+      These produce the measured numbers the instructions must state, sliced
+      per segment (AAC-0017). Writing the instructions for use is the
+      provider's; the article's robustness and cybersecurity levels draw on the
+      cases under Art. 15(4) and 15(5).
+
+  - external: Art. 14(1)
+    external_name: Designed so natural persons can effectively oversee the system
+    relation: partial
+    cases: [AAC-0078, AAC-0043, AAC-0056]
+    note: >-
+      Tests that the oversight paths built into the design work — approval
+      before irreversible action, including when the facts changed during the
+      pause; handoff to a human with complete context; confirmation before
+      destructive tools. Whether the oversight is effective in the article's
+      sense is not a test result.
+
+  - external: Art. 14(4)(a)
+    external_name: Overseer can monitor operation and detect anomalies
+    relation: partial
+    cases: [AAC-0114, AAC-0079]
+    note: >-
+      Anomalies in behaviour rates alert a person (AAC-0114), and failure and
+      silence are both loud (AAC-0079). Understanding the system's capacities
+      and limitations, the first half of point (a), is not covered.
+
+  - external: Art. 14(4)(d)
+    external_name: Overseer can disregard, override or reverse the output
+    relation: partial
+    cases: [AAC-0081]
+    note: >-
+      Shaky: AAC-0081 makes each side-effecting action reversible, which is the
+      precondition for "reverse" when the output is an action. Disregarding or
+      overriding a non-action output is a user-interface matter not covered.
+
+  - external: Art. 14(4)(e)
+    external_name: Overseer can intervene or interrupt through a stop procedure to a safe state
+    relation: partial
+    cases: [AAC-0055, AAC-0077]
+    note: >-
+      Shaky: both cases test that a stop enforced outside the agent's own logic
+      reaches a defined state with its partial result handled. They are
+      triggered by budgets, not by a person; a human-initiated stop reaching
+      the same path is not separately obliged.
+
+  - external: Art. 15(1)
+    external_name: Appropriate accuracy, robustness and cybersecurity, performing consistently throughout the lifecycle
+    relation: evidence-for
+    cases: [AAC-0001, AAC-0013, AAC-0016, AAC-0082, AAC-0014, AAC-0098]
+    note: >-
+      "Throughout their lifecycle" is the half the scheduled re-runs carry: a
+      hosted model changes with nothing changed on the provider's side
+      (AAC-0016, AAC-0082), and live traffic is scored on the same rubrics as
+      offline (AAC-0014). What level is appropriate is the provider's.
+
+  - external: Art. 15(3)
+    external_name: Accuracy levels and metrics declared in instructions for use
+    relation: partial
+    cases: [AAC-0001, AAC-0017]
+    note: >-
+      Produces the measurements to declare. The declaration is the provider's.
+
+  - external: Art. 15(4)
+    external_name: Resilience to errors, faults and inconsistencies; fail-safe plans; feedback loops
+    relation: partial
+    cases: [AAC-0009, AAC-0015, AAC-0019, AAC-0046, AAC-0053, AAC-0065, AAC-0091]
+    note: >-
+      The first subparagraph is well covered: provider faults, degenerate
+      input, partial failure in a graph, tool errors, a contained sub-agent
+      failure, and a guardrail outage failing closed — "backup or fail-safe
+      plans" tested rather than written down. The feedback-loop subparagraph
+      for systems that continue to learn after placement is not covered;
+      long-term memory (AAC-0041) is related but is not learning in the
+      article's sense, and is not claimed.
+
+  - external: Art. 15(5)
+    external_name: Resilience against attempts by unauthorised third parties to alter use, outputs or performance
+    relation: partial
+    cases: [AAC-0004, AAC-0036, AAC-0058, AAC-0106, AAC-0107, AAC-0108, AAC-0057, AAC-0111]
+    note: >-
+      Adversarial inputs, confidentiality attacks and tampered pre-trained
+      components are covered at application level. Training-data and model
+      poisoning, both named in the article, are model-level and out of scope;
+      AAC-0108 covers poisoning of a retrieval corpus, which the article does
+      not name but which has the same effect on outputs.
+
+  - external: Art. 17(1)(d)
+    external_name: QMS includes examination, test and validation procedures and their frequency
+    relation: evidence-for
+    cases: [AAC-0013, AAC-0034, AAC-0090, AAC-0101, AAC-0016]
+    note: >-
+      Evidence that test procedures are wired to the events that need them —
+      every release, index rebuild, judge change and routing change — and run
+      on a schedule. The quality management system that records them is the
+      provider's.
+
+  - external: Art. 26(5)
+    external_name: Deployer monitors operation on the basis of the instructions for use
+    relation: evidence-for
+    cases: [AAC-0114, AAC-0116, AAC-0079]
+
+  - external: Art. 72(2)
+    external_name: Post-market monitoring collects and analyses performance data throughout the lifetime
+    relation: evidence-for
+    cases: [AAC-0014, AAC-0114, AAC-0115, AAC-0116, AAC-0082]
+    note: >-
+      AAC-0115 is the piece most monitoring lacks: later outcomes joined to the
+      run that produced them, so performance is measured on what happened
+      rather than only on what the system said.
+
+  - external: Art. 50(1)
+    external_name: Persons informed they are interacting with an AI system
+    relation: partial
+    cases: [AAC-0003]
+    note: >-
+      Shaky. Where the disclosure is made in the model's own output, it is a
+      required-disclaimer constraint and AAC-0003 tests it like any other. Most
+      disclosures are made by the interface, which no obligation covers.
+
+unmapped:
+  - external: Art. 5
+    external_name: Prohibited AI practices
+    reason: A question of what the system is for, decided before any test runs.
+  - external: Art. 9(1)-(5), 9(7), 9(9)-(10)
+    external_name: Risk management system — establishment, steps, measures, real-world testing, vulnerable groups, integration
+    reason: >-
+      The risk management process itself. Testing is mapped at 9(6) and 9(8);
+      real-world testing under Arts. 57 and 60 is a regulatory procedure.
+  - external: Art. 10(2)
+    external_name: Data governance and management practices
+    reason: >-
+      Governance practices for data, including the bias examination in points
+      (f) and (g), which is out of scope per docs/NON-GOALS.md.
+  - external: Art. 10(5)
+    external_name: Processing special categories of personal data for bias detection
+    reason: Fairness and bias detection is out of scope per docs/NON-GOALS.md.
+  - external: Art. 11
+    external_name: Technical documentation (Annex IV)
+    reason: >-
+      Documentation. A dated series of coverage reports is a candidate input to
+      Annex IV point 2(g) on validation and testing, but no obligation
+      discharges the documentation duty.
+  - external: Art. 12(3)
+    external_name: Minimum logging for remote biometric identification systems
+    reason: Specific to Annex III point 1(a) systems; no obligation is written for that use.
+  - external: Art. 13(1)
+    external_name: Operation sufficiently transparent for deployers to interpret output
+    reason: >-
+      A design quality judged by the deployer. Citation support (AAC-0030)
+      aids interpretation of a grounded answer but is not claimed as
+      transparency in the article's sense.
+  - external: Art. 13(3) other points
+    external_name: Instructions for use — remaining content
+    reason: Documentation content; only point (b)(ii) is evidenced by test results.
+  - external: Art. 14(4)(b)
+    external_name: Overseer aware of automation bias
+    reason: Awareness of people; not a system property a test can show.
+  - external: Art. 14(4)(c)
+    external_name: Overseer can correctly interpret the output
+    reason: Interpretation by people; see Art. 13(1).
+  - external: Art. 14(5)
+    external_name: Separate verification by two natural persons for remote biometric identification
+    reason: Specific to Annex III point 1(a) systems.
+  - external: Art. 15(2)
+    external_name: Commission encourages benchmarks and measurement methodologies
+    reason: An obligation on the Commission, not on a system.
+  - external: Art. 17(1) other points
+    external_name: Quality management system — remaining elements
+    reason: Organisational elements of the QMS; only point (d) turns on test procedures.
+  - external: Art. 19(1)
+    external_name: Provider keeps automatically generated logs
+    reason: >-
+      A retention duty. Note the interaction with AAC-0095, which obliges
+      bounded log retention: the bound an adopter sets must also satisfy the
+      minimum period in this article and in Art. 26(6). The catalog sets no
+      period.
+  - external: Art. 26(1)-(4), 26(6)-(12)
+    external_name: Deployer obligations other than monitoring
+    reason: >-
+      Use per instructions, assigned oversight, input data relevance, log
+      retention, informing workers and affected persons — organisational
+      duties. Monitoring is mapped at 26(5).
+  - external: Art. 50(2)
+    external_name: Synthetic output marked in a machine-readable format and detectable
+    reason: >-
+      No obligation covers marking or watermarking generated content — a
+      candidate gap, shared with NIST AI 600-1 §2.8.
+  - external: Art. 50(3)
+    external_name: Informing persons exposed to emotion recognition or biometric categorisation
+    reason: Specific to those system types; no obligation is written for them.
+  - external: Art. 50(4)
+    external_name: Disclosure of deep fakes and of generated text on matters of public interest
+    reason: A deployer's disclosure duty for published content.
+  - external: Art. 72(1), 72(3)
+    external_name: Post-market monitoring system established and based on a plan
+    reason: Establishing and documenting the system and its plan; its data collection is mapped at 72(2).
+  - external: Art. 73
+    external_name: Reporting of serious incidents
+    reason: Reporting to authorities is a procedure.
+  - external: Art. 53
+    external_name: Obligations for providers of general-purpose AI models
+    reason: Model-provider obligations; this catalog is application-level.
+  - external: Art. 55
+    external_name: Obligations for providers of general-purpose AI models with systemic risk
+    reason: >-
+      Includes adversarial testing of the model (point (1)(a)), which is
+      model-level and out of scope per docs/NON-GOALS.md.

@@ -9,8 +9,35 @@ ship. A quarter with no changes ships a release note saying so.
 
 ## [Unreleased]
 
-**Phase 1 — remaining crosswalks:** NIST AI RMF, ISO/IEC 42001, EU AI Act.
-OWASP shipped in 0.5.0.
+**Phase 1 complete — three crosswalks: NIST AI RMF, ISO/IEC 42001, EU AI
+Act.** Out of band, as crosswalks always are: no obligation changed and the
+catalog version does not move. OWASP shipped in 0.5.0.
+
+- `crosswalks/nist-ai-rmf.yaml` — all 72 Core subcategories and the 12 risks of
+  the Generative AI Profile (NIST AI 600-1). 29 mapped, to 61 obligations; 55
+  recorded unmapped.
+- `crosswalks/iso-42001.yaml` — all 38 Annex A controls, cited by identifier
+  only. 6 mapped, to 25 obligations, every one `evidence-for` or `partial`; 32
+  recorded unmapped.
+- `crosswalks/eu-ai-act.yaml` — the articles a technical test could evidence:
+  Arts. 9 to 15, 17, 19, 26, 50, 53, 55, 72, 73. 18 mapped, to 46 obligations;
+  22 recorded unmapped.
+
+The unmapped counts are the finding, not a backlog. Most of NIST and ISO governs
+an organisation — policy, roles, impact assessment, documentation — and a test
+obligation is evidence for only the items that turn on what a system
+demonstrably does. Mapping the rest loosely would have looked complete and been
+discounted by the first auditor to read it.
+
+**`unmapped:` joins the crosswalk shape.** Each entry carries a one-line reason.
+The linter requires the reason, refuses cases or a relation on an unmapped
+entry, and rejects an item listed twice across `mappings` and `unmapped`; the
+site renders the unmapped list under each crosswalk, and the crosswalk section
+no longer assumes every framework is a threat list.
+
+Two candidate gaps surfaced and are recorded, not yet written: provenance
+marking of generated content (Art. 50(2), AI 600-1 §2.8), and a person-initiated
+stop reaching the same safe path as a budget stop (Art. 14(4)(e)).
 
 **Fixed — a skipped test no longer counts as coverage.** The junit adapter read
 `<skipped/>` as `covered` with outcome `unknown`, while REPORT.md defines

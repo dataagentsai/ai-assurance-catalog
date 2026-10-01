@@ -1,0 +1,506 @@
+# Crosswalk: NIST AI RMF 1.0 (NIST AI 100-1) and its Generative AI Profile
+# (NIST AI 600-1) -> AAC obligations.
+#
+# INFORMATIVE. Released out of band from the catalog: a NIST revision must never
+# force a version bump in catalog/.
+#
+# The AI RMF is organised by RISK-MANAGEMENT OUTCOME — what an organisation has
+# in place. This catalog is organised by APPLICATION SHAPE — what must be true of
+# one system. Most subcategories describe a process, a role or a document, and a
+# test obligation is at best evidence that the process operated. So nearly every
+# mapping here is `evidence-for` or `partial`; `tests-for` is used only where an
+# obligation directly tests the risk the item names.
+#
+# Every one of the 72 Core subcategories, and every one of the 12 risks in
+# Section 2 of the Generative AI Profile, appears exactly once: under `mappings`
+# or under `unmapped` with the reason. An item with no obligation behind it is
+# recorded, not padded. The linter enforces that no item appears twice.
+#
+# Generative AI Profile items are cited by their Section 2 heading number
+# ("AI 600-1 §2.2"). The profile's suggested actions (GV-1.1-001 and so on) are
+# not mapped individually; they hang off the Core subcategories already here.
+#
+# NIST publications are US-government works and may be quoted. Names below are
+# short labels, not the subcategory text — read the source for the full wording.
+
+framework: nist-ai-rmf
+framework_version: "1.0 (NIST AI 100-1, January 2023); Generative AI Profile NIST AI 600-1 (July 2024)"
+framework_url: https://doi.org/10.6028/NIST.AI.100-1
+license_note: >-
+  US-government work, not subject to copyright in the United States; freely
+  redistributable. Generative AI Profile at https://doi.org/10.6028/NIST.AI.600-1.
+version: "0.1.0"
+
+mappings:
+  # ---- GOVERN ----------------------------------------------------------------
+  - external: GOVERN 1.6
+    external_name: Mechanisms to inventory AI systems
+    relation: evidence-for
+    cases: [AAC-0094, AAC-0107]
+    note: >-
+      AAC-0094 is the one case that names this outright: an inventory of models
+      in use records intent unless the egress point refuses everything not on
+      it. AAC-0107 makes the inventory precise to the digest. Neither supplies
+      the organisational inventory itself, or its resourcing.
+
+  - external: GOVERN 6.2
+    external_name: Contingency for failures in third-party data or AI systems
+    relation: evidence-for
+    cases: [AAC-0009, AAC-0091, AAC-0098]
+    note: >-
+      The contingency process is organisational; these show that its technical
+      half works. AAC-0009 injects provider failure, AAC-0091 takes a
+      third-party guardrail down, and AAC-0098 ensures the fallback the
+      contingency relies on was itself evaluated.
+
+  # ---- MAP -------------------------------------------------------------------
+  - external: MAP 3.5
+    external_name: Human oversight processes defined, assessed, documented
+    relation: partial
+    cases: [AAC-0078, AAC-0043, AAC-0056]
+    note: >-
+      Covers "assessed" only — each case tests that an oversight path works
+      (approval before irreversible action, handoff to a human, confirmation
+      before destructive tools). Defining and documenting the oversight process
+      is the organisation's.
+
+  # ---- MEASURE ---------------------------------------------------------------
+  - external: MEASURE 1.2
+    external_name: Appropriateness of metrics and effectiveness of controls regularly assessed
+    relation: partial
+    cases: [AAC-0084, AAC-0088, AAC-0090]
+    note: >-
+      Two halves are evidenced: a model-graded metric is checked against human
+      labels and re-checked when it changes (AAC-0084, AAC-0090), and a
+      guardrail control's effectiveness is measured in both directions
+      (AAC-0088). Error reports and impacts on affected communities are not.
+
+  - external: MEASURE 2.1
+    external_name: Test sets, metrics and TEVV tools documented
+    relation: partial
+    cases: [AAC-0001]
+    note: >-
+      AAC-0001 requires the test set to exist and be version-controlled. The
+      coverage report (docs/REPORT.md) records which mechanism and which tool
+      produced each verdict, which is closer to this item than any single
+      obligation, but a report is not an obligation and is not mapped.
+
+  - external: MEASURE 2.3
+    external_name: Performance measured for conditions similar to deployment
+    relation: evidence-for
+    cases: [AAC-0001, AAC-0007, AAC-0017, AAC-0098, AAC-0014]
+    note: >-
+      "Similar to deployment" is where these differ from an offline score:
+      latency under realistic concurrency (AAC-0007), every route the system can
+      actually serve from (AAC-0098), and live sampled traffic (AAC-0014). The
+      criteria themselves are the adopter's.
+
+  - external: MEASURE 2.4
+    external_name: Functionality and behaviour monitored in production
+    relation: evidence-for
+    cases: [AAC-0014, AAC-0114, AAC-0116, AAC-0079, AAC-0011]
+    note: >-
+      AAC-0114 and AAC-0116 exist because traffic-based monitoring alone reads a
+      broken deployment as a quiet hour; AAC-0011 is the telemetry everything
+      else in this row depends on.
+
+  - external: MEASURE 2.5
+    external_name: Valid and reliable; limits of generalisability documented
+    relation: partial
+    cases: [AAC-0001, AAC-0010, AAC-0013, AAC-0018, AAC-0098]
+    note: >-
+      Validity and reliability are evidenced: accuracy on a frozen set, its
+      noise floor, regression against the incumbent, stability under
+      paraphrase, and every reachable model. Documenting the limits of
+      generalisability is not an obligation in the catalog.
+
+  - external: MEASURE 2.6
+    external_name: Evaluated for safety; fails safely, including beyond knowledge limits
+    relation: evidence-for
+    cases: [AAC-0005, AAC-0091, AAC-0055, AAC-0077, AAC-0056, AAC-0072, AAC-0031, AAC-0019]
+    note: >-
+      "Fail safely beyond its knowledge limits" lands on two cases teams rarely
+      connect to safety: abstention when the corpus cannot answer (AAC-0031)
+      and a tested strategy at the context limit (AAC-0019). Whether residual
+      risk is within tolerance is a threshold, and belongs to the adopter.
+
+  - external: MEASURE 2.7
+    external_name: Security and resilience evaluated
+    relation: evidence-for
+    cases: [AAC-0004, AAC-0036, AAC-0058, AAC-0057, AAC-0106, AAC-0107, AAC-0108, AAC-0111, AAC-0071]
+    note: >-
+      See crosswalks/owasp-llm.yaml for the threat-by-threat split of the same
+      cases.
+
+  - external: MEASURE 2.8
+    external_name: Transparency and accountability risks examined
+    relation: partial
+    cases: [AAC-0080, AAC-0011, AAC-0060, AAC-0100]
+    note: >-
+      Accountability through traceability only: any action, step or route
+      choice can be reconstructed afterwards. Transparency towards users and
+      affected people is not covered.
+
+  - external: MEASURE 2.10
+    external_name: Privacy risk examined
+    relation: evidence-for
+    cases: [AAC-0006, AAC-0032, AAC-0040, AAC-0095, AAC-0096, AAC-0097, AAC-0117]
+
+  - external: MEASURE 2.13
+    external_name: Effectiveness of TEVV metrics and processes evaluated
+    relation: evidence-for
+    cases: [AAC-0084, AAC-0085, AAC-0086, AAC-0087, AAC-0090, AAC-0010]
+    note: >-
+      The closest fit in the RMF for the A10 judge obligations: a model-graded
+      metric is itself a TEVV instrument, and these cases validate it — human
+      agreement, bias probes, stability, calibration, re-validation on change.
+      AAC-0010 supplies the noise floor without which no metric's movement can
+      be read.
+
+  - external: MEASURE 3.1
+    external_name: Existing, unanticipated and emergent risks tracked from deployed performance
+    relation: evidence-for
+    cases: [AAC-0114, AAC-0115, AAC-0014]
+
+  - external: MEASURE 3.3
+    external_name: End-user feedback and appeal integrated into evaluation metrics
+    relation: partial
+    cases: [AAC-0115]
+    note: >-
+      AAC-0115 joins later outcomes, including explicit feedback, to the run
+      that produced them and counts them beside rubric scores — the
+      "integrated into evaluation metrics" half. The appeal process is not
+      covered.
+
+  - external: MEASURE 4.3
+    external_name: Performance improvements or declines identified from field data
+    relation: evidence-for
+    cases: [AAC-0014, AAC-0114, AAC-0115]
+    note: >-
+      Field-data cases only. AAC-0013 also identifies declines, but on an
+      offline set, so it sits under MEASURE 2.5 instead. Consultation with
+      affected communities is not covered.
+
+  # ---- MANAGE ----------------------------------------------------------------
+  - external: MANAGE 1.1
+    external_name: Determination whether the system achieves its purpose and should proceed
+    relation: evidence-for
+    cases: [AAC-0001, AAC-0013, AAC-0102]
+    note: >-
+      The `gate: true` field on an obligation is the catalog's input to this
+      go/no-go. These three are the release gates for quality, regression and
+      cost; the determination itself, and the thresholds behind it, are the
+      adopter's.
+
+  - external: MANAGE 2.4
+    external_name: Supersede, disengage or deactivate systems performing inconsistently
+    relation: partial
+    cases: [AAC-0012, AAC-0077]
+    note: >-
+      AAC-0012 exercises reverting to the previous model-and-prompt pair, which
+      is supersession tested rather than assumed. AAC-0077 stops a run, not a
+      system. Assigning responsibility for the decision is not covered.
+
+  - external: MANAGE 3.1
+    external_name: Third-party risks monitored and controls applied
+    relation: evidence-for
+    cases: [AAC-0016, AAC-0094, AAC-0107, AAC-0009]
+
+  - external: MANAGE 3.2
+    external_name: Pre-trained models monitored as part of regular monitoring
+    relation: evidence-for
+    cases: [AAC-0016, AAC-0082, AAC-0012, AAC-0107]
+    note: >-
+      The strongest Core fit in this file. A hosted model changes under you
+      with nothing changed on your side; AAC-0016 and AAC-0082 re-run frozen
+      inputs on a schedule to catch it, and AAC-0107 detects a substituted
+      artifact at the release gate.
+
+  - external: MANAGE 4.1
+    external_name: Post-deployment monitoring plans implemented
+    relation: partial
+    cases: [AAC-0114, AAC-0115, AAC-0116, AAC-0101, AAC-0012]
+    note: >-
+      Covers monitoring, capture of user input (AAC-0115), recovery (AAC-0012)
+      and change management for routing (AAC-0101). Appeal and override,
+      decommissioning and incident response are not covered.
+
+  - external: MANAGE 4.3
+    external_name: Incidents and errors communicated; tracking and recovery processes followed
+    relation: partial
+    cases: [AAC-0080, AAC-0079]
+    note: >-
+      Shaky and deliberately marked partial: AAC-0079 makes failures reach a
+      human and AAC-0080 makes any action explainable weeks later, which an
+      incident process needs. Communicating incidents to affected parties is
+      organisational and not covered.
+
+  # ---- Generative AI Profile (NIST AI 600-1, Section 2) ----------------------
+  - external: AI 600-1 §2.2
+    external_name: Confabulation
+    relation: tests-for
+    cases: [AAC-0029, AAC-0030, AAC-0031, AAC-0024, AAC-0110, AAC-0112]
+    note: >-
+      Includes two forms of confabulation the profile's examples do not
+      separate: a claim about the system's own actions that its tool results
+      do not support (AAC-0110), and a reply that reports a completed outcome
+      for work the system has only promised (AAC-0112).
+
+  - external: AI 600-1 §2.3
+    external_name: Dangerous, Violent, or Hateful Content
+    relation: partial
+    cases: [AAC-0005, AAC-0088, AAC-0091, AAC-0092]
+    note: >-
+      The catalog obliges testing against the adopter's declared policy
+      categories and does not name categories itself. Evidence for this risk
+      only where the adopter's policy includes it.
+
+  - external: AI 600-1 §2.4
+    external_name: Data Privacy
+    relation: partial
+    cases: [AAC-0006, AAC-0032, AAC-0040, AAC-0095, AAC-0096, AAC-0117]
+    note: >-
+      Application-level leakage paths only. Training-data memorisation and
+      inference of sensitive attributes are model-level and out of scope per
+      docs/NON-GOALS.md.
+
+  - external: AI 600-1 §2.7
+    external_name: Human-AI Configuration
+    relation: partial
+    cases: [AAC-0078, AAC-0043, AAC-0056]
+    note: >-
+      Shaky: these test that a human is in the loop where the design says one
+      is. Automation bias, over-reliance, anthropomorphisation and emotional
+      entanglement — the substance of this risk — are not covered.
+
+  - external: AI 600-1 §2.9
+    external_name: Information Security
+    relation: partial
+    cases: [AAC-0004, AAC-0036, AAC-0058, AAC-0106, AAC-0057, AAC-0071, AAC-0108, AAC-0111]
+    note: >-
+      The profile names two halves. The attack surface of the GAI system itself
+      (direct and indirect prompt injection, poisoning) is covered; the
+      lowered barrier to offensive cyber capability is a model-capability
+      question and is not.
+
+  - external: AI 600-1 §2.11
+    external_name: Obscene, Degrading, and/or Abusive Content
+    relation: partial
+    cases: [AAC-0005, AAC-0088, AAC-0091, AAC-0092]
+    note: >-
+      As §2.3: evidence only where the adopter's declared policy categories
+      include it.
+
+  - external: AI 600-1 §2.12
+    external_name: Value Chain and Component Integration
+    relation: evidence-for
+    cases: [AAC-0107, AAC-0094, AAC-0012, AAC-0016, AAC-0098]
+    note: >-
+      Covers the deployed value chain — which components serve, whether they
+      are the ones evaluated, and whether a provider-side change is noticed.
+      Vetting procured training data is out of scope.
+
+unmapped:
+  # ---- GOVERN ----------------------------------------------------------------
+  - external: GOVERN 1.1
+    external_name: Legal and regulatory requirements understood and documented
+    reason: Organisational process; no system property evidences it.
+  - external: GOVERN 1.2
+    external_name: Trustworthy characteristics integrated into policy
+    reason: Organisational policy.
+  - external: GOVERN 1.3
+    external_name: Level of risk management set by risk tolerance
+    reason: Risk tolerance is the adopter's threshold, which the catalog never sets.
+  - external: GOVERN 1.4
+    external_name: Risk management process established through transparent policy
+    reason: Organisational policy.
+  - external: GOVERN 1.5
+    external_name: Ongoing monitoring and periodic review of the risk management process
+    reason: Reviews the process, not the system; system monitoring is under MEASURE 2.4.
+  - external: GOVERN 1.7
+    external_name: Decommissioning and phasing out safely
+    reason: No obligation covers retiring a system.
+  - external: GOVERN 2.1
+    external_name: Roles, responsibilities and lines of communication documented
+    reason: Organisational roles.
+  - external: GOVERN 2.2
+    external_name: Personnel and partners trained
+    reason: Training of people.
+  - external: GOVERN 2.3
+    external_name: Executive leadership responsible for AI risk decisions
+    reason: Organisational accountability.
+  - external: GOVERN 3.1
+    external_name: Decisions informed by a diverse team
+    reason: Team composition.
+  - external: GOVERN 3.2
+    external_name: Roles for human-AI configurations and oversight defined
+    reason: Role definition; the tested oversight paths are under MAP 3.5.
+  - external: GOVERN 4.1
+    external_name: Safety-first mindset fostered
+    reason: Organisational culture.
+  - external: GOVERN 4.2
+    external_name: Teams document and communicate risks and impacts
+    reason: Organisational documentation practice.
+  - external: GOVERN 4.3
+    external_name: Practices enable testing, incident identification and information sharing
+    reason: >-
+      An organisational practice. An adopter's series of coverage reports is
+      evidence for it as a whole; no single obligation is.
+  - external: GOVERN 5.1
+    external_name: Feedback from those external to the team collected and integrated
+    reason: Organisational engagement process.
+  - external: GOVERN 5.2
+    external_name: Adjudicated feedback incorporated into design
+    reason: Organisational engagement process.
+  - external: GOVERN 6.1
+    external_name: Policies for third-party risks, including IP
+    reason: Organisational policy; the technical controls are under MANAGE 3.1.
+
+  # ---- MAP -------------------------------------------------------------------
+  - external: MAP 1.1
+    external_name: Intended purposes, context and settings understood and documented
+    reason: Context-setting documentation.
+  - external: MAP 1.2
+    external_name: Interdisciplinary actors and competencies
+    reason: Team composition.
+  - external: MAP 1.3
+    external_name: Mission and goals for AI documented
+    reason: Organisational documentation.
+  - external: MAP 1.4
+    external_name: Business value or context of use defined
+    reason: Business decision.
+  - external: MAP 1.5
+    external_name: Organisational risk tolerances determined
+    reason: Risk tolerance is the adopter's threshold, which the catalog never sets.
+  - external: MAP 1.6
+    external_name: System requirements elicited and understood
+    reason: Requirements elicitation is a process; obligations are not requirements for a specific system.
+  - external: MAP 2.1
+    external_name: Tasks and methods defined (classifier, generative model, recommender)
+    reason: >-
+      The catalog's archetype classification (taxonomy/archetypes.yaml) is a
+      natural artifact for this, but it is a classification, not an
+      obligation, so nothing maps.
+  - external: MAP 2.2
+    external_name: Knowledge limits and use of output by humans documented
+    reason: Documentation; the tested behaviour at knowledge limits is under MEASURE 2.6.
+  - external: MAP 2.3
+    external_name: Scientific integrity and TEVV considerations identified
+    reason: Planning-stage documentation; the measurement-side evidence is under MEASURE 2.13.
+  - external: MAP 3.1
+    external_name: Potential benefits examined
+    reason: Benefit analysis.
+  - external: MAP 3.2
+    external_name: Potential costs of errors examined against risk tolerance
+    reason: >-
+      "Costs" here are harms from errors, judged against risk tolerance. The
+      catalog's cost obligations measure spend, which is a different thing.
+  - external: MAP 3.3
+    external_name: Targeted application scope specified
+    reason: Scope decision and documentation.
+  - external: MAP 3.4
+    external_name: Operator and practitioner proficiency processes
+    reason: Training and certification of people.
+  - external: MAP 4.1
+    external_name: Technology and legal risks of components mapped, including third-party
+    reason: Risk-mapping process.
+  - external: MAP 4.2
+    external_name: Internal risk controls for components identified and documented
+    reason: Documentation of controls; the controls' operation is under MANAGE 3.1.
+  - external: MAP 5.1
+    external_name: Likelihood and magnitude of impacts identified
+    reason: Impact assessment.
+  - external: MAP 5.2
+    external_name: Engagement with relevant AI actors on impacts
+    reason: Organisational engagement process.
+
+  # ---- MEASURE ---------------------------------------------------------------
+  - external: MEASURE 1.1
+    external_name: Metrics selected; unmeasured risks documented
+    reason: >-
+      Selection is a decision. The coverage report's not-covered and
+      accepted-risk rows are the natural record of what is not measured, but
+      that is report format, not an obligation.
+  - external: MEASURE 1.3
+    external_name: Independent assessors involved
+    reason: Who assesses, not what is true of the system.
+  - external: MEASURE 2.2
+    external_name: Evaluations involving human subjects meet requirements
+    reason: Research-ethics requirement on the evaluation, not the system.
+  - external: MEASURE 2.9
+    external_name: Model explained and validated; output interpreted in context
+    reason: >-
+      Model explainability is model-level (docs/NON-GOALS.md). Citation support
+      (AAC-0030) helps a reader interpret an answer but is not an explanation.
+  - external: MEASURE 2.11
+    external_name: Fairness and bias evaluated
+    reason: >-
+      Out of scope per docs/NON-GOALS.md: it needs domain-specific protected
+      attributes and legal context. Per-slice accuracy (AAC-0017) is not a
+      fairness measure and is not claimed as one.
+  - external: MEASURE 2.12
+    external_name: Environmental impact and sustainability assessed
+    reason: >-
+      No obligation measures energy or emissions. The cost obligations measure
+      tokens and currency, which are not a proxy the catalog will claim.
+  - external: MEASURE 3.2
+    external_name: Risk tracking where measurement is not yet possible
+    reason: Process for unmeasurable risks; by construction no test obligation reaches it.
+  - external: MEASURE 4.1
+    external_name: Measurement approaches informed by domain experts and end users
+    reason: Consultation process.
+  - external: MEASURE 4.2
+    external_name: Trustworthiness results validated with domain experts
+    reason: Consultation process.
+
+  # ---- MANAGE ----------------------------------------------------------------
+  - external: MANAGE 1.2
+    external_name: Risk treatment prioritised
+    reason: Prioritisation decision.
+  - external: MANAGE 1.3
+    external_name: Responses to high-priority risks planned
+    reason: >-
+      Planning. Where the response is acceptance, an accepted-risk declaration
+      in the coverage report records it, but that is not an obligation.
+  - external: MANAGE 1.4
+    external_name: Negative residual risks documented
+    reason: Documentation of residual risk.
+  - external: MANAGE 2.1
+    external_name: Resources and non-AI alternatives considered
+    reason: Resourcing decision.
+  - external: MANAGE 2.2
+    external_name: Mechanisms to sustain the value of deployed systems
+    reason: >-
+      Too general for a test obligation to evidence specifically; the drift and
+      monitoring cases are mapped under MEASURE 2.4 and MANAGE 3.2.
+  - external: MANAGE 2.3
+    external_name: Response to previously unknown risks
+    reason: Incident procedure.
+  - external: MANAGE 4.2
+    external_name: Continual improvement integrated into updates
+    reason: Improvement process.
+
+  # ---- Generative AI Profile (NIST AI 600-1, Section 2) ----------------------
+  - external: AI 600-1 §2.1
+    external_name: CBRN Information or Capabilities
+    reason: >-
+      A model-capability uplift question, evaluated on the model. An
+      application whose policy categories include it gets AAC-0005 as under
+      §2.3.
+  - external: AI 600-1 §2.5
+    external_name: Environmental Impacts
+    reason: No obligation measures energy or emissions.
+  - external: AI 600-1 §2.6
+    external_name: Harmful Bias and Homogenization
+    reason: >-
+      Fairness is out of scope per docs/NON-GOALS.md. Judge bias (AAC-0085) is
+      bias of an evaluator, a different sense of the word.
+  - external: AI 600-1 §2.8
+    external_name: Information Integrity
+    reason: >-
+      Provenance and authentication of generated content is not an obligation
+      in the catalog — a candidate gap, shared with EU AI Act Art. 50(2).
+      Misinformation from confabulation is mapped under §2.2.
+  - external: AI 600-1 §2.10
+    external_name: Intellectual Property
+    reason: Training-data and legal question; no application-level test obligation.

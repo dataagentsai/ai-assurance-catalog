@@ -173,8 +173,25 @@ if (fs.existsSync(cwDir)) {
     const cw = yaml.load(fs.readFileSync(path.join(cwDir, f), "utf8"));
     if (!cw.framework) { err(rel, "missing framework"); continue; }
     const mapped = new Set();
+    /*
+     * An external item is either mapped or recorded under `unmapped` with a
+     * reason — once. Appearing in both means the file contradicts itself;
+     * appearing twice means two notes that can drift apart.
+     */
+    const seenExt = new Set();
+    const once = (ext) => {
+      if (seenExt.has(ext)) err(rel, `${ext}: listed more than once across mappings and unmapped`);
+      seenExt.add(ext);
+    };
+    for (const u of cw.unmapped || []) {
+      if (!u.external) { err(rel, "unmapped entry missing external identifier"); continue; }
+      once(u.external);
+      if (!u.reason || !String(u.reason).trim()) err(rel, `${u.external}: unmapped entry needs a reason`);
+      if (u.cases || u.relation) err(rel, `${u.external}: an unmapped entry carries no cases or relation`);
+    }
     for (const m of cw.mappings || []) {
       if (!m.external) err(rel, "mapping missing external identifier");
+      else once(m.external);
       if (!RELATIONS.has(m.relation)) {
         err(rel, `${m.external}: relation must be one of ${[...RELATIONS].join(", ")}`);
       }
@@ -184,7 +201,10 @@ if (fs.existsSync(cwDir)) {
         else mapped.add(c);
       }
     }
-    crosswalks.push({ framework: cw.framework, entries: (cw.mappings || []).length, mapped: mapped.size });
+    crosswalks.push({
+      framework: cw.framework, entries: (cw.mappings || []).length,
+      mapped: mapped.size, unmapped: (cw.unmapped || []).length,
+    });
   }
 }
 
@@ -316,7 +336,8 @@ if (patterns.size) {
 }
 if (realCases) console.log(`realizations: ${realCases} cases, ${realOptions} concrete options`);
 for (const c of crosswalks) {
-  console.log(`crosswalk ${c.framework}: ${c.entries} entries -> ${c.mapped} cases`);
+  console.log(`crosswalk ${c.framework}: ${c.entries} entries -> ${c.mapped} cases` +
+    (c.unmapped ? `, ${c.unmapped} recorded unmapped` : ""));
 }
 for (const w of warnings) console.log(`  warn  ${w}`);
 if (errors.length) {

@@ -251,13 +251,818 @@ footer{padding:40px 0 64px;color:var(--ink-3);font-family:var(--mono);font-size:
 </div></section>
 
 <section><div class="wrap">
+  <div class="prose"><span class="snum">Crosswalk — eu-ai-act</span>
+  <h2>What an existing framework maps to</h2>
+  <p class="lede">Informative. 18 entries, mapped to obligations across the archetypes that actually owe them; 22 more recorded below as unmapped, with the reason.</p>
+  <p>The external framework is organised by its own axis — threat, risk-management outcome, control or article; this catalog is organised by <em>application shape</em>. The mapping is many-to-many by construction, and that is the point — a single external item lands on several obligations across several archetypes, which is exactly what the framework on its own cannot tell you.</p>
+  <p>Crosswalks release out of band: a revision upstream must never force a version bump in the catalog. <code>relation</code> records how tight each mapping is, because claiming a test obligation is <em>equivalent</em> to a governance control is the fastest way to have a crosswalk dismissed.</p></div>
+  <div class="tbl-scroll"><table style="min-width:860px"><thead><tr>
+    <th style="width:112px">Entry</th><th style="width:190px">Name</th><th style="width:86px">Relation</th><th>Obligations</th>
+  </tr></thead><tbody>
+  <tr>
+    <td class="k">Art. 9(6)</td>
+    <td><strong>Testing to identify risk management measures and confirm consistent performance</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0005</span><span class="chip">AAC-0010</span><span class="chip">AAC-0098</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">"Perform consistently for their intended purpose": accuracy on a frozen set, the safety corpus, the run-to-run noise floor, and every route the system can serve from. Any covered row in a coverage report is testing in this sense; these are the ones that speak to consistency.</div></td>
+  </tr><tr>
+    <td class="k">Art. 9(8)</td>
+    <td><strong>Testing before placing on the market, against prior defined metrics and probabilistic thresholds</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0013</span><span class="chip">AAC-0102</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The catalog obliges a frozen set, a regression comparison and a cost gate run before promotion. The metrics and probabilistic thresholds the article requires are the provider's to define — the catalog deliberately sets none (docs/NON-GOALS.md) — so the mapping is partial by design.</div></td>
+  </tr><tr>
+    <td class="k">Art. 10(3)</td>
+    <td><strong>Testing data sets relevant, representative, free of errors, complete</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0031</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Under Art. 10(6), a system that does not train models owes Art. 10(2) to (5) for its testing data sets only, which is the usual position of an LLM application. AAC-0001 requires the curated, version-controlled set to exist; AAC-0031 requires the unanswerable cases a set curated from answerable questions never contains, which is completeness in practice. Neither tests representativeness or error rate of the set itself.</div></td>
+  </tr><tr>
+    <td class="k">Art. 12(1)</td>
+    <td><strong>Automatic recording of events (logs) over the lifetime of the system</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0011</span><span class="chip">AAC-0060</span><span class="chip">AAC-0080</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">AAC-0011 is asserted in CI, so a log field that stops being written fails a build instead of being discovered when it is needed.</div></td>
+  </tr><tr>
+    <td class="k">Art. 12(2)</td>
+    <td><strong>Logs enable identifying risk situations and substantial modification, post-market monitoring, and deployer monitoring</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0012</span><span class="chip">AAC-0100</span><span class="chip">AAC-0080</span><span class="chip">AAC-0114</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Point (a), substantial modification, is the one teams miss: recording the model version, prompt revision and serving route per request (AAC-0012, AAC-0100) is what lets a provider show from the logs that what ran is what was assessed. Points (b) and (c) are served by the same records.</div></td>
+  </tr><tr>
+    <td class="k">Art. 13(3)(b)(ii)</td>
+    <td><strong>Instructions for use state the level of accuracy, robustness and cybersecurity tested and validated</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0017</span><span class="chip">AAC-0018</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">These produce the measured numbers the instructions must state, sliced per segment (AAC-0017). Writing the instructions for use is the provider's; the article's robustness and cybersecurity levels draw on the cases under Art. 15(4) and 15(5).</div></td>
+  </tr><tr>
+    <td class="k">Art. 14(1)</td>
+    <td><strong>Designed so natural persons can effectively oversee the system</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0078</span><span class="chip">AAC-0043</span><span class="chip">AAC-0056</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Tests that the oversight paths built into the design work — approval before irreversible action, including when the facts changed during the pause; handoff to a human with complete context; confirmation before destructive tools. Whether the oversight is effective in the article's sense is not a test result.</div></td>
+  </tr><tr>
+    <td class="k">Art. 14(4)(a)</td>
+    <td><strong>Overseer can monitor operation and detect anomalies</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0114</span><span class="chip">AAC-0079</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Anomalies in behaviour rates alert a person (AAC-0114), and failure and silence are both loud (AAC-0079). Understanding the system's capacities and limitations, the first half of point (a), is not covered.</div></td>
+  </tr><tr>
+    <td class="k">Art. 14(4)(d)</td>
+    <td><strong>Overseer can disregard, override or reverse the output</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0081</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Shaky: AAC-0081 makes each side-effecting action reversible, which is the precondition for "reverse" when the output is an action. Disregarding or overriding a non-action output is a user-interface matter not covered.</div></td>
+  </tr><tr>
+    <td class="k">Art. 14(4)(e)</td>
+    <td><strong>Overseer can intervene or interrupt through a stop procedure to a safe state</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0055</span><span class="chip">AAC-0077</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Shaky: both cases test that a stop enforced outside the agent's own logic reaches a defined state with its partial result handled. They are triggered by budgets, not by a person; a human-initiated stop reaching the same path is not separately obliged.</div></td>
+  </tr><tr>
+    <td class="k">Art. 15(1)</td>
+    <td><strong>Appropriate accuracy, robustness and cybersecurity, performing consistently throughout the lifecycle</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0013</span><span class="chip">AAC-0016</span><span class="chip">AAC-0082</span><span class="chip">AAC-0014</span><span class="chip">AAC-0098</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">"Throughout their lifecycle" is the half the scheduled re-runs carry: a hosted model changes with nothing changed on the provider's side (AAC-0016, AAC-0082), and live traffic is scored on the same rubrics as offline (AAC-0014). What level is appropriate is the provider's.</div></td>
+  </tr><tr>
+    <td class="k">Art. 15(3)</td>
+    <td><strong>Accuracy levels and metrics declared in instructions for use</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0017</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Produces the measurements to declare. The declaration is the provider's.</div></td>
+  </tr><tr>
+    <td class="k">Art. 15(4)</td>
+    <td><strong>Resilience to errors, faults and inconsistencies; fail-safe plans; feedback loops</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0009</span><span class="chip">AAC-0015</span><span class="chip">AAC-0019</span><span class="chip">AAC-0046</span><span class="chip">AAC-0053</span><span class="chip">AAC-0065</span><span class="chip">AAC-0091</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The first subparagraph is well covered: provider faults, degenerate input, partial failure in a graph, tool errors, a contained sub-agent failure, and a guardrail outage failing closed — "backup or fail-safe plans" tested rather than written down. The feedback-loop subparagraph for systems that continue to learn after placement is not covered; long-term memory (AAC-0041) is related but is not learning in the article's sense, and is not claimed.</div></td>
+  </tr><tr>
+    <td class="k">Art. 15(5)</td>
+    <td><strong>Resilience against attempts by unauthorised third parties to alter use, outputs or performance</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0004</span><span class="chip">AAC-0036</span><span class="chip">AAC-0058</span><span class="chip">AAC-0106</span><span class="chip">AAC-0107</span><span class="chip">AAC-0108</span><span class="chip">AAC-0057</span><span class="chip">AAC-0111</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Adversarial inputs, confidentiality attacks and tampered pre-trained components are covered at application level. Training-data and model poisoning, both named in the article, are model-level and out of scope; AAC-0108 covers poisoning of a retrieval corpus, which the article does not name but which has the same effect on outputs.</div></td>
+  </tr><tr>
+    <td class="k">Art. 17(1)(d)</td>
+    <td><strong>QMS includes examination, test and validation procedures and their frequency</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0013</span><span class="chip">AAC-0034</span><span class="chip">AAC-0090</span><span class="chip">AAC-0101</span><span class="chip">AAC-0016</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Evidence that test procedures are wired to the events that need them — every release, index rebuild, judge change and routing change — and run on a schedule. The quality management system that records them is the provider's.</div></td>
+  </tr><tr>
+    <td class="k">Art. 26(5)</td>
+    <td><strong>Deployer monitors operation on the basis of the instructions for use</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0114</span><span class="chip">AAC-0116</span><span class="chip">AAC-0079</span></span>
+      </td>
+  </tr><tr>
+    <td class="k">Art. 72(2)</td>
+    <td><strong>Post-market monitoring collects and analyses performance data throughout the lifetime</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0014</span><span class="chip">AAC-0114</span><span class="chip">AAC-0115</span><span class="chip">AAC-0116</span><span class="chip">AAC-0082</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">AAC-0115 is the piece most monitoring lacks: later outcomes joined to the run that produced them, so performance is measured on what happened rather than only on what the system said.</div></td>
+  </tr><tr>
+    <td class="k">Art. 50(1)</td>
+    <td><strong>Persons informed they are interacting with an AI system</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0003</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Shaky. Where the disclosure is made in the model's own output, it is a required-disclaimer constraint and AAC-0003 tests it like any other. Most disclosures are made by the interface, which no obligation covers.</div></td>
+  </tr>
+  </tbody></table></div>
+  <div class="prose"><p style="margin-top:22px"><strong>Unmapped.</strong> No obligation provides evidence for these. Recorded rather than padded: a crosswalk that maps everything is claiming more than a test catalog can show.</p></div>
+  <div class="tbl-scroll"><table style="min-width:700px"><thead><tr>
+    <th style="width:150px">Entry</th><th style="width:260px">Name</th><th>Why not</th>
+  </tr></thead><tbody>
+  <tr>
+    <td class="k">Art. 5</td>
+    <td>Prohibited AI practices</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">A question of what the system is for, decided before any test runs.</td>
+  </tr><tr>
+    <td class="k">Art. 9(1)-(5), 9(7), 9(9)-(10)</td>
+    <td>Risk management system — establishment, steps, measures, real-world testing, vulnerable groups, integration</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The risk management process itself. Testing is mapped at 9(6) and 9(8); real-world testing under Arts. 57 and 60 is a regulatory procedure.</td>
+  </tr><tr>
+    <td class="k">Art. 10(2)</td>
+    <td>Data governance and management practices</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Governance practices for data, including the bias examination in points (f) and (g), which is out of scope per docs/NON-GOALS.md.</td>
+  </tr><tr>
+    <td class="k">Art. 10(5)</td>
+    <td>Processing special categories of personal data for bias detection</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Fairness and bias detection is out of scope per docs/NON-GOALS.md.</td>
+  </tr><tr>
+    <td class="k">Art. 11</td>
+    <td>Technical documentation (Annex IV)</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation. A dated series of coverage reports is a candidate input to Annex IV point 2(g) on validation and testing, but no obligation discharges the documentation duty.</td>
+  </tr><tr>
+    <td class="k">Art. 12(3)</td>
+    <td>Minimum logging for remote biometric identification systems</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Specific to Annex III point 1(a) systems; no obligation is written for that use.</td>
+  </tr><tr>
+    <td class="k">Art. 13(1)</td>
+    <td>Operation sufficiently transparent for deployers to interpret output</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">A design quality judged by the deployer. Citation support (AAC-0030) aids interpretation of a grounded answer but is not claimed as transparency in the article's sense.</td>
+  </tr><tr>
+    <td class="k">Art. 13(3) other points</td>
+    <td>Instructions for use — remaining content</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation content; only point (b)(ii) is evidenced by test results.</td>
+  </tr><tr>
+    <td class="k">Art. 14(4)(b)</td>
+    <td>Overseer aware of automation bias</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Awareness of people; not a system property a test can show.</td>
+  </tr><tr>
+    <td class="k">Art. 14(4)(c)</td>
+    <td>Overseer can correctly interpret the output</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Interpretation by people; see Art. 13(1).</td>
+  </tr><tr>
+    <td class="k">Art. 14(5)</td>
+    <td>Separate verification by two natural persons for remote biometric identification</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Specific to Annex III point 1(a) systems.</td>
+  </tr><tr>
+    <td class="k">Art. 15(2)</td>
+    <td>Commission encourages benchmarks and measurement methodologies</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">An obligation on the Commission, not on a system.</td>
+  </tr><tr>
+    <td class="k">Art. 17(1) other points</td>
+    <td>Quality management system — remaining elements</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational elements of the QMS; only point (d) turns on test procedures.</td>
+  </tr><tr>
+    <td class="k">Art. 19(1)</td>
+    <td>Provider keeps automatically generated logs</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">A retention duty. Note the interaction with AAC-0095, which obliges bounded log retention: the bound an adopter sets must also satisfy the minimum period in this article and in Art. 26(6). The catalog sets no period.</td>
+  </tr><tr>
+    <td class="k">Art. 26(1)-(4), 26(6)-(12)</td>
+    <td>Deployer obligations other than monitoring</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Use per instructions, assigned oversight, input data relevance, log retention, informing workers and affected persons — organisational duties. Monitoring is mapped at 26(5).</td>
+  </tr><tr>
+    <td class="k">Art. 50(2)</td>
+    <td>Synthetic output marked in a machine-readable format and detectable</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">No obligation covers marking or watermarking generated content — a candidate gap, shared with NIST AI 600-1 §2.8.</td>
+  </tr><tr>
+    <td class="k">Art. 50(3)</td>
+    <td>Informing persons exposed to emotion recognition or biometric categorisation</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Specific to those system types; no obligation is written for them.</td>
+  </tr><tr>
+    <td class="k">Art. 50(4)</td>
+    <td>Disclosure of deep fakes and of generated text on matters of public interest</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">A deployer's disclosure duty for published content.</td>
+  </tr><tr>
+    <td class="k">Art. 72(1), 72(3)</td>
+    <td>Post-market monitoring system established and based on a plan</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Establishing and documenting the system and its plan; its data collection is mapped at 72(2).</td>
+  </tr><tr>
+    <td class="k">Art. 73</td>
+    <td>Reporting of serious incidents</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Reporting to authorities is a procedure.</td>
+  </tr><tr>
+    <td class="k">Art. 53</td>
+    <td>Obligations for providers of general-purpose AI models</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Model-provider obligations; this catalog is application-level.</td>
+  </tr><tr>
+    <td class="k">Art. 55</td>
+    <td>Obligations for providers of general-purpose AI models with systemic risk</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Includes adversarial testing of the model (point (1)(a)), which is model-level and out of scope per docs/NON-GOALS.md.</td>
+  </tr>
+  </tbody></table></div>
+</div></section><section><div class="wrap">
+  <div class="prose"><span class="snum">Crosswalk — iso-iec-42001</span>
+  <h2>What an existing framework maps to</h2>
+  <p class="lede">Informative. 6 entries, mapped to obligations across the archetypes that actually owe them; 32 more recorded below as unmapped, with the reason.</p>
+  <p>The external framework is organised by its own axis — threat, risk-management outcome, control or article; this catalog is organised by <em>application shape</em>. The mapping is many-to-many by construction, and that is the point — a single external item lands on several obligations across several archetypes, which is exactly what the framework on its own cannot tell you.</p>
+  <p>Crosswalks release out of band: a revision upstream must never force a version bump in the catalog. <code>relation</code> records how tight each mapping is, because claiming a test obligation is <em>equivalent</em> to a governance control is the fastest way to have a crosswalk dismissed.</p></div>
+  <div class="tbl-scroll"><table style="min-width:860px"><thead><tr>
+    <th style="width:112px">Entry</th><th style="width:190px">Name</th><th style="width:86px">Relation</th><th>Obligations</th>
+  </tr></thead><tbody>
+  <tr>
+    <td class="k">A.6.2.4</td>
+    <td><strong>AI system verification and validation</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0002</span><span class="chip">AAC-0003</span><span class="chip">AAC-0013</span><span class="chip">AAC-0098</span><span class="chip">AAC-0099</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Nearly every covered row of an adopter's coverage report is evidence for this control; listed are the core obligations that frame verification against the declared contract (AAC-0002, AAC-0003, AAC-0099) and validation against intended use (AAC-0001, AAC-0013, AAC-0098). A dated series of reports from CI is the evidence form a surveillance audit prefers — see docs/REPORT.md.</div></td>
+  </tr><tr>
+    <td class="k">A.6.2.5</td>
+    <td><strong>AI system deployment</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0107</span><span class="chip">AAC-0012</span><span class="chip">AAC-0101</span><span class="chip">AAC-0102</span><span class="chip">AAC-0034</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Release-path evidence: what serves is what was evaluated (AAC-0107), rollback is exercised (AAC-0012), and the changes that conventionally bypass evaluation — routing configuration, cost, index rebuilds — are gated like a model change.</div></td>
+  </tr><tr>
+    <td class="k">A.6.2.6</td>
+    <td><strong>AI system operation and monitoring</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0014</span><span class="chip">AAC-0114</span><span class="chip">AAC-0116</span><span class="chip">AAC-0016</span><span class="chip">AAC-0082</span><span class="chip">AAC-0079</span><span class="chip">AAC-0115</span></span>
+      </td>
+  </tr><tr>
+    <td class="k">A.6.2.8</td>
+    <td><strong>AI system recording of event logs</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0011</span><span class="chip">AAC-0060</span><span class="chip">AAC-0080</span><span class="chip">AAC-0100</span><span class="chip">AAC-0095</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">AAC-0095 belongs here as the counterweight: logs are redacted at write time and retention is bounded, and the two obligations hold together rather than trading off.</div></td>
+  </tr><tr>
+    <td class="k">A.7.5</td>
+    <td><strong>Data provenance</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0108</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Retrieval-corpus provenance only. Provenance of training and fine-tuning data is model-level and out of scope per docs/NON-GOALS.md. Mapped on the reading that Annex A's data controls reach data the system uses in operation, not only data it was trained on; confirm against your copy.</div></td>
+  </tr><tr>
+    <td class="k">A.10.3</td>
+    <td><strong>Suppliers</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0094</span><span class="chip">AAC-0107</span><span class="chip">AAC-0016</span><span class="chip">AAC-0098</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The model provider is the supplier that matters most to an LLM application. These show the supplier's product is restricted to an approved set, pinned, watched for silent change, and evaluated on every route. The supplier-management process is the organisation's.</div></td>
+  </tr>
+  </tbody></table></div>
+  <div class="prose"><p style="margin-top:22px"><strong>Unmapped.</strong> No obligation provides evidence for these. Recorded rather than padded: a crosswalk that maps everything is claiming more than a test catalog can show.</p></div>
+  <div class="tbl-scroll"><table style="min-width:700px"><thead><tr>
+    <th style="width:150px">Entry</th><th style="width:260px">Name</th><th>Why not</th>
+  </tr></thead><tbody>
+  <tr>
+    <td class="k">A.2.2</td>
+    <td>AI policy</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational policy.</td>
+  </tr><tr>
+    <td class="k">A.2.3</td>
+    <td>Alignment with other organisational policies</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational policy.</td>
+  </tr><tr>
+    <td class="k">A.2.4</td>
+    <td>Review of the AI policy</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational policy.</td>
+  </tr><tr>
+    <td class="k">A.3.2</td>
+    <td>AI roles and responsibilities</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational roles.</td>
+  </tr><tr>
+    <td class="k">A.3.3</td>
+    <td>Reporting of concerns</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational process for people to raise concerns.</td>
+  </tr><tr>
+    <td class="k">A.4.2</td>
+    <td>Resource documentation</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation.</td>
+  </tr><tr>
+    <td class="k">A.4.3</td>
+    <td>Data resources</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation of resources.</td>
+  </tr><tr>
+    <td class="k">A.4.4</td>
+    <td>Tooling resources</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation of resources.</td>
+  </tr><tr>
+    <td class="k">A.4.5</td>
+    <td>System and computing resources</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation of resources.</td>
+  </tr><tr>
+    <td class="k">A.4.6</td>
+    <td>Human resources</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">People and competence.</td>
+  </tr><tr>
+    <td class="k">A.5.2</td>
+    <td>Impact assessment process</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Impact assessment is an organisational process.</td>
+  </tr><tr>
+    <td class="k">A.5.3</td>
+    <td>Documentation of impact assessments</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation.</td>
+  </tr><tr>
+    <td class="k">A.5.4</td>
+    <td>Impacts on individuals or groups</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Impact assessment; fairness measurement is out of scope per docs/NON-GOALS.md.</td>
+  </tr><tr>
+    <td class="k">A.5.5</td>
+    <td>Societal impacts</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Impact assessment.</td>
+  </tr><tr>
+    <td class="k">A.6.1.2</td>
+    <td>Objectives for responsible development</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational objectives.</td>
+  </tr><tr>
+    <td class="k">A.6.1.3</td>
+    <td>Processes for responsible design and development</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Process definition; its operation is evidenced under A.6.2.4 and A.6.2.5.</td>
+  </tr><tr>
+    <td class="k">A.6.2.2</td>
+    <td>Requirements and specification</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Specification is the adopter's. The catalog's obligations are not a system's requirements and are not claimed as its specification.</td>
+  </tr><tr>
+    <td class="k">A.6.2.3</td>
+    <td>Documentation of design and development</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation.</td>
+  </tr><tr>
+    <td class="k">A.6.2.7</td>
+    <td>Technical documentation</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation.</td>
+  </tr><tr>
+    <td class="k">A.7.2</td>
+    <td>Data for development and enhancement</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Training and development data are model-level and out of scope per docs/NON-GOALS.md.</td>
+  </tr><tr>
+    <td class="k">A.7.3</td>
+    <td>Acquisition of data</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Acquisition process; ingestion controls on a retrieval corpus are under A.7.5.</td>
+  </tr><tr>
+    <td class="k">A.7.4</td>
+    <td>Quality of data</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Data-quality requirements are set by the organisation. A.7.5 carries the nearest evidence; mapping AAC-0108 here as well would claim more than a provenance check shows.</td>
+  </tr><tr>
+    <td class="k">A.7.6</td>
+    <td>Data preparation</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Training-data preparation is out of scope per docs/NON-GOALS.md.</td>
+  </tr><tr>
+    <td class="k">A.8.2</td>
+    <td>System documentation and information for users</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation.</td>
+  </tr><tr>
+    <td class="k">A.8.3</td>
+    <td>External reporting</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational reporting process.</td>
+  </tr><tr>
+    <td class="k">A.8.4</td>
+    <td>Communication of incidents</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational communication process.</td>
+  </tr><tr>
+    <td class="k">A.8.5</td>
+    <td>Information for interested parties</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational communication.</td>
+  </tr><tr>
+    <td class="k">A.9.2</td>
+    <td>Processes for responsible use</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational process for the organisation's own use of AI.</td>
+  </tr><tr>
+    <td class="k">A.9.3</td>
+    <td>Objectives for responsible use</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational objectives.</td>
+  </tr><tr>
+    <td class="k">A.9.4</td>
+    <td>Intended use</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Concerns how the organisation uses the system. Scope-of-refusal testing (AAC-0003) shows the system stays inside a declared scope, which is related but not the same claim.</td>
+  </tr><tr>
+    <td class="k">A.10.2</td>
+    <td>Allocation of responsibilities</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Contractual and organisational.</td>
+  </tr><tr>
+    <td class="k">A.10.4</td>
+    <td>Customers</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Customer relationship.</td>
+  </tr>
+  </tbody></table></div>
+</div></section><section><div class="wrap">
+  <div class="prose"><span class="snum">Crosswalk — nist-ai-rmf</span>
+  <h2>What an existing framework maps to</h2>
+  <p class="lede">Informative. 29 entries, mapped to obligations across the archetypes that actually owe them; 55 more recorded below as unmapped, with the reason.</p>
+  <p>The external framework is organised by its own axis — threat, risk-management outcome, control or article; this catalog is organised by <em>application shape</em>. The mapping is many-to-many by construction, and that is the point — a single external item lands on several obligations across several archetypes, which is exactly what the framework on its own cannot tell you.</p>
+  <p>Crosswalks release out of band: a revision upstream must never force a version bump in the catalog. <code>relation</code> records how tight each mapping is, because claiming a test obligation is <em>equivalent</em> to a governance control is the fastest way to have a crosswalk dismissed.</p></div>
+  <div class="tbl-scroll"><table style="min-width:860px"><thead><tr>
+    <th style="width:112px">Entry</th><th style="width:190px">Name</th><th style="width:86px">Relation</th><th>Obligations</th>
+  </tr></thead><tbody>
+  <tr>
+    <td class="k">GOVERN 1.6</td>
+    <td><strong>Mechanisms to inventory AI systems</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0094</span><span class="chip">AAC-0107</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">AAC-0094 is the one case that names this outright: an inventory of models in use records intent unless the egress point refuses everything not on it. AAC-0107 makes the inventory precise to the digest. Neither supplies the organisational inventory itself, or its resourcing.</div></td>
+  </tr><tr>
+    <td class="k">GOVERN 6.2</td>
+    <td><strong>Contingency for failures in third-party data or AI systems</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0009</span><span class="chip">AAC-0091</span><span class="chip">AAC-0098</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The contingency process is organisational; these show that its technical half works. AAC-0009 injects provider failure, AAC-0091 takes a third-party guardrail down, and AAC-0098 ensures the fallback the contingency relies on was itself evaluated.</div></td>
+  </tr><tr>
+    <td class="k">MAP 3.5</td>
+    <td><strong>Human oversight processes defined, assessed, documented</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0078</span><span class="chip">AAC-0043</span><span class="chip">AAC-0056</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Covers "assessed" only — each case tests that an oversight path works (approval before irreversible action, handoff to a human, confirmation before destructive tools). Defining and documenting the oversight process is the organisation's.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 1.2</td>
+    <td><strong>Appropriateness of metrics and effectiveness of controls regularly assessed</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0084</span><span class="chip">AAC-0088</span><span class="chip">AAC-0090</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Two halves are evidenced: a model-graded metric is checked against human labels and re-checked when it changes (AAC-0084, AAC-0090), and a guardrail control's effectiveness is measured in both directions (AAC-0088). Error reports and impacts on affected communities are not.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 2.1</td>
+    <td><strong>Test sets, metrics and TEVV tools documented</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">AAC-0001 requires the test set to exist and be version-controlled. The coverage report (docs/REPORT.md) records which mechanism and which tool produced each verdict, which is closer to this item than any single obligation, but a report is not an obligation and is not mapped.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 2.3</td>
+    <td><strong>Performance measured for conditions similar to deployment</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0007</span><span class="chip">AAC-0017</span><span class="chip">AAC-0098</span><span class="chip">AAC-0014</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">"Similar to deployment" is where these differ from an offline score: latency under realistic concurrency (AAC-0007), every route the system can actually serve from (AAC-0098), and live sampled traffic (AAC-0014). The criteria themselves are the adopter's.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 2.4</td>
+    <td><strong>Functionality and behaviour monitored in production</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0014</span><span class="chip">AAC-0114</span><span class="chip">AAC-0116</span><span class="chip">AAC-0079</span><span class="chip">AAC-0011</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">AAC-0114 and AAC-0116 exist because traffic-based monitoring alone reads a broken deployment as a quiet hour; AAC-0011 is the telemetry everything else in this row depends on.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 2.5</td>
+    <td><strong>Valid and reliable; limits of generalisability documented</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0010</span><span class="chip">AAC-0013</span><span class="chip">AAC-0018</span><span class="chip">AAC-0098</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Validity and reliability are evidenced: accuracy on a frozen set, its noise floor, regression against the incumbent, stability under paraphrase, and every reachable model. Documenting the limits of generalisability is not an obligation in the catalog.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 2.6</td>
+    <td><strong>Evaluated for safety; fails safely, including beyond knowledge limits</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0005</span><span class="chip">AAC-0091</span><span class="chip">AAC-0055</span><span class="chip">AAC-0077</span><span class="chip">AAC-0056</span><span class="chip">AAC-0072</span><span class="chip">AAC-0031</span><span class="chip">AAC-0019</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">"Fail safely beyond its knowledge limits" lands on two cases teams rarely connect to safety: abstention when the corpus cannot answer (AAC-0031) and a tested strategy at the context limit (AAC-0019). Whether residual risk is within tolerance is a threshold, and belongs to the adopter.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 2.7</td>
+    <td><strong>Security and resilience evaluated</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0004</span><span class="chip">AAC-0036</span><span class="chip">AAC-0058</span><span class="chip">AAC-0057</span><span class="chip">AAC-0106</span><span class="chip">AAC-0107</span><span class="chip">AAC-0108</span><span class="chip">AAC-0111</span><span class="chip">AAC-0071</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">See crosswalks/owasp-llm.yaml for the threat-by-threat split of the same cases.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 2.8</td>
+    <td><strong>Transparency and accountability risks examined</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0080</span><span class="chip">AAC-0011</span><span class="chip">AAC-0060</span><span class="chip">AAC-0100</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Accountability through traceability only: any action, step or route choice can be reconstructed afterwards. Transparency towards users and affected people is not covered.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 2.10</td>
+    <td><strong>Privacy risk examined</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0006</span><span class="chip">AAC-0032</span><span class="chip">AAC-0040</span><span class="chip">AAC-0095</span><span class="chip">AAC-0096</span><span class="chip">AAC-0097</span><span class="chip">AAC-0117</span></span>
+      </td>
+  </tr><tr>
+    <td class="k">MEASURE 2.13</td>
+    <td><strong>Effectiveness of TEVV metrics and processes evaluated</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0084</span><span class="chip">AAC-0085</span><span class="chip">AAC-0086</span><span class="chip">AAC-0087</span><span class="chip">AAC-0090</span><span class="chip">AAC-0010</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The closest fit in the RMF for the A10 judge obligations: a model-graded metric is itself a TEVV instrument, and these cases validate it — human agreement, bias probes, stability, calibration, re-validation on change. AAC-0010 supplies the noise floor without which no metric's movement can be read.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 3.1</td>
+    <td><strong>Existing, unanticipated and emergent risks tracked from deployed performance</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0114</span><span class="chip">AAC-0115</span><span class="chip">AAC-0014</span></span>
+      </td>
+  </tr><tr>
+    <td class="k">MEASURE 3.3</td>
+    <td><strong>End-user feedback and appeal integrated into evaluation metrics</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0115</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">AAC-0115 joins later outcomes, including explicit feedback, to the run that produced them and counts them beside rubric scores — the "integrated into evaluation metrics" half. The appeal process is not covered.</div></td>
+  </tr><tr>
+    <td class="k">MEASURE 4.3</td>
+    <td><strong>Performance improvements or declines identified from field data</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0014</span><span class="chip">AAC-0114</span><span class="chip">AAC-0115</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Field-data cases only. AAC-0013 also identifies declines, but on an offline set, so it sits under MEASURE 2.5 instead. Consultation with affected communities is not covered.</div></td>
+  </tr><tr>
+    <td class="k">MANAGE 1.1</td>
+    <td><strong>Determination whether the system achieves its purpose and should proceed</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0001</span><span class="chip">AAC-0013</span><span class="chip">AAC-0102</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The `gate: true` field on an obligation is the catalog's input to this go/no-go. These three are the release gates for quality, regression and cost; the determination itself, and the thresholds behind it, are the adopter's.</div></td>
+  </tr><tr>
+    <td class="k">MANAGE 2.4</td>
+    <td><strong>Supersede, disengage or deactivate systems performing inconsistently</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0012</span><span class="chip">AAC-0077</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">AAC-0012 exercises reverting to the previous model-and-prompt pair, which is supersession tested rather than assumed. AAC-0077 stops a run, not a system. Assigning responsibility for the decision is not covered.</div></td>
+  </tr><tr>
+    <td class="k">MANAGE 3.1</td>
+    <td><strong>Third-party risks monitored and controls applied</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0016</span><span class="chip">AAC-0094</span><span class="chip">AAC-0107</span><span class="chip">AAC-0009</span></span>
+      </td>
+  </tr><tr>
+    <td class="k">MANAGE 3.2</td>
+    <td><strong>Pre-trained models monitored as part of regular monitoring</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0016</span><span class="chip">AAC-0082</span><span class="chip">AAC-0012</span><span class="chip">AAC-0107</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The strongest Core fit in this file. A hosted model changes under you with nothing changed on your side; AAC-0016 and AAC-0082 re-run frozen inputs on a schedule to catch it, and AAC-0107 detects a substituted artifact at the release gate.</div></td>
+  </tr><tr>
+    <td class="k">MANAGE 4.1</td>
+    <td><strong>Post-deployment monitoring plans implemented</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0114</span><span class="chip">AAC-0115</span><span class="chip">AAC-0116</span><span class="chip">AAC-0101</span><span class="chip">AAC-0012</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Covers monitoring, capture of user input (AAC-0115), recovery (AAC-0012) and change management for routing (AAC-0101). Appeal and override, decommissioning and incident response are not covered.</div></td>
+  </tr><tr>
+    <td class="k">MANAGE 4.3</td>
+    <td><strong>Incidents and errors communicated; tracking and recovery processes followed</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0080</span><span class="chip">AAC-0079</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Shaky and deliberately marked partial: AAC-0079 makes failures reach a human and AAC-0080 makes any action explainable weeks later, which an incident process needs. Communicating incidents to affected parties is organisational and not covered.</div></td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.2</td>
+    <td><strong>Confabulation</strong></td>
+    <td><span class="chip n">tests-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0029</span><span class="chip">AAC-0030</span><span class="chip">AAC-0031</span><span class="chip">AAC-0024</span><span class="chip">AAC-0110</span><span class="chip">AAC-0112</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Includes two forms of confabulation the profile's examples do not separate: a claim about the system's own actions that its tool results do not support (AAC-0110), and a reply that reports a completed outcome for work the system has only promised (AAC-0112).</div></td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.3</td>
+    <td><strong>Dangerous, Violent, or Hateful Content</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0005</span><span class="chip">AAC-0088</span><span class="chip">AAC-0091</span><span class="chip">AAC-0092</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The catalog obliges testing against the adopter's declared policy categories and does not name categories itself. Evidence for this risk only where the adopter's policy includes it.</div></td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.4</td>
+    <td><strong>Data Privacy</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0006</span><span class="chip">AAC-0032</span><span class="chip">AAC-0040</span><span class="chip">AAC-0095</span><span class="chip">AAC-0096</span><span class="chip">AAC-0117</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Application-level leakage paths only. Training-data memorisation and inference of sensitive attributes are model-level and out of scope per docs/NON-GOALS.md.</div></td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.7</td>
+    <td><strong>Human-AI Configuration</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0078</span><span class="chip">AAC-0043</span><span class="chip">AAC-0056</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Shaky: these test that a human is in the loop where the design says one is. Automation bias, over-reliance, anthropomorphisation and emotional entanglement — the substance of this risk — are not covered.</div></td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.9</td>
+    <td><strong>Information Security</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0004</span><span class="chip">AAC-0036</span><span class="chip">AAC-0058</span><span class="chip">AAC-0106</span><span class="chip">AAC-0057</span><span class="chip">AAC-0071</span><span class="chip">AAC-0108</span><span class="chip">AAC-0111</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The profile names two halves. The attack surface of the GAI system itself (direct and indirect prompt injection, poisoning) is covered; the lowered barrier to offensive cyber capability is a model-capability question and is not.</div></td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.11</td>
+    <td><strong>Obscene, Degrading, and/or Abusive Content</strong></td>
+    <td><span class="chip n">partial</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0005</span><span class="chip">AAC-0088</span><span class="chip">AAC-0091</span><span class="chip">AAC-0092</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">As §2.3: evidence only where the adopter's declared policy categories include it.</div></td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.12</td>
+    <td><strong>Value Chain and Component Integration</strong></td>
+    <td><span class="chip n">evidence-for</span></td>
+    <td><span class="chips" style="margin-bottom:6px"><span class="chip">AAC-0107</span><span class="chip">AAC-0094</span><span class="chip">AAC-0012</span><span class="chip">AAC-0016</span><span class="chip">AAC-0098</span></span>
+      <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Covers the deployed value chain — which components serve, whether they are the ones evaluated, and whether a provider-side change is noticed. Vetting procured training data is out of scope.</div></td>
+  </tr>
+  </tbody></table></div>
+  <div class="prose"><p style="margin-top:22px"><strong>Unmapped.</strong> No obligation provides evidence for these. Recorded rather than padded: a crosswalk that maps everything is claiming more than a test catalog can show.</p></div>
+  <div class="tbl-scroll"><table style="min-width:700px"><thead><tr>
+    <th style="width:150px">Entry</th><th style="width:260px">Name</th><th>Why not</th>
+  </tr></thead><tbody>
+  <tr>
+    <td class="k">GOVERN 1.1</td>
+    <td>Legal and regulatory requirements understood and documented</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational process; no system property evidences it.</td>
+  </tr><tr>
+    <td class="k">GOVERN 1.2</td>
+    <td>Trustworthy characteristics integrated into policy</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational policy.</td>
+  </tr><tr>
+    <td class="k">GOVERN 1.3</td>
+    <td>Level of risk management set by risk tolerance</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Risk tolerance is the adopter's threshold, which the catalog never sets.</td>
+  </tr><tr>
+    <td class="k">GOVERN 1.4</td>
+    <td>Risk management process established through transparent policy</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational policy.</td>
+  </tr><tr>
+    <td class="k">GOVERN 1.5</td>
+    <td>Ongoing monitoring and periodic review of the risk management process</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Reviews the process, not the system; system monitoring is under MEASURE 2.4.</td>
+  </tr><tr>
+    <td class="k">GOVERN 1.7</td>
+    <td>Decommissioning and phasing out safely</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">No obligation covers retiring a system.</td>
+  </tr><tr>
+    <td class="k">GOVERN 2.1</td>
+    <td>Roles, responsibilities and lines of communication documented</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational roles.</td>
+  </tr><tr>
+    <td class="k">GOVERN 2.2</td>
+    <td>Personnel and partners trained</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Training of people.</td>
+  </tr><tr>
+    <td class="k">GOVERN 2.3</td>
+    <td>Executive leadership responsible for AI risk decisions</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational accountability.</td>
+  </tr><tr>
+    <td class="k">GOVERN 3.1</td>
+    <td>Decisions informed by a diverse team</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Team composition.</td>
+  </tr><tr>
+    <td class="k">GOVERN 3.2</td>
+    <td>Roles for human-AI configurations and oversight defined</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Role definition; the tested oversight paths are under MAP 3.5.</td>
+  </tr><tr>
+    <td class="k">GOVERN 4.1</td>
+    <td>Safety-first mindset fostered</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational culture.</td>
+  </tr><tr>
+    <td class="k">GOVERN 4.2</td>
+    <td>Teams document and communicate risks and impacts</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational documentation practice.</td>
+  </tr><tr>
+    <td class="k">GOVERN 4.3</td>
+    <td>Practices enable testing, incident identification and information sharing</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">An organisational practice. An adopter's series of coverage reports is evidence for it as a whole; no single obligation is.</td>
+  </tr><tr>
+    <td class="k">GOVERN 5.1</td>
+    <td>Feedback from those external to the team collected and integrated</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational engagement process.</td>
+  </tr><tr>
+    <td class="k">GOVERN 5.2</td>
+    <td>Adjudicated feedback incorporated into design</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational engagement process.</td>
+  </tr><tr>
+    <td class="k">GOVERN 6.1</td>
+    <td>Policies for third-party risks, including IP</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational policy; the technical controls are under MANAGE 3.1.</td>
+  </tr><tr>
+    <td class="k">MAP 1.1</td>
+    <td>Intended purposes, context and settings understood and documented</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Context-setting documentation.</td>
+  </tr><tr>
+    <td class="k">MAP 1.2</td>
+    <td>Interdisciplinary actors and competencies</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Team composition.</td>
+  </tr><tr>
+    <td class="k">MAP 1.3</td>
+    <td>Mission and goals for AI documented</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational documentation.</td>
+  </tr><tr>
+    <td class="k">MAP 1.4</td>
+    <td>Business value or context of use defined</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Business decision.</td>
+  </tr><tr>
+    <td class="k">MAP 1.5</td>
+    <td>Organisational risk tolerances determined</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Risk tolerance is the adopter's threshold, which the catalog never sets.</td>
+  </tr><tr>
+    <td class="k">MAP 1.6</td>
+    <td>System requirements elicited and understood</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Requirements elicitation is a process; obligations are not requirements for a specific system.</td>
+  </tr><tr>
+    <td class="k">MAP 2.1</td>
+    <td>Tasks and methods defined (classifier, generative model, recommender)</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">The catalog's archetype classification (taxonomy/archetypes.yaml) is a natural artifact for this, but it is a classification, not an obligation, so nothing maps.</td>
+  </tr><tr>
+    <td class="k">MAP 2.2</td>
+    <td>Knowledge limits and use of output by humans documented</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation; the tested behaviour at knowledge limits is under MEASURE 2.6.</td>
+  </tr><tr>
+    <td class="k">MAP 2.3</td>
+    <td>Scientific integrity and TEVV considerations identified</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Planning-stage documentation; the measurement-side evidence is under MEASURE 2.13.</td>
+  </tr><tr>
+    <td class="k">MAP 3.1</td>
+    <td>Potential benefits examined</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Benefit analysis.</td>
+  </tr><tr>
+    <td class="k">MAP 3.2</td>
+    <td>Potential costs of errors examined against risk tolerance</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">"Costs" here are harms from errors, judged against risk tolerance. The catalog's cost obligations measure spend, which is a different thing.</td>
+  </tr><tr>
+    <td class="k">MAP 3.3</td>
+    <td>Targeted application scope specified</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Scope decision and documentation.</td>
+  </tr><tr>
+    <td class="k">MAP 3.4</td>
+    <td>Operator and practitioner proficiency processes</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Training and certification of people.</td>
+  </tr><tr>
+    <td class="k">MAP 4.1</td>
+    <td>Technology and legal risks of components mapped, including third-party</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Risk-mapping process.</td>
+  </tr><tr>
+    <td class="k">MAP 4.2</td>
+    <td>Internal risk controls for components identified and documented</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation of controls; the controls' operation is under MANAGE 3.1.</td>
+  </tr><tr>
+    <td class="k">MAP 5.1</td>
+    <td>Likelihood and magnitude of impacts identified</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Impact assessment.</td>
+  </tr><tr>
+    <td class="k">MAP 5.2</td>
+    <td>Engagement with relevant AI actors on impacts</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Organisational engagement process.</td>
+  </tr><tr>
+    <td class="k">MEASURE 1.1</td>
+    <td>Metrics selected; unmeasured risks documented</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Selection is a decision. The coverage report's not-covered and accepted-risk rows are the natural record of what is not measured, but that is report format, not an obligation.</td>
+  </tr><tr>
+    <td class="k">MEASURE 1.3</td>
+    <td>Independent assessors involved</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Who assesses, not what is true of the system.</td>
+  </tr><tr>
+    <td class="k">MEASURE 2.2</td>
+    <td>Evaluations involving human subjects meet requirements</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Research-ethics requirement on the evaluation, not the system.</td>
+  </tr><tr>
+    <td class="k">MEASURE 2.9</td>
+    <td>Model explained and validated; output interpreted in context</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Model explainability is model-level (docs/NON-GOALS.md). Citation support (AAC-0030) helps a reader interpret an answer but is not an explanation.</td>
+  </tr><tr>
+    <td class="k">MEASURE 2.11</td>
+    <td>Fairness and bias evaluated</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Out of scope per docs/NON-GOALS.md: it needs domain-specific protected attributes and legal context. Per-slice accuracy (AAC-0017) is not a fairness measure and is not claimed as one.</td>
+  </tr><tr>
+    <td class="k">MEASURE 2.12</td>
+    <td>Environmental impact and sustainability assessed</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">No obligation measures energy or emissions. The cost obligations measure tokens and currency, which are not a proxy the catalog will claim.</td>
+  </tr><tr>
+    <td class="k">MEASURE 3.2</td>
+    <td>Risk tracking where measurement is not yet possible</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Process for unmeasurable risks; by construction no test obligation reaches it.</td>
+  </tr><tr>
+    <td class="k">MEASURE 4.1</td>
+    <td>Measurement approaches informed by domain experts and end users</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Consultation process.</td>
+  </tr><tr>
+    <td class="k">MEASURE 4.2</td>
+    <td>Trustworthiness results validated with domain experts</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Consultation process.</td>
+  </tr><tr>
+    <td class="k">MANAGE 1.2</td>
+    <td>Risk treatment prioritised</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Prioritisation decision.</td>
+  </tr><tr>
+    <td class="k">MANAGE 1.3</td>
+    <td>Responses to high-priority risks planned</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Planning. Where the response is acceptance, an accepted-risk declaration in the coverage report records it, but that is not an obligation.</td>
+  </tr><tr>
+    <td class="k">MANAGE 1.4</td>
+    <td>Negative residual risks documented</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Documentation of residual risk.</td>
+  </tr><tr>
+    <td class="k">MANAGE 2.1</td>
+    <td>Resources and non-AI alternatives considered</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Resourcing decision.</td>
+  </tr><tr>
+    <td class="k">MANAGE 2.2</td>
+    <td>Mechanisms to sustain the value of deployed systems</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Too general for a test obligation to evidence specifically; the drift and monitoring cases are mapped under MEASURE 2.4 and MANAGE 3.2.</td>
+  </tr><tr>
+    <td class="k">MANAGE 2.3</td>
+    <td>Response to previously unknown risks</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Incident procedure.</td>
+  </tr><tr>
+    <td class="k">MANAGE 4.2</td>
+    <td>Continual improvement integrated into updates</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Improvement process.</td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.1</td>
+    <td>CBRN Information or Capabilities</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">A model-capability uplift question, evaluated on the model. An application whose policy categories include it gets AAC-0005 as under §2.3.</td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.5</td>
+    <td>Environmental Impacts</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">No obligation measures energy or emissions.</td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.6</td>
+    <td>Harmful Bias and Homogenization</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Fairness is out of scope per docs/NON-GOALS.md. Judge bias (AAC-0085) is bias of an evaluator, a different sense of the word.</td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.8</td>
+    <td>Information Integrity</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Provenance and authentication of generated content is not an obligation in the catalog — a candidate gap, shared with EU AI Act Art. 50(2). Misinformation from confabulation is mapped under §2.2.</td>
+  </tr><tr>
+    <td class="k">AI 600-1 §2.10</td>
+    <td>Intellectual Property</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">Training-data and legal question; no application-level test obligation.</td>
+  </tr>
+  </tbody></table></div>
+</div></section><section><div class="wrap">
   <div class="prose"><span class="snum">Crosswalk — owasp-llm-top-10</span>
   <h2>What an existing framework maps to</h2>
   <p class="lede">Informative. 10 entries, mapped to obligations across the archetypes that actually owe them.</p>
-  <p>The external framework is organised by <em>threat</em>; this catalog is organised by <em>application shape</em>. The mapping is many-to-many by construction, and that is the point — a single threat lands on several obligations across several archetypes, which is exactly what a threat list on its own cannot tell you.</p>
+  <p>The external framework is organised by its own axis — threat, risk-management outcome, control or article; this catalog is organised by <em>application shape</em>. The mapping is many-to-many by construction, and that is the point — a single external item lands on several obligations across several archetypes, which is exactly what the framework on its own cannot tell you.</p>
   <p>Crosswalks release out of band: a revision upstream must never force a version bump in the catalog. <code>relation</code> records how tight each mapping is, because claiming a test obligation is <em>equivalent</em> to a governance control is the fastest way to have a crosswalk dismissed.</p></div>
   <div class="tbl-scroll"><table style="min-width:860px"><thead><tr>
-    <th style="width:78px">Entry</th><th style="width:190px">Name</th><th style="width:86px">Relation</th><th>Obligations</th>
+    <th style="width:112px">Entry</th><th style="width:190px">Name</th><th style="width:86px">Relation</th><th>Obligations</th>
   </tr></thead><tbody>
   <tr>
     <td class="k">LLM01</td>
@@ -321,6 +1126,7 @@ footer{padding:40px 0 64px;color:var(--ink-3);font-family:var(--mono);font-size:
       <div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">OWASP frames this as availability and denial of service. The catalog also carries it as an economic obligation — AAC-0102 gates cost regression at release — which is the framing the security-oriented entry does not supply. See patterns/cost.yaml for the failure shapes.</div></td>
   </tr>
   </tbody></table></div>
+  
 </div></section>
 
 <section id="build"><div class="wrap">

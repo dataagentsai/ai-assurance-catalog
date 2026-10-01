@@ -2,7 +2,20 @@
 
 Mappings from catalog identifiers to external frameworks.
 
-**Done:** `owasp-llm.yaml` — all 10 entries, mapped to 35 obligations.
+**Done — all four.** Every item in each framework's considered scope appears
+exactly once, either mapped or recorded as unmapped with the reason.
+
+| File | Mapped | Unmapped | Obligations reached |
+|---|---|---|---|
+| `owasp-llm.yaml` | 10 | 0 | 35 |
+| `nist-ai-rmf.yaml` | 29 (22 Core subcategories, 7 GenAI Profile risks) | 55 | 61 |
+| `iso-42001.yaml` | 6 of 38 Annex A controls | 32 | 25 |
+| `eu-ai-act.yaml` | 18 articles or paragraphs | 22 | 46 |
+
+The unmapped counts are the honest result, not unfinished work. NIST AI RMF and
+ISO 42001 govern organisations — policy, roles, impact assessment,
+documentation — and a test obligation is evidence for only the handful of
+items that turn on what a system demonstrably does.
 
 Crosswalks release **out of band** from the catalog. An external framework
 revising its own identifiers must never force a version bump in `catalog/` —
@@ -13,10 +26,10 @@ frameworks around them churn.
 
 | File | Framework | Legal shape |
 |---|---|---|
-| ~~`owasp-llm.yaml`~~ | OWASP Top 10 for LLM Applications — **done** | Creative Commons — may quote |
-| `nist-ai-rmf.yaml` | NIST AI RMF + Generative AI Profile | US government, freely redistributable |
-| `iso-42001.yaml` | ISO/IEC 42001 Annex A | **Copyrighted and paywalled — cite clause identifiers only, never reproduce control text** |
-| `eu-ai-act.yaml` | EU AI Act | Official Journal, public — may quote |
+| `owasp-llm.yaml` | OWASP Top 10 for LLM Applications (2025) — **done** | Creative Commons — may quote |
+| `nist-ai-rmf.yaml` | NIST AI RMF 1.0 Core + Generative AI Profile (AI 600-1) — **done** | US government, freely redistributable |
+| `iso-42001.yaml` | ISO/IEC 42001:2023 Annex A — **done** | **Copyrighted and paywalled — cite clause identifiers only, never reproduce control text** |
+| `eu-ai-act.yaml` | EU AI Act, Regulation (EU) 2024/1689 — **done** | Official Journal, public — may quote |
 
 Four frameworks, four different licensing positions in one directory. Check
 before quoting anything.
@@ -44,6 +57,22 @@ mappings:
   Appropriate for most OWASP entries.
 - `partial` — the case covers one aspect; the external item needs more.
 
+An external item no obligation provides evidence for goes under `unmapped`,
+with a one-line reason, instead of being left out or padded with a loose
+mapping:
+
+```yaml
+unmapped:
+  - external: MEASURE 2.11
+    external_name: Fairness and bias evaluated
+    reason: Out of scope per docs/NON-GOALS.md.
+```
+
+The linter requires every unmapped entry to carry a reason and no cases, and
+rejects an item listed twice across `mappings` and `unmapped`. Silence about an
+item is indistinguishable from not having looked at it — the same rule the
+coverage report applies to obligations.
+
 **Never claim one-to-one equivalence with a management-system control.** ISO
 42001 controls govern *processes* — roles, impact assessment, lifecycle
 management. A test obligation is at best evidence that a process operated. An
@@ -57,3 +86,8 @@ validation. The OWASP pass surfaced three missing obligations — system prompt 
 artifact provenance, and retrieval-corpus poisoning. All three are now written
 as `AAC-0106`, `AAC-0107` and `AAC-0108`, and the crosswalk entries that found
 them record that provenance in their notes.
+
+The governance passes found two more candidates, recorded in `unmapped` rather
+than written as obligations here: provenance marking of generated content (EU
+AI Act Art. 50(2), NIST AI 600-1 §2.8), and a human-initiated stop reaching the
+same safe path as a budget stop (noted under Art. 14(4)(e)).

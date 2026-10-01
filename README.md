@@ -158,7 +158,7 @@ npm run validate-report -- examples/coverage-report.example.json
 ## Roadmap
 
 - [x] **Phase 0** — normative core: catalog, schema, identifier policy, renderer
-- [~] **Phase 1** — crosswalks: OWASP LLM Top 10 done; NIST AI RMF, ISO 42001, EU AI Act to go
+- [x] **Phase 1** — crosswalks: OWASP LLM Top 10, NIST AI RMF (with the Generative AI Profile), ISO/IEC 42001 Annex A, EU AI Act — each item mapped or recorded unmapped with the reason
 - [x] **Phase 2** — coverage report schema (the artifact an auditor consumes)
 - [x] **Phase 3** — adapters: junit and promptfoo shipped; DeepEval and eval-platform exports to go
 - [x] **Phase 4** — reference implementation: [spark-cost-agent](https://github.com/basantchoudhary/spark-cost-agent/tree/main/aac) emits a real report from its own suite, 23/50 covered

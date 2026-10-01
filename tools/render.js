@@ -557,11 +557,11 @@ const html = `<title>AI Assurance Catalog</title>
 ${crosswalks.map((cw) => `<section><div class="wrap">
   <div class="prose"><span class="snum">Crosswalk — ${esc(cw.framework)}</span>
   <h2>What an existing framework maps to</h2>
-  <p class="lede">Informative. ${cw.mappings.length} entries, mapped to obligations across the archetypes that actually owe them.</p>
-  <p>The external framework is organised by <em>threat</em>; this catalog is organised by <em>application shape</em>. The mapping is many-to-many by construction, and that is the point — a single threat lands on several obligations across several archetypes, which is exactly what a threat list on its own cannot tell you.</p>
+  <p class="lede">Informative. ${cw.mappings.length} entries, mapped to obligations across the archetypes that actually owe them${(cw.unmapped || []).length ? `; ${cw.unmapped.length} more recorded below as unmapped, with the reason` : ""}.</p>
+  <p>The external framework is organised by its own axis — threat, risk-management outcome, control or article; this catalog is organised by <em>application shape</em>. The mapping is many-to-many by construction, and that is the point — a single external item lands on several obligations across several archetypes, which is exactly what the framework on its own cannot tell you.</p>
   <p>Crosswalks release out of band: a revision upstream must never force a version bump in the catalog. <code>relation</code> records how tight each mapping is, because claiming a test obligation is <em>equivalent</em> to a governance control is the fastest way to have a crosswalk dismissed.</p></div>
   <div class="tbl-scroll"><table style="min-width:860px"><thead><tr>
-    <th style="width:78px">Entry</th><th style="width:190px">Name</th><th style="width:86px">Relation</th><th>Obligations</th>
+    <th style="width:112px">Entry</th><th style="width:190px">Name</th><th style="width:86px">Relation</th><th>Obligations</th>
   </tr></thead><tbody>
   ${cw.mappings.map((m) => `<tr>
     <td class="k">${esc(m.external)}</td>
@@ -571,6 +571,16 @@ ${crosswalks.map((cw) => `<section><div class="wrap">
       ${m.note ? `<div style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">${esc(m.note.trim())}</div>` : ""}</td>
   </tr>`).join("")}
   </tbody></table></div>
+  ${(cw.unmapped || []).length ? `<div class="prose"><p style="margin-top:22px"><strong>Unmapped.</strong> No obligation provides evidence for these. Recorded rather than padded: a crosswalk that maps everything is claiming more than a test catalog can show.</p></div>
+  <div class="tbl-scroll"><table style="min-width:700px"><thead><tr>
+    <th style="width:150px">Entry</th><th style="width:260px">Name</th><th>Why not</th>
+  </tr></thead><tbody>
+  ${cw.unmapped.map((u) => `<tr>
+    <td class="k">${esc(u.external)}</td>
+    <td>${esc(u.external_name || "")}</td>
+    <td style="font-size:13.5px;line-height:1.5;color:var(--ink-3)">${esc(String(u.reason).trim())}</td>
+  </tr>`).join("")}
+  </tbody></table></div>` : ""}
 </div></section>`).join("")}
 
 <section id="build"><div class="wrap">
