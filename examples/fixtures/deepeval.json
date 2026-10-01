@@ -1,0 +1,147 @@
+{
+  "_comment": "Fixture: a DeepEval test run for the illustrative invoice-classifier, in the shape `deepeval test run` writes to DEEPEVAL_RESULTS_FOLDER (TestRun.model_dump(by_alias=True, exclude_none=True)). Exercises every declaration path — tags, metadata, a metric name, none at all — and the one that matters most: a case whose every metric was skipped for missing parameters still reads success: true with empty metricsData, and must not count as coverage.",
+  "testFile": "tests/test_llm_eval.py",
+  "testCases": [
+    {
+      "name": "test_absent_fields_stay_null",
+      "input": "Invoice INV-2207 with no purchase-order reference",
+      "actualOutput": "{\"invoice_number\": \"INV-2207\", \"po_number\": null}",
+      "retrievalContext": ["INVOICE INV-2207 ... (no PO reference on document)"],
+      "tags": ["AAC-0024"],
+      "flaky": false,
+      "success": true,
+      "metricsData": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.9,
+          "success": true,
+          "score": 1.0,
+          "reason": "Every extracted value is present in the source document.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "judge-model",
+          "evaluationCost": 0.0011
+        }
+      ],
+      "runDuration": 2.41,
+      "evaluationCost": 0.0011,
+      "order": 0
+    },
+    {
+      "name": "test_paraphrased_invoice_gives_same_record",
+      "input": "Same invoice, line items reordered and vendor name abbreviated",
+      "actualOutput": "{\"invoice_number\": \"INV-2207\", \"total\": \"1240.00\"}",
+      "metadata": { "aac": "AAC-0018" },
+      "flaky": false,
+      "success": true,
+      "metricsData": [
+        {
+          "name": "Record Equivalence [GEval]",
+          "threshold": 0.8,
+          "success": true,
+          "score": 0.92,
+          "reason": "Both records agree on every field.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "judge-model",
+          "evaluationCost": 0.0009
+        }
+      ],
+      "runDuration": 3.02,
+      "evaluationCost": 0.0009,
+      "order": 1
+    },
+    {
+      "name": "test_field_level_scores",
+      "input": "40 gold invoices",
+      "actualOutput": "per-field precision and recall table",
+      "flaky": false,
+      "success": false,
+      "metricsData": [
+        {
+          "name": "AAC-0025 field precision and recall [GEval]",
+          "threshold": 0.8,
+          "success": true,
+          "score": 0.88,
+          "reason": "Per-field scores reported; lowest field is due_date at 0.81.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "judge-model",
+          "evaluationCost": 0.0014
+        },
+        {
+          "name": "Answer Relevancy",
+          "threshold": 0.7,
+          "success": false,
+          "score": 0.5,
+          "reason": "Output includes commentary beyond the requested table.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "judge-model",
+          "evaluationCost": 0.0007
+        }
+      ],
+      "runDuration": 4.4,
+      "evaluationCost": 0.0021,
+      "order": 2
+    },
+    {
+      "name": "test_dates_render_in_document_locale",
+      "input": "Invoice dated 04/07/2026 from a UK vendor",
+      "actualOutput": "{\"invoice_date\": \"2026-04-07\"}",
+      "tags": ["AAC-0023"],
+      "flaky": false,
+      "success": false,
+      "metricsData": [
+        {
+          "name": "Date Fidelity [GEval]",
+          "threshold": 0.9,
+          "success": false,
+          "score": 0.4,
+          "reason": "Date read as 7 April; a UK vendor's 04/07 is 4 July.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "judge-model",
+          "evaluationCost": 0.0008
+        }
+      ],
+      "runDuration": 2.2,
+      "evaluationCost": 0.0008,
+      "order": 3
+    },
+    {
+      "name": "test_no_position_bias_on_long_invoices",
+      "input": "",
+      "tags": ["AAC-0021"],
+      "flaky": false,
+      "success": true,
+      "metricsData": [],
+      "order": 4
+    },
+    {
+      "name": "test_summary_tone_is_neutral",
+      "input": "Summarise the invoice dispute",
+      "actualOutput": "The vendor disputes the late-payment fee.",
+      "flaky": false,
+      "success": true,
+      "metricsData": [
+        {
+          "name": "Tone [GEval]",
+          "threshold": 0.7,
+          "success": true,
+          "score": 0.9,
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "judge-model"
+        }
+      ],
+      "order": 5
+    }
+  ],
+  "conversationalTestCases": [],
+  "metricsScores": [],
+  "testPassed": 4,
+  "testFailed": 2,
+  "runDuration": 18.6,
+  "evaluationCost": 0.0049
+}

@@ -14,12 +14,14 @@ acquire six competitors overnight. See [NON-GOALS.md](NON-GOALS.md).
 |---|---|---|
 | `junit` | junit XML from any runner | M1 deterministic assertion, M5 trace assertion |
 | `promptfoo` | promptfoo JSON output | M3 model-graded, M2 programmatic metric |
+| `deepeval` | DeepEval test run JSON | M3 model-graded |
 
-Two, deliberately. `docs/VERSIONING.md` requires two independent
-implementations before `1.0.0` — the same bar the IETF applies before advancing
-a specification, for the same reason. A format proven by a single implementation
-silently encodes that implementation's assumptions as normative, and you only
-find out when the second one arrives.
+`docs/VERSIONING.md` requires two independent implementations before `1.0.0` —
+the same bar the IETF applies before advancing a specification, for the same
+reason. A format proven by a single implementation silently encodes that
+implementation's assumptions as normative, and you only find out when the
+second one arrives. The third arrived with one such assumption to correct:
+DeepEval reports a case whose every metric was skipped as passed (see below).
 
 ## Declaring which obligation a test discharges
 
@@ -46,6 +48,26 @@ tests:
   - description: golden set across 6 vendors
     metadata: { aac: AAC-0001 }
 ```
+
+**DeepEval** — test case tags or metadata, a metric name, or the test name:
+
+```python
+LLMTestCase(input=q, actual_output=a, retrieval_context=ctx,
+            tags=["AAC-0029"])                 # or metadata={"aac": "AAC-0029"}
+
+GEval(name="AAC-0030 citation supports claim", ...)   # this metric alone decides
+
+def test_aac_0031_abstains(): ...                       # under `deepeval test run`
+```
+
+A tag or `metadata.aac` makes every metric on the case decide the outcome; an
+identifier in a metric's name makes only that metric decide it. The adapter
+reads the run DeepEval already saved — `test_run_*.json` in
+`DEEPEVAL_RESULTS_FOLDER`, or `.deepeval/.latest_run_full.json` — and takes
+each metric's verdict from its own `success` field. It never compares a score
+with a threshold; a metric with no verdict is `unknown`. Metrics DeepEval marks
+`flaky` do not decide the outcome, exactly as they do not decide DeepEval's.
+Per-test overrides go in `metadata` as `aac.mechanism` and `aac.stage`.
 
 **A mapping file**, for suites that predate the catalog and cannot be annotated
 in one diff:
@@ -111,7 +133,11 @@ npm run validate-report -- coverage-report.json
   A deliberate decision outranks an incidental test result.
 - **A skipped check is not coverage.** A result marked `ran: false` (junit's
   `<skipped/>`) adds no evidence; an obligation with nothing else stays
-  `not-covered`, with the skipped check named in its `note`.
+  `not-covered`, with the skipped check named in its `note`. DeepEval's
+  equivalent is quieter: with `skip_on_missing_params`, a skipped metric is
+  dropped from `metricsData` and the test case keeps its initial
+  `success: true`, so a case whose every metric was skipped reads as passed.
+  The adapter marks a case with no metric results `ran: false`.
 - **Everything else becomes `not-covered`.** No adapter evidence and no
   declaration produces an explicit row saying so.
 

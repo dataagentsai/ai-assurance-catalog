@@ -3,8 +3,9 @@
 ```
 fixtures/junit.xml       a pytest run
 fixtures/promptfoo.json  a promptfoo run
+fixtures/deepeval.json   a DeepEval test run
 aac.config.yaml          what is claimed, from where, and what is accepted
-coverage-report.example.json   <- built from the three above
+coverage-report.example.json   <- built from the four above
 ```
 
 ## The report is a build artifact, not a document

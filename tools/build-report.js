@@ -20,6 +20,7 @@ const ROOT = path.join(__dirname, "..");
 const ADAPTERS = {
   junit: require("../adapters/junit"),
   promptfoo: require("../adapters/promptfoo"),
+  deepeval: require("../adapters/deepeval"),
 };
 
 const args = process.argv.slice(2);

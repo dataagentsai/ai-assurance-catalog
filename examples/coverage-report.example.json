@@ -251,6 +251,10 @@
           "type": "experiment",
           "ref": "semantically equivalent rewrites and reordered line items",
           "url": "https://evals.example.internal/runs/a3f19c2"
+        },
+        {
+          "type": "test",
+          "ref": "tests/test_llm_eval.py::test_paraphrased_invoice_gives_same_record"
         }
       ]
     },
@@ -291,7 +295,8 @@
     },
     {
       "case": "AAC-0021",
-      "status": "not-covered"
+      "status": "not-covered",
+      "note": "check exists but did not run: tests/test_llm_eval.py::test_no_position_bias_on_long_invoices"
     },
     {
       "case": "AAC-0022",
@@ -315,33 +320,45 @@
       "status": "covered",
       "outcome": "fail",
       "mechanisms": [
-        "M1"
+        "M1",
+        "M3"
       ],
       "stages": [
-        "S2"
+        "S2",
+        "S3"
       ],
       "evidence": [
         {
           "type": "test",
           "ref": "tests.contract::test_dates_and_currency_normalise"
+        },
+        {
+          "type": "test",
+          "ref": "tests/test_llm_eval.py::test_dates_render_in_document_locale"
         }
       ],
-      "note": "3 of 40 gold records normalised to the wrong locale: 04/07/2026 parsed as 7 April, expected 4 July"
+      "note": "3 of 40 gold records normalised to the wrong locale: 04/07/2026 parsed as 7 April, expected 4 July | Date Fidelity [GEval]: Date read as 7 April; a UK vendor's 04/07 is 4 July."
     },
     {
       "case": "AAC-0024",
       "status": "covered",
       "outcome": "pass",
       "mechanisms": [
-        "M1"
+        "M1",
+        "M3"
       ],
       "stages": [
-        "S2"
+        "S2",
+        "S3"
       ],
       "evidence": [
         {
           "type": "test",
           "ref": "tests.contract::test_missing_fields_are_null_not_invented"
+        },
+        {
+          "type": "test",
+          "ref": "tests/test_llm_eval.py::test_absent_fields_stay_null"
         }
       ]
     },
@@ -360,6 +377,10 @@
           "type": "experiment",
           "ref": "precision and recall reported per field, not per record",
           "url": "https://evals.example.internal/runs/a3f19c2"
+        },
+        {
+          "type": "test",
+          "ref": "tests/test_llm_eval.py::test_field_level_scores"
         }
       ]
     },

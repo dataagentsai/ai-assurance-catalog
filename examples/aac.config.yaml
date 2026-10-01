@@ -38,6 +38,13 @@ sources:
     stages: [S3]
     url: https://evals.example.internal/runs/a3f19c2
 
+  # A DeepEval run, as `deepeval test run` writes it to DEEPEVAL_RESULTS_FOLDER.
+  # Its metrics are model-graded, so M3 is declared rather than guessed.
+  - adapter: deepeval
+    path: fixtures/deepeval.json
+    mechanisms: [M3]
+    stages: [S3]
+
 declarations:
   # Conditional obligations whose stated condition genuinely does not hold.
   - case: AAC-0092

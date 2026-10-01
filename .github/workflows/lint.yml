@@ -32,6 +32,9 @@ jobs:
       # Schema, identifier permanence, and the no-product-names discipline.
       - run: npm run lint
 
+      # Table-driven adapter tests for the edges one fixture cannot reach.
+      - run: npm run test-adapters
+
       # The example report is a build artifact of the adapters, not a document.
       # Rebuilding it from the fixtures proves the whole chain — fixture,
       # adapter, merge, schema — still works together.

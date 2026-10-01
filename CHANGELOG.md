@@ -39,6 +39,23 @@ Two candidate gaps surfaced and are recorded, not yet written: provenance
 marking of generated content (Art. 50(2), AI 600-1 §2.8), and a person-initiated
 stop reaching the same safe path as a budget stop (Art. 14(4)(e)).
 
+**Phase 3 — a DeepEval adapter.** `adapters/deepeval.js` reads the test run
+DeepEval already saved (`test_run_*.json` under `DEEPEVAL_RESULTS_FOLDER`, or
+`.deepeval/.latest_run_full.json`) and translates it into coverage results. An
+obligation is declared in the test case's `tags` or `metadata.aac`, in a
+metric's name, or in the test name. Each metric's verdict is DeepEval's own
+`success` field; the adapter never compares a score with a threshold, and
+metrics DeepEval marks `flaky` decide nothing here either.
+
+The junit rule carries over, and needed carrying: with `skip_on_missing_params`
+DeepEval drops a skipped metric from `metricsData` and leaves the case's
+`success` at its initial `true`, so a case whose every metric was skipped reads
+as passed. The adapter marks it `ran: false`. The example gains a DeepEval
+fixture that adds evidence without moving the summary, and one skipped case
+(AAC-0021) that now names itself in its not-covered row. A table-driven test,
+`npm run test-adapters`, pins the edges a single fixture cannot reach, and runs
+in `npm test` and CI.
+
 **Fixed — a skipped test no longer counts as coverage.** The junit adapter read
 `<skipped/>` as `covered` with outcome `unknown`, while REPORT.md defines
 `covered` as a check that exists *and ran*. A support agent's first report
