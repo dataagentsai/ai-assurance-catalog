@@ -55,6 +55,21 @@ sources:
     mechanisms: { EVAL: [M3], ANNOTATION: [M6], API: [M1] }
     url: https://langfuse.example.internal/project/proj-invoice
 
+  # Feedback a LangSmith experiment already holds: GET /api/v1/feedback?session=
+  # <experiment id>, saved as it answers (a bare array; fewer than 100 rows, so
+  # one page is the whole export). evaluate() writes every evaluator's feedback
+  # as source type `model`, the exact-match one included, so that one says M1
+  # in its own extra; the rest are mapped here. LangSmith keeps booleans and
+  # numbers in one field, so keys whose 1/0 is a verdict are listed as binary.
+  - adapter: langsmith
+    path: fixtures/langsmith.json
+    map: fixtures/langsmith.map.yaml
+    mechanisms: { model: [M3], app: [M6] }
+    stages: [S3]
+    binary: [AAC-0018 paraphrase_stable, invented_value, field_review]
+    inverted: [invented_value]
+    url: https://smith.langchain.com/o/tenant-invoice
+
 declarations:
   # Conditional obligations whose stated condition genuinely does not hold.
   - case: AAC-0092

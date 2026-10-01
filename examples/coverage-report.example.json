@@ -18,7 +18,8 @@
       "status": "covered",
       "outcome": "pass",
       "mechanisms": [
-        "M3"
+        "M3",
+        "M1"
       ],
       "stages": [
         "S3"
@@ -28,8 +29,21 @@
           "type": "experiment",
           "ref": "golden set — 240 labelled invoices across 6 vendors",
           "url": "https://evals.example.internal/runs/a3f19c2"
+        },
+        {
+          "type": "experiment",
+          "ref": "vendor_exact_match @ trace:0b7e4c1d-2a3f-4e5b-8c6d-000000000001",
+          "url": "https://smith.langchain.com/o/tenant-invoice/projects/p/5f0c2a8e-3d41-4b7a-9c1e-a3f19c2e0001/r/0b7e4c1d-2a3f-4e5b-8c6d-000000000001",
+          "at": "2026-08-14T16:11:07Z"
+        },
+        {
+          "type": "experiment",
+          "ref": "vendor_exact_match @ trace:0b7e4c1d-2a3f-4e5b-8c6d-000000000002",
+          "url": "https://smith.langchain.com/o/tenant-invoice/projects/p/5f0c2a8e-3d41-4b7a-9c1e-a3f19c2e0001/r/0b7e4c1d-2a3f-4e5b-8c6d-000000000002",
+          "at": "2026-08-14T16:12:14Z"
         }
-      ]
+      ],
+      "note": "langsmith vendor_exact_match: 2 feedback (2 pass)"
     },
     {
       "case": "AAC-0002",
@@ -239,9 +253,15 @@
           "type": "experiment",
           "ref": "AAC-0017 accuracy by vendor slice @ experiment:run-a3f19c2",
           "at": "2026-08-15T11:00:00Z"
+        },
+        {
+          "type": "experiment",
+          "ref": "min_vendor_slice_accuracy @ project:5f0c2a8e-3d41-4b7a-9c1e-a3f19c2e0001",
+          "url": "https://smith.langchain.com/o/tenant-invoice/projects/p/5f0c2a8e-3d41-4b7a-9c1e-a3f19c2e0001",
+          "at": "2026-08-14T16:17:49Z"
         }
       ],
-      "note": "langfuse AAC-0017 accuracy by vendor slice: 1 score (1 unknown)"
+      "note": "langfuse AAC-0017 accuracy by vendor slice: 1 score (1 unknown) | langsmith min_vendor_slice_accuracy: 1 feedback (1 unknown)"
     },
     {
       "case": "AAC-0018",
@@ -262,8 +282,15 @@
         {
           "type": "test",
           "ref": "tests/test_llm_eval.py::test_paraphrased_invoice_gives_same_record"
+        },
+        {
+          "type": "experiment",
+          "ref": "AAC-0018 paraphrase_stable @ trace:0b7e4c1d-2a3f-4e5b-8c6d-000000000003",
+          "url": "https://smith.langchain.com/o/tenant-invoice/projects/p/5f0c2a8e-3d41-4b7a-9c1e-a3f19c2e0001/r/0b7e4c1d-2a3f-4e5b-8c6d-000000000003",
+          "at": "2026-08-14T16:13:21Z"
         }
-      ]
+      ],
+      "note": "langsmith AAC-0018 paraphrase_stable: 1 feedback (1 pass)"
     },
     {
       "case": "AAC-0019",
@@ -405,9 +432,15 @@
           "ref": "invented-value @ trace:tr-80a4",
           "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-80a4",
           "at": "2026-08-15T10:02:18Z"
+        },
+        {
+          "type": "experiment",
+          "ref": "invented_value @ trace:0b7e4c1d-2a3f-4e5b-8c6d-000000000004",
+          "url": "https://smith.langchain.com/o/tenant-invoice/projects/p/5f0c2a8e-3d41-4b7a-9c1e-a3f19c2e0001/r/0b7e4c1d-2a3f-4e5b-8c6d-000000000004",
+          "at": "2026-08-14T16:14:28Z"
         }
       ],
-      "note": "langfuse absent-fields-null, invented-value: 4 scores (4 pass)"
+      "note": "langfuse absent-fields-null, invented-value: 4 scores (4 pass) | langsmith invented_value: 1 feedback (1 pass)"
     },
     {
       "case": "AAC-0025",
@@ -436,9 +469,15 @@
           "ref": "field-recall-review @ trace:tr-7f9c",
           "url": "https://langfuse.example.internal/project/proj-invoice/traces/tr-7f9c",
           "at": "2026-08-15T14:22:40Z"
+        },
+        {
+          "type": "annotation",
+          "ref": "field_review @ trace:0b7e4c1d-2a3f-4e5b-8c6d-000000000005",
+          "url": "https://smith.langchain.com/o/tenant-invoice/projects/p/5f0c2a8e-3d41-4b7a-9c1e-a3f19c2e0001/r/0b7e4c1d-2a3f-4e5b-8c6d-000000000005",
+          "at": "2026-08-14T16:15:35Z"
         }
       ],
-      "note": "langfuse field-recall-review: 1 score (1 pass)"
+      "note": "langfuse field-recall-review: 1 score (1 pass) | langsmith field_review: 1 feedback (1 pass)"
     },
     {
       "case": "AAC-0026",

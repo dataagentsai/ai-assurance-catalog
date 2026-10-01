@@ -139,7 +139,7 @@ patterns/       informative anti-patterns mapping into the cases that catch them
 crosswalks/     mappings to OWASP, NIST AI RMF, ISO 42001, EU AI Act
 tools/          linter, renderer, report builder, validator, badge
 action.yml      GitHub Action for adopters
-adapters/       junit, promptfoo, DeepEval, Langfuse -> coverage report; translation only
+adapters/       junit, promptfoo, DeepEval, Langfuse, LangSmith -> coverage report; translation only
 examples/       fixtures, adopter config, and the report they build
 docs/           identifier, versioning, realization, report, adapter and scope policy
 ```
@@ -160,7 +160,7 @@ npm run validate-report -- examples/coverage-report.example.json
 - [x] **Phase 0** — normative core: catalog, schema, identifier policy, renderer
 - [x] **Phase 1** — crosswalks: OWASP LLM Top 10, NIST AI RMF (with the Generative AI Profile), ISO/IEC 42001 Annex A, EU AI Act — each item mapped or recorded unmapped with the reason
 - [x] **Phase 2** — coverage report schema (the artifact an auditor consumes)
-- [x] **Phase 3** — adapters: junit, promptfoo, DeepEval and Langfuse score exports shipped; LangSmith feedback next
+- [x] **Phase 3** — adapters: junit, promptfoo, DeepEval, and eval-platform exports (Langfuse scores, LangSmith feedback); complete
 - [x] **Phase 4** — reference implementation: [spark-cost-agent](https://github.com/basantchoudhary/spark-cost-agent/tree/main/aac) emits a real report from its own suite, 23/50 covered
 - [x] **Phase 5** — ecosystem plugs: [OTel attribute convention](docs/OTEL.md), GitHub Action, badge
 

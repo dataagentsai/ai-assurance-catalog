@@ -16,6 +16,7 @@ acquire six competitors overnight. See [NON-GOALS.md](NON-GOALS.md).
 | `promptfoo` | promptfoo JSON output | M3 model-graded, M2 programmatic metric |
 | `deepeval` | DeepEval test run JSON | M3 model-graded |
 | `langfuse` | Langfuse scores API export (v2 or v3) | declared per Langfuse source — see below |
+| `langsmith` | LangSmith feedback list export (`GET /api/v1/feedback`) | declared per feedback source type — see below |
 
 `docs/VERSIONING.md` requires two independent implementations before `1.0.0` —
 the same bar the IETF applies before advancing a specification, for the same
@@ -130,6 +131,68 @@ worst outcome wins, evidence is the first `maxRefs` (default 5) scored entities
 with failing ones first, each linked to its trace, and the note carries the
 totals — `langfuse faithful: 412 scores (3 fail, 409 pass); 5 of 412 shown`.
 
+**LangSmith** — feedback `extra`, the feedback key, or a mapping file:
+
+```python
+client.create_feedback(run_id=r, key="vendor_exact_match", score=True,
+                       extra={"aac": "AAC-0001", "aac.mechanism": "M1"})
+
+def faithful(run, example):              # an evaluate() evaluator
+    return {"key": "faithful", "score": ok, "extra": {"aac": "AAC-0029"}}
+```
+
+The adapter reads feedback the workspace already holds, saved from
+`GET /api/v1/feedback` as it answers — usually filtered with
+`session=<project or experiment id>`. The response is a bare JSON array, paged
+by `offset` and `limit` (at most 100), with no envelope and no cursor. One saved
+page, an array of pages, the SDK's `list_feedback()` dumped as JSON or one
+object per line, or `resultsPath`. Field names were checked against LangSmith's
+published OpenAPI (`FeedbackSchema`) and the `langsmith` SDK's `Feedback` model.
+
+The rules are Langfuse's, adjusted where LangSmith's shape differs:
+
+- **Declaration**: `extra.aac`, then `feedback_source.metadata.aac` (where
+  `source_info` and an evaluator's `evaluator_info` land), then an identifier
+  in the key, then the mapping file of exact keys. App feedback — a reviewer
+  in the UI or an annotation queue — cannot carry `extra`, so it is mapped by
+  key. The `aac.*` fields are read from either place; `extra` wins.
+- **Verdict**: `aac.outcome` as the writer stated it; then `extra.error: true`,
+  which is what `evaluate()` writes when an evaluator raised — `error`, since the
+  check ran and could not decide; then a **boolean** `score`. LangSmith keeps
+  booleans and numbers in one `score` field, and a feedback row does not say
+  which a key holds, so a numeric `1` or `0` is a verdict only for keys the
+  adopter lists under `binary:` — exactly 1 or 0, never "close to". `aac.pass:
+  false` or `inverted:` for a key that states a defect. Everything else — a
+  0.12, a 3 of 5, a categorical `value`, a `correction` — is `unknown`.
+- **Mechanism**: never from `feedback_source.type`. `evaluate()` writes every
+  evaluator's feedback as `model`, an exact-match function included, and `api`
+  is whatever code called `create_feedback`. `aac.mechanism`, or the source
+  block — a list, or a map keyed by source type (`api`, `model`, `app`,
+  `auto_eval`).
+- **Stage**: a feedback row does not say whether its project is a tracing
+  project or an experiment, so the default is `S5`, or `S3` for feedback from a
+  comparative experiment. Set `stages: [S3]` on a source that exports an
+  experiment, or `aac.stage` per row.
+- **Pagination**: with no cursor or total in the response, a saved file whose
+  last page is full — 100 rows, or the first page's length, or `pageSize` — may
+  have stopped early, and the adapter warns. Save the short last page, or set
+  `pageSize` to the limit you used.
+
+```yaml
+  - adapter: langsmith
+    path: reports/langsmith-feedback.json
+    mechanisms: { model: [M3], app: [M6], api: [M1] }
+    stages: [S3]                      # an experiment's feedback
+    map: aac.langsmith.map.yaml       # feedback keys, matched exactly
+    binary: [correct, hallucination]  # keys whose 1/0 is a verdict
+    inverted: [hallucination]
+    url: https://smith.langchain.com/o/<tenant-id>   # links to /projects/p/<session>/r/<run>
+```
+
+Rows fold exactly as Langfuse scores do: one result per obligation, mechanism
+set and stage set, worst outcome wins, `maxRefs` run links with failing ones
+first — `langsmith faithful: 412 feedback (3 fail, 409 pass); 5 of 412 shown`.
+
 **A mapping file**, for suites that predate the catalog and cannot be annotated
 in one diff:
 
@@ -157,12 +220,13 @@ Parametrised tests are handled: a pattern naming the function matches every
 parametrisation of it (`test_x[case a]`, `test_x[case b]`), and worst-outcome-
 wins folds them into one verdict.
 
-**What a score never says.** Langfuse holds the scores that were written, not
+**What a score never says.** Langfuse and LangSmith hold the scores that were written, not
 the checks that ran and found nothing to write. A watch that records only its
 findings — a score when a rule fires, nothing when it holds — exports as
 nothing but failures, and an obligation whose rule never fired reads as
-not-covered. To be read as coverage, a check writes its passes too (a BOOLEAN
-per evaluated trace), or states `aac.outcome` on a score it already writes.
+not-covered. To be read as coverage, a check writes its passes too (a boolean
+per evaluated trace or run), or states `aac.outcome` on a score it already
+writes.
 
 ## Per-test overrides
 
@@ -240,10 +304,6 @@ module.exports = {
 Register it in `tools/build-report.js` and add a fixture under
 `examples/fixtures/`. CI rebuilds the example report and fails on any diff, so a
 fixture is what keeps an adapter honest.
-
-**Next: LangSmith.** Feedback exports (`key`, `score`, `value`,
-`feedback_source`) fit the same rules — a verdict only where the feedback is
-boolean or states one — and are the second eval-platform adapter to write.
 
 Read the output envelope **defensively**. Tools move their JSON shape between
 versions, and an adapter that pins one shape breaks on upgrade for no good

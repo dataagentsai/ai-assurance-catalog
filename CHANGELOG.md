@@ -9,6 +9,25 @@ ship. A quarter with no changes ships a release note saying so.
 
 ## [Unreleased]
 
+**Phase 3 complete — a LangSmith adapter: feedback becomes evidence.**
+`adapters/langsmith.js` reads feedback as `GET /api/v1/feedback` returns it — a
+bare array paged by offset and limit — or as the SDK's `list_feedback()` dumps
+it (field names checked against LangSmith's published OpenAPI `FeedbackSchema`
+and the `langsmith` SDK's `Feedback` model). It is the Langfuse adapter's
+sibling and keeps its rules: an obligation is declared in `extra.aac` (or
+`feedback_source.metadata.aac`, where `source_info` lands), in the key, or in a
+mapping file of keys; the writer's `aac.outcome` wins; `skipped` is `ran:
+false`; a numeric score is `unknown`; the mechanism is declared, never read from
+`feedback_source.type`, which `evaluate()` sets to `model` for every evaluator,
+an exact-match function included. Three differences follow from LangSmith's
+shape. `extra.error: true`, which `evaluate()` writes when an evaluator raised,
+is `error`. Booleans and numbers share one `score` field, so a boolean is a
+verdict and a 1 or 0 is one only for keys the adopter lists under `binary:`.
+And the response carries no cursor or total, so the adapter warns when the
+last saved page is full rather than when a cursor remains. The example gains an
+experiment's feedback that adds evidence without moving the summary;
+`adapters/langsmith.test.js` joins `npm run test-adapters`.
+
 **Phase 3 — a Langfuse adapter: eval-platform scores become evidence.**
 `adapters/langfuse.js` reads a project's scores as the public API returns them
 (`GET /api/public/v3/scores?fields=details,subject` on Langfuse v4, `/v2/scores`
@@ -27,7 +46,6 @@ export that stopped before its last page and on a v3 export without `metadata`.
 The example gains a Langfuse fixture that adds evidence without moving the
 summary, and a skipped online sampler (AAC-0014) that names itself in its
 not-covered row; `adapters/langfuse.test.js` joins `npm run test-adapters`.
-LangSmith feedback is the next adapter.
 
 **A judge owes what a judge owes, whatever the system's archetype.** M3 and M4
 in `taxonomy/realization.yaml` now carry `owes: [AAC-0084, AAC-0085, AAC-0086,

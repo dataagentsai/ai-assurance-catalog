@@ -23,6 +23,7 @@ const ADAPTERS = {
   promptfoo: require("../adapters/promptfoo"),
   deepeval: require("../adapters/deepeval"),
   langfuse: require("../adapters/langfuse"),
+  langsmith: require("../adapters/langsmith"),
 };
 
 const args = process.argv.slice(2);

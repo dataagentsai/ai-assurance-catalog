@@ -1,0 +1,5 @@
+# Feedback keys a reviewer already writes in the LangSmith app, mapped to the
+# obligation each discharges. App feedback cannot carry extra.aac, so the key is
+# matched exactly; a key that matches no feedback in the export is reported.
+AAC-0025:
+  - field_review
