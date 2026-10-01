@@ -19,6 +19,14 @@ grader. One rule in `tools/owed.js`, read by `build-report` and
 MINOR under the versioning rules: existing cases widened, none changed. The
 example report goes from 47 applicable to 51.
 
+- **Four statements say what the support agent's defects taught** (T-021),
+  clarifications in place per ID-POLICY: AAC-0038 is tested across separate
+  calls carrying only the conversation's identifier (F-006); AAC-0042's
+  measurement includes a conversation past the history bound, so growth in
+  stored state shows (the uncapped write); AAC-0043 reads the handoff where the
+  person receiving it works (F-007); AAC-0058's plants sit on records where
+  obeying would succeed (F-041).
+
 **Phase 1 complete — three crosswalks: NIST AI RMF, ISO/IEC 42001, EU AI
 Act.** Out of band, as crosswalks always are: no obligation changed and the
 catalog version does not move. OWASP shipped in 0.5.0.

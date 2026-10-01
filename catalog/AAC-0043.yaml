@@ -20,7 +20,7 @@ title: |-
   Escalation to a human works under load
 
 statement: |-
-  Where a human handoff exists, the trigger conditions and the completeness of the transferred context are tested. Applies wherever a human is the fallback.
+  Where a human handoff exists, the trigger conditions and the completeness of the transferred context are tested. Applies wherever a human is the fallback. The check reads the handoff where the person receiving it would — the queue or desk they work from — not the record the system wrote: a handoff written completely to a store no person's surface reads passes every check made on the writer's side.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.

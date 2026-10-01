@@ -20,7 +20,7 @@ title: |-
   State retention and self-consistency
 
 statement: |-
-  Facts established in early turns are still honoured late in the conversation, and the assistant never contradicts something it previously asserted.
+  Facts established in early turns are still honoured late in the conversation, and the assistant never contradicts something it previously asserted. Tested across separate calls to the system's own entrypoint, each carrying only the conversation's identifier as a caller would hold it — never by handing an earlier turn's state to the later call in memory. A suite that passes the conversation between turns itself cannot see a system that has no way to find the conversation again.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.

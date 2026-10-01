@@ -20,7 +20,7 @@ title: |-
   Conversation-level cost and turns to resolution
 
 statement: |-
-  Cost and turn count measured per resolved conversation. Growing context makes late turns expensive in a way per-call metrics never show.
+  Cost and turn count measured per resolved conversation. Growing context makes late turns expensive in a way per-call metrics never show. The measurement includes a conversation longer than the declared history bound, so growth past the bound shows in the figure whether it is in what each turn sends or in what is stored and read back: a bound applied only on the way to the model leaves the stored state, and every turn that reads it, growing without limit.
 
 # Realization is advisory: it names the class of machinery that can discharge
 # the obligation, never a product. See docs/REALIZATION.md.
