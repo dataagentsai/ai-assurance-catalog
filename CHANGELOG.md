@@ -9,6 +9,13 @@ ship. A quarter with no changes ships a release note saying so.
 
 ## [Unreleased]
 
+**AAC-0118 — autonomy widens only on agreement measured for that decision.**
+From a CCA-F case: a limit under which the agent approves on its own, justified
+by 96% agreement over 500 conversations in which that decision was 4% and the
+disagreements clustered on its ambiguous inputs. Agreement is measured on the
+decision class, stratified (ambiguous inputs, values near the limit), with each
+stratum's size stated. A4, A6, A7, A9; M6, M2; S3, S5.
+
 **Phase 3 complete — a LangSmith adapter: feedback becomes evidence.**
 `adapters/langsmith.js` reads feedback as `GET /api/v1/feedback` returns it — a
 bare array paged by offset and limit — or as the SDK's `list_feedback()` dumps

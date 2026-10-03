@@ -1,0 +1,40 @@
+# AAC-0118 — Autonomy widens only on agreement measured for that decision
+# Normative. Edit here; the rendered site is generated from this file.
+id: AAC-0118
+status: active
+since: "0.17.0"
+
+level: MUST
+dimension: oversight
+gate: true
+
+# Applies to these archetypes. CORE cases list every archetype explicitly
+# rather than relying on an inheritance keyword, so a consumer never has to
+# resolve the taxonomy to know whether a case applies.
+archetypes:
+  - A4
+  - A6
+  - A7
+  - A9
+core: false
+
+title: |-
+  Autonomy widens only on agreement measured for that decision
+
+statement: |-
+  Before a decision a person approves is left to the agent — a refund under a limit, a replacement under a value — reviewers' agreement with the agent is measured on that decision class alone, not on the conversations at large, and sampled by stratum: the inputs the decision turns on being ambiguous, and values near the proposed limit. Each stratum's sample size and agreement are stated beside the limit they justify, and a stratum where agreement is not shown stays with a person.
+
+  An overall agreement rate says almost nothing about one decision inside it. Five hundred conversations sampled uniformly, of which the decision being automated is one in twenty-five, measure that decision on about twenty cases — and where the disagreements cluster on ambiguous input, the clustering is on exactly the cases the change would stop a person seeing.
+
+# Realization is advisory: it names the class of machinery that can discharge
+# the obligation, never a product. See docs/REALIZATION.md.
+mechanisms:
+  - M6
+  - M2
+stages:
+  - S3
+  - S5
+tool_class: |-
+  Annotation tool + eval platform, sampling by stratum
+
+# Crosswalks to external frameworks live in /crosswalks, keyed by this id.
