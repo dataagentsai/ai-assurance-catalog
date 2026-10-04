@@ -1,0 +1,70 @@
+name: site
+
+# The page is a build artifact of catalog/, never a file anyone edits.
+# It is committed as well as deployed, so the catalog is readable straight from
+# the repository without waiting on a deployment — and because it is committed,
+# the rebuild below fails the build if it has gone stale.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and never cancel one half-done.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install --no-fund --no-audit
+
+      # Schema, identifier permanence, and both boundary disciplines. A page
+      # rendered from a catalog that does not lint is worse than no page.
+      - run: npm run lint
+
+      # A rebuild that produces a diff means someone edited generated output
+      # instead of the catalog it comes from.
+      - name: site/ is in sync with catalog/
+        run: |
+          npm run render
+          if ! git diff --quiet -- site/; then
+            echo "::error::site/ is stale or was hand-edited. Run 'npm run build' and commit."
+            git diff --stat -- site/
+            exit 1
+          fi
+
+      # The page is useless if its client script dies before render() runs.
+      - run: npm run check-page
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: site
+
+  # Deployment is kept in its own job so that a repository without Pages turned
+  # on still gets an honest green signal on the catalog itself. This job stays
+  # red until Settings > Pages > Build and deployment is set to GitHub Actions;
+  # enabling it from the workflow was tried and refused by the token.
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
