@@ -1,9 +1,45 @@
 # AI Assurance Catalog
 
-**Test obligations for AI applications, by architecture archetype.**
+An open, machine-readable list of what must be true of an AI application before
+it is trusted in production, stated as test obligations and sorted by the kind
+of application (chatbot, document extractor, tool-using agent and so on).
 
-Status: **working draft 0.17.0** — identifiers are stable from the first tagged
-release. Nothing here is externally binding.
+**Status: version 0.17.0, released 10 October 2026, a working draft.**
+Nothing here is externally binding.
+
+- **Done:** 118 obligations with permanent identifiers (36 owed by every AI
+  application, the rest by particular kinds), the schema and linter, mappings
+  to OWASP, NIST AI RMF, ISO/IEC 42001 and the EU AI Act, a coverage-report
+  format, and adapters that turn existing test results (JUnit, promptfoo,
+  DeepEval, Langfuse, LangSmith) into that report. Roadmap phases 0 to 5 are
+  all complete.
+- **Partial:** concrete "how to build it" options cover 60 of the 118
+  obligations (163 options), and plain-language guidance covers 9.
+
+**Run it** (needs Node.js):
+
+```bash
+git clone https://github.com/dataagentsai/ai-assurance-catalog && cd ai-assurance-catalog
+npm ci && npm test     # lint the catalog, test the adapters, build and validate an example report
+```
+
+Or read it as a page: <https://dataagentsai.github.io/ai-assurance-catalog/>.
+
+**Part of a family.** Six public repositories that together specify, build and
+test AI agents:
+
+| Repository | Its job |
+|---|---|
+| **AI Assurance Catalog** (AAC, this repository) | what must be **true** of an AI application: test obligations |
+| [AI Harness Catalog](https://github.com/dataagentsai/ai-harness-catalog) (AHC) | what must **exist** around the model call: harness capabilities |
+| [AgentTwin](https://github.com/dataagentsai/agenttwin) | what an agent must **face**: a simulated world to test it in |
+| [Clean AI Engineering](https://github.com/dataagentsai/clean-ai-engineering) | the specs, the four gates and the build-test-fix cycle that join the rest |
+| [Reference Agent](https://github.com/dataagentsai/reference-agent) | the reference implementation: one agent built and tested to all of the above |
+| [AgentTwin Lab](https://github.com/dataagentsai/agenttwin-lab) | the lab: a world that keeps running for days, for testing long-running agents |
+
+**How to cite:** to cite the catalog itself, rather than one case, cite the release you used. Metadata is in
+[CITATION.cff](CITATION.cff); GitHub's "Cite this repository" button renders it
+as APA or BibTeX.
 
 ---
 
@@ -25,7 +61,7 @@ thing nobody publishes. This is that catalog.
 
 ## What it is
 
-117 obligations. Each one states, in plain English, something that must be true
+118 obligations. Each one states, in plain English, something that must be true
 of a system — tagged with which architecture archetypes owe it, which classes of
 machinery can produce a verdict, at which lifecycle stage, and whether failure
 blocks.
@@ -46,16 +82,17 @@ stages: [S2, S4]          # CI pre-merge, runtime gateway
 tool_class: Test runner + gateway
 ```
 
-Thirty-six of the 117 are **core** — owed by every AI application regardless of
+Thirty-six of the 118 are **core** — owed by every AI application regardless of
 shape. The rest are archetype deltas: what is *new* about that shape's risk
-surface. That is why this is 117 cases and not several hundred.
+surface. That is why this is 118 cases and not several hundred.
 
 ## Where this sits
 
-This catalog is one part of a family. The others are the
-[AI Assurance Catalog](https://github.com/dataagentsai/ai-assurance-catalog) —
-what must be **TRUE** — and **AgentTwin**, which describes what a system must be
-**FACED** with.
+This catalog is one part of the family listed at the top. Its closest siblings
+are the [AI Harness Catalog](https://github.com/dataagentsai/ai-harness-catalog),
+which states what must **EXIST**, and
+[AgentTwin](https://github.com/dataagentsai/agenttwin), which describes what a
+system must be **FACED** with.
 
 Two family-level documents govern form, and neither asks you to agree with
 anything:
@@ -131,7 +168,7 @@ deprecation rules.
 ## Layout
 
 ```
-catalog/        117 cases, one YAML file each — the normative master
+catalog/        118 cases, one YAML file each — the normative master
 taxonomy/       archetypes, mechanisms, stages, dimensions, levels
 schema/         JSON Schema for a case, a pattern, and a coverage report
 realizations/   how each obligation gets built — six approaches, named products
@@ -169,12 +206,6 @@ all translation — it reads what your test tooling already produced and emits t
 report format defined in [docs/REPORT.md](docs/REPORT.md). Nothing in this
 repository will ever evaluate anything itself; see
 [docs/ADAPTERS.md](docs/ADAPTERS.md).
-
-## Citing
-
-To cite the catalog itself, rather than one case, cite the release you used.
-Metadata is in [CITATION.cff](CITATION.cff); GitHub's "Cite this repository"
-button renders it as APA or BibTeX.
 
 ## Licence
 
