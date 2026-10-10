@@ -9,6 +9,8 @@ ship. A quarter with no changes ships a release note saying so.
 
 ## [Unreleased]
 
+## [0.17.0] — 2026-10-10
+
 **AAC-0118 — autonomy widens only on agreement measured for that decision.**
 From a CCA-F case: a limit under which the agent approves on its own, justified
 by 96% agreement over 500 conversations in which that decision was 4% and the
@@ -884,7 +886,8 @@ First public draft. Identifiers are provisional until `1.0.0`; see
   verified pre-merge and which then *operate* in production, so S2 was added.
   Found by the linter rule rejecting gates that cannot fail anywhere.
 
-[Unreleased]: https://github.com/dataagentsai/ai-assurance-catalog/compare/v0.11.4...HEAD
+[Unreleased]: https://github.com/dataagentsai/ai-assurance-catalog/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/dataagentsai/ai-assurance-catalog/releases/tag/v0.17.0
 [0.11.4]: https://github.com/dataagentsai/ai-assurance-catalog/compare/v0.11.3...v0.11.4
 [0.11.3]: https://github.com/dataagentsai/ai-assurance-catalog/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/dataagentsai/ai-assurance-catalog/compare/v0.11.1...v0.11.2

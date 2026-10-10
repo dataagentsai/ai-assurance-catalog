@@ -2,7 +2,7 @@
 
 **Test obligations for AI applications, by architecture archetype.**
 
-Status: **working draft 0.11.4** — identifiers are stable from the first tagged
+Status: **working draft 0.17.0** — identifiers are stable from the first tagged
 release. Nothing here is externally binding.
 
 ---
@@ -169,6 +169,12 @@ all translation — it reads what your test tooling already produced and emits t
 report format defined in [docs/REPORT.md](docs/REPORT.md). Nothing in this
 repository will ever evaluate anything itself; see
 [docs/ADAPTERS.md](docs/ADAPTERS.md).
+
+## Citing
+
+To cite the catalog itself, rather than one case, cite the release you used.
+Metadata is in [CITATION.cff](CITATION.cff); GitHub's "Cite this repository"
+button renders it as APA or BibTeX.
 
 ## Licence
 

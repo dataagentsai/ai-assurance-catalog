@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: software
+title: "AI Assurance Catalog: test obligations for AI applications, by architecture archetype"
+version: "0.17.0"
+date-released: "2026-10-10"
+authors:
+  - given-names: Basant
+    family-names: Choudhary
+    affiliation: "DataAgents.ai"
+repository-code: "https://github.com/dataagentsai/ai-assurance-catalog"
+url: "https://github.com/dataagentsai/ai-assurance-catalog"
+abstract: >-
+  An open catalog of what must be true of an AI application before it is trusted in production, stated as test obligations per architecture archetype, with stable identifiers, crosswalks to external frameworks, and tooling that turns an evaluation suite into a coverage report. Part of Clean AI Engineering.
+keywords:
+  - AI assurance
+  - AI evaluation
+  - LLM applications
+  - AI agents
+  - test obligations
+  - specification
+license:
+  - Apache-2.0
+  - CC-BY-4.0
