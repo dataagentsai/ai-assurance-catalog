@@ -9,6 +9,10 @@ ship. A quarter with no changes ships a release note saying so.
 
 ## [Unreleased]
 
+## [0.17.1] — 2026-10-14
+
+No catalog changes. README first screen for reviewers; release cut so Zenodo archives it with a DOI.
+
 ## [0.17.0] — 2026-10-10
 
 **AAC-0118 — autonomy widens only on agreement measured for that decision.**

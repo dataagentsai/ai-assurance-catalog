@@ -4,7 +4,7 @@ An open, machine-readable list of what must be true of an AI application before
 it is trusted in production, stated as test obligations and sorted by the kind
 of application (chatbot, document extractor, tool-using agent and so on).
 
-**Status: version 0.17.0, released 10 October 2026, a working draft.**
+**Status: version 0.17.1, released 14 October 2026, a working draft.**
 Nothing here is externally binding.
 
 - **Done:** 118 obligations with permanent identifiers (36 owed by every AI
