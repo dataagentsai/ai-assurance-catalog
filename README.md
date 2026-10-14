@@ -1,5 +1,7 @@
 # AI Assurance Catalog
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23366151.svg)](https://doi.org/10.5281/zenodo.23366151)
+
 An open, machine-readable list of what must be true of an AI application before
 it is trusted in production, stated as test obligations and sorted by the kind
 of application (chatbot, document extractor, tool-using agent and so on).
@@ -37,7 +39,7 @@ test AI agents:
 | [Reference Agent](https://github.com/dataagentsai/reference-agent) | the reference implementation: one agent built and tested to all of the above |
 | [AgentTwin Lab](https://github.com/dataagentsai/agenttwin-lab) | the lab: a world that keeps running for days, for testing long-running agents |
 
-**How to cite:** to cite the catalog itself, rather than one case, cite the release you used. Metadata is in
+**How to cite:** DOI [10.5281/zenodo.23366151](https://doi.org/10.5281/zenodo.23366151) (all versions; Zenodo also gives each release its own). to cite the catalog itself, rather than one case, cite the release you used. Metadata is in
 [CITATION.cff](CITATION.cff); GitHub's "Cite this repository" button renders it
 as APA or BibTeX.
 
