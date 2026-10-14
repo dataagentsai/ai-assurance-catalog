@@ -39,7 +39,7 @@ test AI agents:
 | [Reference Agent](https://github.com/dataagentsai/reference-agent) | the reference implementation: one agent built and tested to all of the above |
 | [AgentTwin Lab](https://github.com/dataagentsai/agenttwin-lab) | the lab: a world that keeps running for days, for testing long-running agents |
 
-**How to cite:** DOI [10.5281/zenodo.23366151](https://doi.org/10.5281/zenodo.23366151) (all versions; Zenodo also gives each release its own). to cite the catalog itself, rather than one case, cite the release you used. Metadata is in
+**How to cite:** DOI [10.5281/zenodo.23366151](https://doi.org/10.5281/zenodo.23366151) (all versions; Zenodo also gives each release its own). To cite the catalog itself, rather than one case, cite the release you used. Metadata is in
 [CITATION.cff](CITATION.cff); GitHub's "Cite this repository" button renders it
 as APA or BibTeX.
 
