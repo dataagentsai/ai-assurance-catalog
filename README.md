@@ -2,6 +2,8 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23366151.svg)](https://doi.org/10.5281/zenodo.23366151)
 
+Open source (Apache 2.0) · Website: [dataagentsai.github.io/ai-assurance-catalog](https://dataagentsai.github.io/ai-assurance-catalog/) · Part of [Clean Data Engineering](https://cleandataengineering.ai/)
+
 An open, machine-readable list of what must be true of an AI application before
 it is trusted in production, stated as test obligations and sorted by the kind
 of application (chatbot, document extractor, tool-using agent and so on).
